@@ -53,4 +53,12 @@ is:
 00375ab8
 011fe030
 
+hålla in 1-knappen?
+0x8039f6a0
+0x8039f700
+0x8039f760
+0x803a1dc8
+etc...
 
+
+8554cd48	storlek på mario, 3f800000 = 1, 40000000 = 2 etc
