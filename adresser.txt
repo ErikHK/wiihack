@@ -1,0 +1,56 @@
+NTSC
+00429cc0	poäng, går att ändra
+01547900	tid kvar, går ej att ändra?
+
+00354e93	liv
+
+00354e90	liv
+003fc95c	liv
+015478ec	liv
+
+spring:
+01201030	acc?
+01201050	acc?
+0154b8c8	visar + åt höger
+0154b8ec	visar + åt höger
+0154b910	visar + åt höger, räcker med att ändra denna! YEAH!!!
+0154ba1c	visar + åt höger
+0154c83c	visar - åt höger
+0154c854	visar + i hast åt höger, -1.5 - 1.5 utan knapp 1, -3 - 3 med knapp 1
+0154cca8	1/0 springer/inte springer
+
+SPRING-VÄRDE I CODE:
+8015f61c
+
+
+00354ea0	mynt, kan ändras
+
+40245A00
+
+HOPP:
+00405304	00000004 när man är i luften
+0154b8cc	+-4 upp/ner, hastighet i luften, går ej att ändra
+0154ba20	+-4
+0154c6bc	00010000 när man är i luften
+0154c840	-+4 upp/ner
+015e36cc	nåt höjdvärde typ, -64 - +64?
+
+
+eld:
+00375540	# av eldbollar
+00375550	# av eldbollar, går att ändra!!
+
+PAL-eld?
+80375840
+80375850
+
+ADRESS I MINNET FÖR ELD:
+80040984
+
+	
+is:
+00375aa8
+00375ab8
+011fe030
+
+
