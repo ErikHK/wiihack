@@ -39,21 +39,23 @@ li 	r4,0x7b50
 addi	r4,r4,0x7b50
 adde	r3,r3,r4		;r3 = 0x0039f6a0
 lwz	r2,0(r3)		;ladda in värdet i adress r3 till r2
-li	r5,0x1000		;ladda in 0x1000 i r5
-and	r2,r2,r5		;0x1000 AND 0x1000
+lis	r5,0x1000		;ladda in 0x10000000 i r5
+and	r2,r2,r5		;0x10000000 AND 0x10000000
 cmpwi	r2, 0			;om 0, minus hålls inte inne!
 bne	0x20			;hoppa till 0x811de1fc om minus hålls inne
-;annars minusa liv!
+bl	0xfeffffec		;annars hoppa till 0x801de1cc
+
+
+
+
+minusa liv!
+i 811de1fc:
 lis	r3,0x0435		;r3=0x04350000
 addi	r3,r3,0x5190		;r3=0x04355190, adressen för antal liv
 lwz	r2,0(r3)		;ladda in värdet i adress r3 till r2 (antal liv)
 subi	r2,r2,1			;liv = liv-1
 stwx	r2,r20,r3		;lägg tillbaka liven igen
-bl 0xfeffffd8			;gå tillbaka till 0x801de1cc
-
-
-i 811de1fc:
-bl 0xff000014
+bl 	0xfeffffbc		;gå tillbaka till 0x801de1cc
 
 
 maskinkod i 801de1c8:
@@ -66,16 +68,11 @@ a9250002		;lha
 38847B50		;addi
 7C632114		adde
 80430000 		;lwz
-38A01000 		;li
+3CA01000 		;li
 7C422838		;and
 2C020000		;cmpwi
-40822000 		;bne
-3C600435		;lis
-38635190		;addi
-80430000		;lwz
-3842FFFF		;subi
-7C54192E 		;stwx
-4AFFFFD9		;bl
+40820020 		;bne
+4AFFFFED		;bl
 
 
 TESTMASKINKOD I 811de1b8:
@@ -83,8 +80,17 @@ a9250002
 4B000011
 
 
-maskinkod i 811de1fc:		;minus hålls inte inne, hoppa tillbaka till 801de1c8
-4AFFFFCD			;bl
+maskinkod i 811de1fc:		;minus hålls inne, minusa osv!
+
+3C600435		;lis
+38635190		;addi
+80430000		;lwz
+3842FFFF		;subi
+7C54192E 		;stwx
+4AFFFFBD		;bl
 
 
-40800008
+riivolution:
+<memory offset="0x001de1c8" value="48fffff0" />
+<memory offset="0x011de1b8" value="a92500023C60003938807B5038847B507C632114804300003CA010007C4228382C020000408200204AFFFFED" />
+<memory offset="0x011de1fc" value="3C60043538635190804300003842FFFF7C54192E4AFFFFBD" />
