@@ -61,4 +61,10 @@ hålla in 1-knappen?
 etc...
 
 
-8554cd48	storlek på mario, 3f800000 = 1, 40000000 = 2 etc
+8554cd48	fysisk storlek på mario, 3f800000 = 1, 40000000 = 2 etc
+
+8154cce4	storlek på mario, eldmario etc alltså! 0=liten, 1=stor, 2=eld, 4 = snurr, 6=is, 5=pingvin,3=mini 
+815dbb74-815dbb8c	antal powerups! allihopa!
+
+
+0154c858	hastighet i y?

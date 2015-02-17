@@ -4,7 +4,11 @@ oändligt med eld-bollar
 0011acc4	stw r20,0(r5) = 92850000
 
 
-läsa av knappar: 0039f6a0
+läsa av knappar: 
+0039f6a0
+0154c6ac
+0154c6b0
+
 -	10000000
 +	00100000
 <-	00010000
@@ -54,7 +58,7 @@ i 811de1fc:
 lis	r3,0x8435		;r3=0x81540000
 addi	r3,r3,5190		;r3=0x815478ec, adressen för antal liv
 lwz	r2,0(r3)		;ladda in värdet i adress r3 till r2 (antal liv)
-subi	r2,r2,1			;liv = liv-1
+zsubi	r2,r2,1			;liv = liv-1
 ;stwx	r2,r20,r3		;lägg tillbaka liven igen
 stb	r2,0(r3)			;TESTA MED ATT LÄGGA IN ETT TAL!
 bl 	0xfeffffbc		;gå tillbaka till 0x801de1cc
@@ -120,18 +124,191 @@ maskinkod i 001de1c8:
 48fffff0
 
 
-maskinkod i 011de1b8:
-a9250002
+maskinkod i 811de1b8:
+;a9250002
+60000000		;nop
 3C608035		;lis
 38635190		;addi
-80430000		;lwz
+60000000		;nop
+;80430000		;lwz
 ;3842FFFF		;subi
 3840001E
 ;7C54192E 		;stwx
 98430003		;stb
-4AFFFFFD
+4AFFFFFD		;b
 
 
 
 <memory offset="0x801de1c8" value="48fffff0" />
-<memory offset="0x811de1b8" value="a92500023C60803538635190804300003840001E984300034AFFFFFD" />
+<memory offset="0x811de1b8" value="600000003C60803538635190600000003840001E984300034AFFFFFC" />
+
+
+
+asm 801de1c8:
+b	0x00118548
+
+
+asm 802F6710:
+lha 	r9,2(r5)
+lis	r3,0x8035		;r3=0x80350000
+addi	r3,r3,0x5190		;r3=0x80355190, adressen för antal liv
+lwz	r2,0(r3)		;ladda in värdet i adress r3 till r2 (antal liv)
+subi	r2,r2,1			;liv = liv-1
+;stwx	r2,r20,r3		;lägg tillbaka liven igen
+;stb	r2,3(r3)		;TESTA MED ATT LÄGGA IN ETT TAL!
+stw	r2,0(r3)
+
+b 	0xffee7aa4		;
+
+maskin 801de1c8:
+48118548
+
+maskin 802F6710:
+A9250002		;lha
+3C608035		;lis
+38635190		;addi
+80430000		;lwz
+3842FFFF		;subi
+90430000		;stw
+4BEE7AA4		;b
+
+
+
+YEY FUNKAR!!
+<memory offset="0x801de1c8" value="48118548" />
+<memory offset="0x802f6710" value="A92500023C60803538635190804300003842FFFF904300004BEE7AA4" />
+
+
+lägg till minusknappsfunktion!
+asm 801de1c8:
+b	0x00118548		;brancha till 802f6710
+
+
+asm 802F6710:
+lha	r9,0x0002(r5)		;origvärde i 801de1c8!
+lis	r3,0x8039
+li 	r4,0x7b50
+addi	r4,r4,0x7b50
+adde	r3,r3,r4		;r3 = 0x0039f6a0
+lwz	r2,0(r3)		;ladda in värdet i adress r3 till r2
+lis	r5,0x1000		;ladda in 0x10000000 i r5
+and	r2,r2,r5		;0x10000000 AND 0x10000000
+cmpwi	r2, 0			;om 0, minus hålls inte inne!
+bne	0x8			;hoppa till 0x802f673c om minus hålls inne
+;bl	0xfeffffec		;annars hoppa till 0x801de1cc
+
+b 	0xffee7a94		;annars hoppa till 0x801de1cc
+
+asm 802f673c:
+lis	r3,0x8035		;r3=0x80350000
+addi	r3,r3,0x5190		;r3=0x80355190, adressen för antal liv
+lwz	r2,0(r3)		;ladda in värdet i adress r3 till r2 (antal liv)
+addi	r2,r2,1			;liv = liv+1
+stw	r2,0(r3)
+
+b 	0xffee7aa4		;
+
+
+maskin 801de1c8:
+48118548
+
+maskin 802F6710:
+A9250002		;lha
+3C608159		;lis
+38806358		;li
+38846358		;addi
+7C632114		;adde
+80430000		;lwz
+3CA01000		;lis
+7C422838		;and
+2C020000		;cmpwi
+40820008		;bne
+4BEE7AA4		;b	FEL ADRESS?
+
+
+maskin 802f673c:
+3C608035		;lis
+38635190		;addi
+80430000		;lwz
+38420001		;subi
+90430000		;stw
+4BEE7A7C		;b
+
+
+<memory offset="0x801de1c8" value="48118548" />
+<memory offset="0x802f6710" value="A92500023C60815938806358388463587C632114804300003CA010007C4228382C020000408200084BEE7AA4" />
+<memory offset="0x802f673c" value="3C608035386351908043000038420001904300004BEE7A7C" />
+
+
+
+TEST MED KNAPPAVLÄSNING:
+801de1c8:
+48118548
+
+802f6710:
+A9250002		;lha
+3C608154		;lis
+38806358		;li	FUNKAR INTE!!
+38846358		;addi
+7C632214		;add
+80430000		;lwz
+4BEE7AA4		;b
+
+
+<memory offset="0x801de1c8" value="48118548" />
+<memory offset="0x802f6710" value="A92500023C60815438806358388463587C632214804300004BEE7AA4" />
+<memory offset="0x802f6710" value="A92500023C608154388063586000000060000000600000004BEE7AA4" />
+
+
+testa med r6, r7, r8 istället!
+endast knappavläsning
+
+801de1c8:
+48118548
+
+802f6710:
+A9250002		;lha
+3CC08154		;lis  r6
+38E06358		;li	r7
+38E76358		;addi r7
+7CC63A14		;add r6,r6,r7
+81060000		;lwz r8, 0(r6)
+4BEE7AA4		;b
+
+
+FUNKAR!
+<memory offset="0x801de1c8" value="48118548" />
+<memory offset="0x802f6710" value="A92500023CC0815438E0635838E763587CC63A14810600004BEE7AA4" />
+
+
+hela med r6,r7,r8:
+
+maskin 801de1c8:
+48118548
+
+maskin 802F6710:
+A9250002		;lha
+3CC08154		;lis  r6
+38E06358		;li	r7
+38E76358		;addi r7
+7CC63A14		;add r6,r6,r7
+81060000		;lwz
+3D401000		;lis r10, 4096
+7D085038		;and r8,r8,r10
+2C080000		;cmpwi
+40820008		;bne
+4BEE7A94		;b
+
+
+maskin 802f673c:
+3CC08035		;lis r6, 0x8035
+38C65190		;addi r6
+80E60000		;lwz r7, 0(r6)
+38E70001		;addi r7,r7,1
+90E60000		;stw
+4BEE7A7C		;b
+
+
+<memory offset="0x801de1c8" value="48118548" />
+<memory offset="0x802f6710" value="A92500023CC0815438E0635838E763587CC63A14810600003D4010007D0850382C080000408200084BEE7A94" />
+<memory offset="0x802f673c" value="3CC0803538C6519080E6000038E7000190E600004BEE7A7C" />
