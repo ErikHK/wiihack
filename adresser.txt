@@ -68,3 +68,5 @@ etc...
 
 
 0154c858	hastighet i y?
+körs WRITE vid 80057154
+kors READ vid aldrig
