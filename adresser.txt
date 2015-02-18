@@ -47,7 +47,7 @@ PAL-eld?
 ADRESS I MINNET FÖR ELD:
 80040984
 
-	
+
 is:
 00375aa8
 00375ab8
@@ -77,6 +77,8 @@ kors READ vid aldrig
 
 8154b804?
 8154b804+0xec = 8154b8f0	hastighet i y, kan ändras!
+detta storeande sker i 80057150
+
 
 0x8154b804+0xac = 8154b8b0
 0x8154b804+0xe8 = 8154b8ec
@@ -106,3 +108,23 @@ kors READ vid aldrig
 
 
 8043fc98+0x70=8043fd08
+
+802f77a4	nånting bra? händer vid 80237dc8
+802f77ac	nånting bra?
+
+
+händer bra saker RUNT 800575f0
+
+8043fc98+0x1c=8043fcb4
+
+8043fd38+0x4=8043fd3c händer vid 80057550
+
+0x8154b804+0xec=8154b8f0
+
+
+8042bbb4	stjärtdunkhastighet!!
+8042bb44	max fallhastighet!!
+
+säkert någon i närheten som är gravitation?
+
+8154e27c	håller i skalet => =0000040E, 0 annars
