@@ -19,6 +19,10 @@ spring:
 0154c854	visar + i hast åt höger, -1.5 - 1.5 utan knapp 1, -3 - 3 med knapp 1
 0154cca8	1/0 springer/inte springer
 
+
+8043fbd4
+80433360-0x5488= 8042ded8
+
 SPRING-VÄRDE I CODE:
 8015f61c
 
@@ -79,6 +83,12 @@ kors READ vid aldrig
 8154b804+0xec = 8154b8f0	hastighet i y, kan ändras!
 detta storeande sker i 80057150
 
+804055d8	innehåller adressen? 80405618 när man är i luften	
+80405604	4 i luften, 0 annars
+811fdf00	luftgrej? testa brp!
+81200868	luftgrej? nja
+8154c6bc	luftgrej?
+
 
 0x8154b804+0xac = 8154b8b0
 0x8154b804+0xe8 = 8154b8ec
@@ -124,7 +134,23 @@ händer bra saker RUNT 800575f0
 
 8042bbb4	stjärtdunkhastighet!!
 8042bb44	max fallhastighet!!
+80936034	pi ~= 3.141593
 
 säkert någon i närheten som är gravitation?
 
 8154e27c	håller i skalet => =0000040E, 0 annars
+
+8154bb90	0=>skadas ej, 01000000=>skadas, 1=>faller genom jorden och dör, 10=>mimare, 
+8154cd68	1=>sitter på yoshi, 0 annars?
+
+8154cc7c	innehåller olika adresser, hoppar, sitter på yoshi, står etc
+8154cc94	803765b0 på yoshi, 80375f2c på marken, 8035459c i luften
+8154cc9c	80375f6c hoppar av yoshi
+
+8154cc7c	sätts till 803765b0 => mario hoppar! kan hoppa i luften då!
+
+8154b9e0	har c41436f4 då ej yoshi, c4141f3c då på yoshi
+8154c828	olika värden beroende på om på yoshi, hoppar, står still, 
+
+
+8043fd2c	1c8 då mat i munnen? 1 då hammare? neee va?
