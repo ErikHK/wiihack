@@ -312,3 +312,9 @@ maskin 802f673c:
 <memory offset="0x801de1c8" value="48118548" />
 <memory offset="0x802f6710" value="A92500023CC0815438E0635838E763587CC63A14810600003D4010007D0850382C080000408200084BEE7A94" />
 <memory offset="0x802f673c" value="3CC0803538C6519080E6000038E7000190E600004BEE7A7C" />
+
+
+
+snabbare fall och stjärtdunk:
+<memory offset="0x8042bbb4" value="c1c00000" />
+<memory offset="0x8042bb44" value="c1800000" />

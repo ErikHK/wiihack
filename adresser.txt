@@ -18,6 +18,7 @@ spring:
 0154c83c	visar - åt höger
 0154c854	visar + i hast åt höger, -1.5 - 1.5 utan knapp 1, -3 - 3 med knapp 1
 0154cca8	1/0 springer/inte springer
+0154ccac	räknar ner efter att cca8 satts till 0
 
 
 8043fbd4
@@ -140,6 +141,7 @@ säkert någon i närheten som är gravitation?
 
 8154e27c	håller i skalet => =0000040E, 0 annars
 
+<<<<<<< HEAD
 8154bb90	0=>skadas ej, 01000000=>skadas, 1=>faller genom jorden och dör, 10=>mimare, 
 8154cd68	1=>sitter på yoshi, 0 annars?
 
@@ -154,3 +156,6 @@ säkert någon i närheten som är gravitation?
 
 
 8043fd2c	1c8 då mat i munnen? 1 då hammare? neee va?
+=======
+
+>>>>>>> 8a6b4a5606ef42498b44b720fa6ff7bd0fa9dc85
