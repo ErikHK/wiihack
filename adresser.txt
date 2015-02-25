@@ -186,31 +186,33 @@ orig:
 800b3b60	9421ffd0
 
 
-800b3b60	49E4C4A0 ;b 0x1e4c4a0
-		48B1C420
+800b3b60	49E4C4A0 	;b 0x1e4c4a0
+		48B1C420	;b ...
 
 
-80bcff80	39E00000	;li r15,0
-		3E0081FF	;lis r16, 0x81ff
-		3E2000D2	;lis r17, 0x00d2		;läs in världadressen
-		3A315408 	;addi r17,r17,0x5408		;läs in världadressen del 2
-		82510000	;lwz r18, 0 (r17)		;r18 = värld
-		3E2080D2	;lis r17, 0x80d2		;läs in banID
-		3A3150A8	;addi r17,r17,0x50a8		;läs in banID del 2
-		82310000	;lwz r17,0(r17)
-		3A600008	;li r19, 8			;shifta såhär mycket
-		7E529830	;slw r18,r18,r19		;shifta!
-		7E109378	;or r16,r16,r18			;r16=0x81ffxx00, xx=värld
-		7E108B78	;or r16,r16,r17			;r16=0x81ffxxyy, yy=bana
-		82300000	;lwz r17, 0(r16)
-		3A310001	;addi r17,r17,1			;tiden går!!!
-		92300000	;stw r17, 0(r16)
-		9421ffd0	;stwu r1,-48(r1) 		;origvärde
+80bcff80	9421ffd0	;stwu r1,-48(r1) 		;origvärde
+      84	39E00000	;li r15,0
+      88	3E0081F0	;lis r16, 0x81f0
+      8c	3E2000D2	;lis r17, 0x00d2		;läs in världadressen
+      90	3A315408 	;addi r17,r17,0x5408		;läs in världadressen del 2
+      94	82510000	;lwz r18, 0 (r17)		;r18 = värld
+      98	3E2080D2	;lis r17, 0x80d2		;läs in banID
+      9c	3A3150A8	;addi r17,r17,0x50a8		;läs in banID del 2
+      a0	82310000	;lwz r17,0(r17)			;läs in banID till r17
+      a4	3A60000c	;li r19, 12			;shifta såhär mycket
+      a8	7E529830	;slw r18,r18,r19		;shifta!
+      ac	7E109378	;or r16,r16,r18			;r16=0x81fxx000, xx=värld
+      b0	3A600004	;li r19, 4			;shifta även denna
+      b4	7E319830	;slw r17,r17,r19
+      b8	7E108B78	;or r16,r16,r17			;r16=0x81fxxyy0, yy=bana
+      bc	82300000	;lwz r17, 0(r16)
+      c0	3A310001	;addi r17,r17,1			;tiden går!!!
+      c4	92300000	;stw r17, 0(r16)
 
-		3E008042	;lis r16,0x8042			;halva poäng
-		3A104FD0	;addi r16,r16,0x4fd0
-		3A104FD0	;addi r16,r16,0x4fd0		;poäng, 80429fa0
-		92300000	;stw r17,0(r16)			;ladda in tiden i poäng
+      c8	3E0080D2	;lis r16,0x80d2			;halva tid
+      d0	3A105BF8	;addi r16,r16,0x5bf8		;tids-adress, 80d25bf8
+      d4	3A60000c	;li r19, 12			;tiden ska shiftas 12 steg
+      d8	7E319830	;slw r17,r17,r19		;shifta 12 steg åt vänster!
+      dc	92300000	;stw r17,0(r16)			;ladda in tiden i poäng
 
-
-		4B4E3B94	;b -0xb1c46c			;go back to orig
+      e0	4B4E3B84	;b -0xb1c47c			;go back to orig
