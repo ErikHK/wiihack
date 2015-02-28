@@ -182,13 +182,14 @@ måste hitta register för värld också!
 
 
 
+!!!!!!TIMERGREJ!!!!!!!
+
 orig:
 800b3b60	9421ffd0
 
 
 800b3b60	49E4C4A0 	;b 0x1e4c4a0
 		48B1C420	;b ...
-
 
 80bcff80	9421ffd0	;stwu r1,-48(r1) 		;origvärde
       84	39E00000	;li r15,0
