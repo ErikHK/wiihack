@@ -216,3 +216,29 @@ orig:
       dc	92300000	;stw r17,0(r16)			;ladda in tiden i poäng
 
       e0	4B4E3B84	;b -0xb1c47c			;go back to orig
+
+
+
+
+9421ffd039E000003E0081F03E2000D23A315408825100003E2080D23A3150A8823100003A60000c7E5298307E1093783A6000047E3198307E108B78823000003A310001923000003E0080D23A105BF83A60000c7E319830923000004B4E3B84
+
+
+<memory offset="800b3b60" value="48B1C420" />
+<memory offset="80bcff80" value="9421ffd039E000003E0081F03E2000D23A315408825100003E2080D23A3150A8823100003A60000c7E5298307E1093783A6000047E3198307E108B78823000003A310001923000003E0080D23A105BF83A60000c7E319830923000004B4E3B84" />
+
+
+!!!!!!!!!!gravity-letande!!!!!!!!!!
+float x_speed_inc
+float y_speed_inc	kan vara något? adress???
+HandleYSpeed()
+class dEn_c		bra skit?
+
+
+0x80163920		setspeed, frame?
+8006cde0		handle y speed, handlar bara om fiender verkar det som
+8006cd90		handle x speed
+8006CD40		UpdateObjectPosBasedOnSpeedValues_real
+
+8006ce00		storea gravitation?? be400000 = -0.187500, rimligt?
+
+81541414		gravitation för EN goomba, hmm
