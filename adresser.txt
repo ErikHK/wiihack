@@ -1,6 +1,9 @@
-NTSC
+NTSC!!!!!!!!
 00429cc0	poäng, går att ändra
 01547900	tid kvar, går ej att ändra?
+
+
+
 800b3b60	tiden ändras i denna adress! körs en gång per sekund!
 		läses oftast vid 800e3b38, IBLAND vid 80159c0c, ibland 800cdea0, 
 
@@ -243,3 +246,22 @@ class dEn_c		bra skit?
 8006ce00		storea gravitation?? be400000 = -0.187500, rimligt?
 
 81541414		gravitation för EN goomba, hmm
+
+
+
+
+ENKLARE POÄNGFIELDÄNDRARTEST, sätt till 0 hela tiden:
+
+800b3b60	48b1c420
+
+80bcff80	9421ffd0
+		3de00000
+		3e000042
+		3a104fd0
+		3a104fd0
+		91f00000
+		4b4e3bcc
+
+
+<memory offset="0x800b3b60" value="48b1c420" />
+<memory offset="0x80bcff80" value="9421ffd03de000003e0000423a104fd03a104fd091f000004b4e3bcc" />
