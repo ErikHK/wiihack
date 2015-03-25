@@ -1,13 +1,11 @@
-NTSC!!!!!!!!
-00429cc0	poäng, går att ändra
-01547900	tid kvar, går ej att ändra?
+81547900	tid kvar, går ej att ändra?
 
 
 
 800b3b60	tiden ändras i denna adress! körs en gång per sekund!
 		läses oftast vid 800e3b38, IBLAND vid 80159c0c, ibland 800cdea0, 
 
-00429fa0	poäng PAL, kan sättas!
+80429fa0	poäng PAL, kan sättas!
 81547908	poäng PAL
 
 
@@ -197,7 +195,7 @@ orig:
 80bcff80	9421ffd0	;stwu r1,-48(r1) 		;origvärde
       84	39E00000	;li r15,0
       88	3E0081F0	;lis r16, 0x81f0
-      8c	3E2000D2	;lis r17, 0x00d2		;läs in världadressen
+      8c	3E2080D2	;lis r17, 0x80d2		;läs in världadressen
       90	3A315408 	;addi r17,r17,0x5408		;läs in världadressen del 2
       94	82510000	;lwz r18, 0 (r17)		;r18 = värld
       98	3E2080D2	;lis r17, 0x80d2		;läs in banID
@@ -224,11 +222,11 @@ orig:
 
 
 
-9421ffd039E000003E0081F03E2000D23A315408825100003E2080D23A3150A8823100003A60000c7E5298307E1093783A6000047E3198307E108B78823000003A310001923000003E0080D23A105BF83A60000c7E319830923000004B4E3B84
+9421ffd039E000003E0081F03E2080D23A315408825100003E2080D23A3150A8823100003A60000c7E5298307E1093783A6000047E3198307E108B78823000003A310001923000003E0080D23A105BF83A60000c7E319830923000004B4E3B84
 
 
-<memory offset="800b3b60" value="48B1C420" />
-<memory offset="80bcff80" value="9421ffd039E000003E0081F03E2000D23A315408825100003E2080D23A3150A8823100003A60000c7E5298307E1093783A6000047E3198307E108B78823000003A310001923000003E0080D23A105BF83A60000c7E319830923000004B4E3B84" />
+<memory offset="0x800b3b60" value="48B1C420" />
+<memory offset="0x80bcff80" value="9421ffd039E000003E0081F03E2080D23A315408825100003E2080D23A3150A8823100003A60000c7E5298307E1093783A6000047E3198307E108B78823000003A310001923000003E0080D23A105BF83A60000c7E319830923000004B4E3B84" />
 
 
 !!!!!!!!!!gravity-letande!!!!!!!!!!
@@ -265,3 +263,237 @@ ENKLARE POÄNGFIELDÄNDRARTEST, sätt till 0 hela tiden:
 
 <memory offset="0x800b3b60" value="48b1c420" />
 <memory offset="0x80bcff80" value="9421ffd03de000003e0000423a104fd03a104fd091f000004b4e3bcc" />
+
+
+pröva att hoppa till adress 802f6710 istället? funkar ju för minus-patchen!
+
+
+800e3b38	48212BD8
+
+802f6710	80010014
+802f6714	3de00000
+802f6718	3e000042
+802f671c	3a104fd0
+802f6720	3a104fd0
+802f6724	91f00000
+802f6728	4BDED414
+
+
+
+<memory offset="0x800e3b38" value="48212bd8" />
+<memory offset="0x802f6710" value="800100143de000003e0000423a104fd03a104fd091f000004BDED414" />
+
+
+pröva att bara köra nop och hoppa tillbaka: FUNKAR!
+
+
+800e3b38	48212BD8
+
+802f6710	80010014
+802f6714	60000000
+802f6718	60000000
+802f671c	60000000
+802f6720	60000000
+802f6724	60000000
+802f6728	4BDED414
+
+
+
+<memory offset="0x800e3b38" value="48212bd8" />
+<memory offset="0x802f6710" value="8001001460000000600000006000000060000000600000004BDED414" />
+
+
+spara registren på stacken, använd dom, lägg tillbaka dom!!
+FUNKAR, ADRESSERA ALLTID 0x8yyyyyyy!!!!!!!!!!
+
+800e3b38	48212BD8 ;b 0x802f6710
+
+802f6710	80010014 ;lwz r0,20(r1)
+		94A1FFFC ;stwu r5, -0x4(sp)
+		94C1fffc ;stwu r6, -0x4(sp)
+		3ca00000 ;lis r5, 0
+		3CC08042 ;lis r6, 0x8042	!!!!!!!!!!
+		38C64FD0 ;addi r6,r6, 0x4fd0
+		38C64FD0 ;addi r6,r6, 0x4fd0
+		90A60000 ;stw r5, 0(r6)
+		84c10000 ;lwzu r6, 0(sp)
+		84a10004 ;lwzu r5, 4(sp)
+		38210004 ;addi r1,r1,0x4
+		4BDED400 ;b back
+		
+		
+
+<memory offset="0x800e3b38" value="48212bd8" />
+<memory offset="0x802f6710" value="8001001494A1FFFC94C1fffc3ca000003CC0804238C64FD038C64FD090A6000084c1000084a10004382100044BDED400" />
+
+
+prova att öka på 1 på poängfältet varje gång:
+FUNKAR!!! körs x antal ggr per sekund, x=?
+
+800e3b38	48212BD8 ;b 0x802f6710
+
+802f6710	80010014 ;lwz r0,20(r1)
+		94A1FFFC ;stwu r5, -0x4(sp)
+		94C1fffc ;stwu r6, -0x4(sp)
+		3CC08042 ;lis r6, 0x8042	!!!!!!!!!!
+		38C64FD0 ;addi r6,r6, 0x4fd0
+		38C64FD0 ;addi r6,r6, 0x4fd0
+		80A60000 ;lwz r5, 0(r6)
+		38A50001 ;addi r5,r5,1
+		90A60000 ;stw r5, 0(r6)
+		84c10000 ;lwzu r6, 0(sp)
+		84a10004 ;lwzu r5, 4(sp)
+		38210004 ;addi r1,r1,0x4
+		4BDED3FC ;b back
+
+
+<memory offset="0x800e3b38" value="48212bd8" />
+<memory offset="0x802f6710" value="8001001494A1FFFC94C1fffc3CC0804238C64FD038C64FD080A6000038A5000190A6000084c1000084a10004382100044BDED3FC" />
+
+
+skriv helt i asm:
+800e3b38	48212BD8 ;b 0x802f6710
+
+800e3ad4	48212c3c ;b 0x802f6710	;kan vara bättre att köra här
+
+
+802f6710:
+
+#lwz r0,20(r1)		#orig för 3b38
+lbz r0,10(r31)		#orig för 3ad4
+
+#save registers
+stwu r5, -0x4(sp)
+stwu r6, -0x4(sp)
+stwu r4, -0x4(sp)
+stwu r3, -0x4(sp)
+stwu r7, -0x4(sp)
+
+#set r7=0x80fyyzz0
+lis r5, 0x80d2
+addi r5,r5,0x5408	#r5 = 0x80d25408 = world_addr
+lwz r6, 0(r5) 		#r6 = world
+lis r5, 0x80d2
+addi r5,r5,0x50a8	#r5 = 0x80d250a8 = stage_addr
+lwz r4, 0(r5)		#r4 = stage
+li r3, 12		#shifta såhär mycket
+slw r6,r6,r3		#shifta r6 12 steg
+li r3, 4		#shifta 4
+slw r4,r4,r3		#shifta r4 4
+lis r7, 0x80f0
+or r7,r7,r6
+or r7,r7,r4		#r7 = 0x80fyyzz0
+
+#check if finished playing, 1 at address 803551e4 if yes, 0 if no
+lis r5, 0x8035
+ori r5,r5,0x51e4	#r5 = 0x803551e4
+lwz r6, 0(r5)		#r6 = värde i r5
+cmpwi r6,1		#r6 == 1?
+beq .stage_complete	#yepp, jump to stage_complete
+			#here r6 == 0
+
+#store timer++ in 0x80fyyzz0
+lwz r6, 0(r7)		#r6 = värde ur 0x80fyyzz0
+addi r6,r6,1		#timer++
+stw r6, 0(r7)		#store it back
+
+#make sure the record isn't zero
+lwz r3, 4(r7)		#r3 = värde i r7+4 = record
+cmpwi r3,0		#compare r3 to zero
+bne 0x14		#if not, jump
+li r3,0x3e7		#else, set record to 0x3e7=999
+#li r4,0x8		#shift 8
+#slw r3,r3,r4		#shift r3 8 steps, 0x3e7000
+nop
+nop
+stw r3,4(r7)		#record = 999
+
+
+#print record at regular timeslot, 80d25bf8
+#addi r5,r5,4		#r5 = 0x80fyyzz4, record slot
+lwz r3, 4(r7)		#r3 = record
+li r4, 0xc		#shift 12 steps
+slw r3,r3,r4		#shift r3 12 steps to the left
+lis r5,0x80d2
+ori r5,r5,0x5bf8	#r5 = time_addr
+stw r3, 0(r5)		#store record<<12 in time_addr
+
+#store timer into points_addr
+lis r5, 0x8042		#r5 = 0x80420000
+addi r5,r5,0x4fd0
+addi r5,r5,0x4fd0	#r5 = 0x80429fa0
+li r3,60		#load 60 into r3
+divwu r6,r6,r3		#timer = timer/60
+stw r6, 0(r5)		#store back, r6 holds timer value
+b .end			#jump past stage_complete
+
+.stage_complete:
+#here the stage is complete
+#check if it's a new record!
+lwz r4, 0(r7)		#r4 = värde i 0x80fyyz0
+lwz r5, 4(r7)		#r5 = värde i 0x80fyyz4 = record
+li r3,60		#60 into r3
+divwu r4,r4,r3		#timer = timer/60
+cmp r5,r5,r4		
+bt lt, .end		#r5 < r4 => no record, go to end	
+stw r4, 4(r7)		#record the record
+li r3,0			#store 0 to r3
+stw r3, 0(r7)		#reset timer for next run etc
+			
+lis r5,0x80d2
+ori r5,r5,0x5bf8	#r5 = time_addr
+stw r3, 0(r5)		#store 0 to regular timeslot so it won't get
+			#added to the points etc!
+
+			#also print out timer to points_addr!
+
+.end:
+lwzu r7, 0(sp)
+lwzu r3, 4(sp)
+lwzu r4, 4(sp)
+lwzu r6, 4(sp)
+lwzu r5, 4(sp)
+addi r1,r1,4
+b back
+
+881F000A 94A1FFFC
+94C1FFFC 9481FFFC
+9461FFFC 94E1FFFC
+3CA080D2 38A55408
+80C50000 3CA080D2
+38A550A8 80850000
+3860000C 7CC61830
+38600004 7C841830
+3CE080F0 7CE73378
+7CE72378 3CA08035
+60A551E4 80C50000
+2C060001 41820060
+80C70000 38C60001
+90C70000 80670004
+2C030000 40820014
+386003E7 60000000
+60000000 90670004
+80670004 3880000C
+7C632030 3CA080D2
+60A55BF8 90650000
+3CA08042 38A54FD0
+38A54FD0 3860003C
+7CC61B96 90C50000
+48000034 80870000
+80A70004 3860003C
+7C841B96 7E852000
+4180001C 90870004
+38600000 90670000
+3CA080D2 60A55BF8
+90650000 84E10000
+84610004 84810004
+84C10004 84A10004
+38210004
+
+4BDED2CC
+
+ta tiden/60 för att få i sekunder! multa sedan med 4096 (0x1000) innan det lagras i record!
+
+0x på offset!!!!!!!!!!!!!!!!
+<memory offset="0x800e3ad4" value="48212c3c" />
+<memory offset="0x802f6710" value="881F000A94A1FFFC94C1FFFC9481FFFC9461FFFC94E1FFFC3CA080D238A5540880C500003CA080D238A550A8808500003860000C7CC61830386000047C8418303CE080F07CE733787CE723783CA0803560A551E480C500002C0600014182006080C7000038C6000190C70000806700042C03000040820014386003E7600000006000000090670004806700043880000C7C6320303CA080D260A55BF8906500003CA0804238A54FD038A54FD03860003C7CC61B9690C50000480000348087000080A700043860003C7C841B967E8520004180001C9087000438600000906700003CA080D260A55BF89065000084E10000846100048481000484C1000484A10004382100044BDED2CC" />
