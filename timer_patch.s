@@ -20,6 +20,7 @@ stwu r6, -0x4(sp)
 stwu r4, -0x4(sp)
 stwu r3, -0x4(sp)
 stwu r7, -0x4(sp)
+stwu r8, -0x4(sp)
 
 #set r7=0x80fyyzz0
 lis r5, 0x80d2
@@ -81,15 +82,16 @@ divw r4,r4,r3		#r4 = timer*10/60
 
 li r3,60			#load 60 into r3
 divwu r6,r6,r3		#timer = timer/60
-li r3,100			#100 into r3
-mullw r6,r6,r3		#timer *= 100
-#li r3,10			#r3 = 10
-#mullw r5,r6,r3		#r5 = rounded timer value
-#subf r4,r4,r5		#r4 = remainder
-#add r6,r6,r4		#timer = xx0y
-stw r6, 0(r5)		#store back, r6 holds timer value, in the form xx0y
-li r3, 10
 
+#li r3,10			#r3 = 10
+#mullw r5,r6,r3		#r5 = rounded timer value	#DENNA FAILAR!! WHYYY??
+mulli r6,r6,10		#testa detta ist? timer *= 10
+sub r4,r4,r6		#r4 = remainder
+li r3,10			#10 into r3
+mullw r6,r6,r3		#timer *= 10
+add r6,r6,r4		#timer = xx0y
+stw r6, 0(r5)		#store back, r6 holds timer value, in the form xx0y
+lwz r8, 0(r5)		#store the timer value in r8 as well
 
 b .end				#jump past stage_complete
 
@@ -102,6 +104,11 @@ li r3,0				#r3 = 0
 stw r3, 0(r5)		#store 0 to regular timeslot so it won't get
 					#added to the points etc!
 					
+#load final time once again!
+lis r5, 0x8042
+ori r5,r5,0x9fa0	#r5 = 0x80429fa0
+stw r8, 0(r5)
+
 #check if it's a new record!
 lwz r4, 0(r7)		#r4 = värde i 0x80fyyz0
 lwz r5, 4(r7)		#r5 = värde i 0x80fyyz4 = record
@@ -110,15 +117,14 @@ cmp 0,1,r5,r4
 bt lt, .recordend	#r4 > r5 => no record, go to recordend
 stw r4, 4(r7)		#record the record
 
-
-
 .recordend:
 li r3,0				#store 0 to r3
 stw r3, 0(r7)		#reset timer for next run etc
 
 .end:
 
-lwzu r7, 0(sp)
+lwzu r8, 0(sp)
+lwzu r7, 4(sp)
 lwzu r3, 4(sp)
 lwzu r4, 4(sp)
 lwzu r6, 4(sp)
@@ -127,6 +133,5 @@ addi r1,r1,4
 #b back
 
 
-
 <memory offset="0x800e3ad4" value="48212c3c" />
-<memory offset="0x802f6710" value="881F000A94A1FFFC94C1FFFC9481FFFC9461FFFC94E1FFFC3CA080D238A5540880C500003CA080D238A550A8808500003860000C7CC61830386000047C8418303CE080F07CE733787CE723783CA0803560A551E480C500002C0600014182008080C7000038C6000190C70000806700042C030000408200103860751238637512906700048067000438A0003C7C632B963880000C7C6320303CA080D260A55BF8906500003CA0804238A54FD038A54FD03860000A7C8619D63860003C7C841BD63860003C7CC61B96386000647CC619D690C500003860000A480000303CA080D260A55BF838600000906500008087000080A700047C2520004180000890870004386000009067000084E10000846100048481000484C1000484A10004382100044BDED2B0" />
+<memory offset="0x802f6710" value="881F000A94A1FFFC94C1FFFC9481FFFC9461FFFC94E1FFFC9501FFFC3CA080D238A5540880C500003CA080D238A550A8808500003860000C7CC61830386000047C8418303CE080F07CE733787CE723783CA0803560A551E480C500002C0600014182008C80C7000038C6000190C70000806700042C030000408200103860751238637512906700048067000438A0003C7C632B963880000C7C6320303CA080D260A55BF8906500003CA0804238A54FD038A54FD03860000A7C8619D63860003C7C841BD63860003C7CC61B961CC6000A7C8620503860000A7CC619D67CC6221490C50000810500004800003C3CA080D260A55BF838600000906500003CA0804260A59FA0910500008087000080A700047C252000418000089087000438600000906700008501000084E10004846100048481000484C1000484A10004382100044BDED290" />
