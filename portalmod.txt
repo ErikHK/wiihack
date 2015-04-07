@@ -1,0 +1,143 @@
+
+MARIO modifierbara:
+8154b804	mario
+8154b910	hastighet i x
+8154b8f0	hastighet i y
+8154b8b4	läge i y-led
+8154b8b0	läge i x-led
+
+
+80095950	collision callback, gäller fiender, iaf goomba, verkar gälla fiender emellan också
+80095C20	player collision! körs när man krockar in i fiender, dock ej om man dödar dem, eller om man hoppar på taggiga
+80064d10	körs när fiender tas bort, t.ex. när man hoppat sönder en goomba
+80064350	beforeCreate stageactor, körs innan en ny actor skapas, r3 innehåller adress till början på dActor_c-klassen
+		kan användas till att göra en portalskjutare! körs när man kastar snö nämligen.
+
+
+80162C40	OBJECT CREATE!! bara fyll i r3 vilket slags objekt! körs när man kastar snöboll t.ex.
+
+objektnummer:
+33		goomba
+36		koopa
+191		ett trött mynt...
+
+
+81540320	koopa
+
+
+81540d48	goomba
+81540fbc	0x00002000 på marken, 0 i luften, 0x04000000 om fast i tile :o
+81540fc4	1 om på marken, 0 i luften
+81540fc8	0 i luften, 0x000d0000 på marken
+81540fd4	0 i luften
+81540fd8	0x10100000 om i luften, etc
+
+
+fast i tile där uppe:
+81540df4	44900000	x
+81540df8	c3ee5800	y
+
+slå i väggen där nere:
+81540df4	448f0000	x
+81540df8	c4190000	y
+
+
+
+8006C580	beforeDelete
+
+
+80064540	beforeDraw__13dStageActor_cFv, r3 = adressen på en random fiende som ritas ut
+
+
+80095D30	prePlayerCollision! körs när man ska hoppa på goomba t.ex., r3=adress till fiende (tror jag), körs även när man krockar!!!
+
+r3+8		sorts fiende i övre 16 bit! 33=goomba, 57=spike top etc
+r3+0x100	spike topsens rotation! i övre 16 bit! vill dock ändras..
+r3+0xe8		spikens hastighet i x-led
+r3+0xec		actorns hastighet i y-led
+r3+0x124	is_visible
+r3+0xf8		gravity?
+r3+0x290	något om att man står på fötter?
+r3+0x274	krockar med någon tile om != 0!!!
+		
+80162E40	Z13FindActorByIDj
+80162E90	findactorbytype
+
+
+togezo.arc	taggiga gubbar
+met_toge.arc	taggig gubbe! använd denna som portal tack! 57 som ID!
+kuribo.arc	goomba!
+nokonokoX.arc	koopa!
+
+
+
+
+
+övergripande plan:
+
+
+
+
+
+
+
+testa att skjuta is rakt fram!
+adress 80064350:
+b 0xb5bcb0	#hoppa till 80bc0000
+
+
+adress 80bc0000:
+#save registers
+stwu r1,-16(r1)		#kör det som stod innan:
+stwu r5, -0x4(sp)
+stwu r6, -0x4(sp)
+
+lis r6,0x80bd
+ori r6,r6,0		#r6 = 0x80bd0000
+lbz r5, 10(r3)		#r5 = typ av objekt, r3=adress osv
+cmpwi r5,0x68
+bne .notyey
+
+.yey:
+stw r3, 0(r6)		#spara adressen till skottet i 0x80bd0000
+
+.notyey:
+#load registers back:
+
+lwzu r6, 0(sp)
+lwzu r5, 4(sp)
+addi sp,sp,4
+b -0xb5bc80
+
+
+adress 800e3ad4:
+b 0x212c3c	#hoppa till 0x802f6710
+
+
+
+adress 802f6710:
+stwu r5, -0x4(sp)
+stwu r6, -0x4(sp)
+lis r6,0x80bd
+ori r6,r6,0
+lwz r5,0(r6)	r5=adress om det är en snöboll
+cmpwi r5,0x0
+bne .noo
+
+.yey: #r5=adress, nolla y-fältet
+li r5,0
+stw r5,0xec(r5)
+
+.noo: #var ingen adress, gör inget va?
+
+lwzu r6, 0(sp)
+lwzu r5, 4(sp)
+b #back
+
+
+
+
+
+
+
+

@@ -75,6 +75,7 @@ etc...
 
 
 8554cd48	fysisk storlek på mario, 3f800000 = 1, 40000000 = 2 etc
+8042BB54	samma, bättre
 
 8154cce4	storlek på mario, eldmario etc alltså! 0=liten, 1=stor, 2=eld, 4 = snurr, 6=is, 5=pingvin,3=mini 
 815dbb74-815dbb8c	antal powerups! allihopa!
@@ -91,6 +92,32 @@ kors READ vid aldrig
 8154b804?
 8154b804+0xec = 8154b8f0	hastighet i y, kan ändras!
 detta storeande sker i 80057150
+8154b918	hopphastighet uppåt?		114
+8154b8b4	läge i y-led, kan ändras!	b0
+8154b8b0	läge i x-led, kan ändras!	ac
+8154c8d0	-				10cc
+8154c858	också hopphastighet		1054
+
+8154b9f0
+
+8042bba0???	grav??
+800573f0?
+8043fd38?
+
+
+8043fc98
+8042e780
+
+
+80237d90	fsubs f1,f1,f0
+
+
+0x802f77ac
+0x802f77a4
+
+80237d80	viktig funktion? körs vid 80057570
+
+
 
 804055d8	innehåller adressen? 80405618 när man är i luften	
 80405604	4 i luften, 0 annars
@@ -245,7 +272,7 @@ class dEn_c		bra skit?
 
 81541414		gravitation för EN goomba, hmm
 
-
+8042bb28		hopp-hastighet för mario!
 
 
 ENKLARE POÄNGFIELDÄNDRARTEST, sätt till 0 hela tiden:
@@ -510,3 +537,10 @@ ta tiden/60 för att få i sekunder! multa sedan med 4096 (0x1000) innan det lagra
 0x på offset!!!!!!!!!!!!!!!!
 <memory offset="0x800e3ad4" value="48212c3c" />
 <memory offset="0x802f6710" value="881F000A94A1FFFC94C1FFFC9481FFFC9461FFFC94E1FFFC3CA080D238A5540880C500003CA080D238A550A8808500003860000C7CC61830386000047C8418303CE080F07CE733787CE723783CA0803560A551E480C500002C0600014182006480C7000038C6000190C70000806700042C030000408200103860751238637512906700048067000438A0003C7C632B963880000C7C6320303CA080D260A55BF8906500003CA0804238A54FD038A54FD03860003C7CC61B9690C500004800002C8087000080A700047C25200041800014908700043CA080D260A55BF890650000386000009067000084E10000846100048481000484C1000484A10004382100044BDED2D0" />
+
+
+NÄR DET EJ VAR ETT REKORD:
+SÄTT 803551f8 till FFFFFFFF när 803551e4 är satt till 1,
+sätt sedan 803551e4 till 2 så tar banan slut!
+
+GÖR EN PORTAL-MOD!!!!
