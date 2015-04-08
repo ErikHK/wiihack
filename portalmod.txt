@@ -103,6 +103,9 @@ i preplayercoll, kolla om r3=portal 1 eller 2, om 1, sätt hastigheter och positi
 från portal 2, och vice versa. sätt skapad portal till 0, så en ny kan skapas.
 
 
+
+SPARA adress till PORTAL1 I 802f6800, PORTAL2 I 802f6804!
+
 kasta mynt istället för is, flytta efter skapande
 FUNKAR!!! ANVÄND ALDRIG 80bc0000!!!!
 
@@ -126,6 +129,9 @@ stwu r1,-16(r1)		#kör det som stod i 80064350
 stwu r5, -0x4(sp)	#spara r5
 stwu r6, -0x4(sp)	#spara r6
 lwz r5, 8(r3)		#r5 = typ av fiende
+lis r6,0x802f
+ori r6,r6,0x6800	#r6 = 0x802f6800
+stw r3,0(r6)		#spara ner adressen till portalen i 802f6800
 xoris r5,r5,0x0033
 cmpwi r5, 0x0		#om r5 = goomba
 bne .exit
@@ -148,31 +154,71 @@ stw r5,0xB0(r3)
 lwzu r6, 0(sp)
 lwzu r5, 4(sp)
 addi sp,sp,4
-b -0x292400-18*4+4
+b -0x292400-21*4+4
 
 #d_x: .float 100.0
 #d_y: .float 100.0
 #.set d_x,0x42c80000;
 #.set d_y,0x42c80000;
-.set d_x,0x00030000;
-.set d_y,0x00010000;
+.set d_x,0x000f0000;
+.set d_y,0x00030000;
 
 
 i 800e3ad4: (ställe som körs ofta, uppdaterar tid egentligen va?)
-b (0x802f6850-0x800e3ad4)
+b (0x802f67B0-0x800e3ad4)
 
 
-i 802f6850:
+i 802f67B0:
 lbz r0,10(r31)		#original-värde
+stwu r5, -0x4(sp)	#spara r5
+stwu r6, -0x4(sp)	#spara r6
+lis r6,0x802f
+ori r6,r6,0x6800	#r6=0x802f6800, adress till portal1!
+lwz r6, 0(r6)		#r6 = värdet i adressen
+lwz r5, 8(r6)		#r5 = typ av fiende
+xoris r5,r5,0x0033
+cmpwi r5, 0x0		#om r5 = goomba
+bne .exit		#no? go to exit
+			#else continue
 
 
+#denna som ej funkar??? JA VAFAN?!
+.checkifcanmove:
+lwz r5, 0x274(r6)	#r5 = 0 om vi kan röra på den
+cmpwi r5, 0
+bne .freeze
 
-b -(0x802f6850-0x800e3ad4)-n*4+4 	#n = antalet instr förutom denna
+#testa att sätta x-hast istället!
+.move:
+#li r5,0
+lis r5, 0x4080		
+stw r5,0xe8(r6)		#hastx = 4.0
+stw r5,0xec(r6)		#hasty = 4.0
+b .exit
+
+.freeze:		#disable gravity and speed
+li r5, 0
+stw r5, 0xf8(r6)	#gravity = 0
+stw r5, 0xe8(r6)	#hastx = 0
+stw r5, 0xec(r6)	#hasty = 0
+
+
+.exit:
+lwzu r6, 0(sp)
+lwzu r5, 4(sp)
+addi sp,sp,4
+
+b -(0x802f67B0-0x800e3ad4)-24*4+4 	#n = antalet instr förutom denna
+
 
 <memory offset="0x80162c40" value="48193AD0" />
 <memory offset="0x80064350" value="48292400" />
+<memory offset="0x800e3ad4" value="48212CDC" />
 <memory offset="0x802f6710" value="2C03006840820008386000332C0400004BE6C524" />
-<memory offset="0x802f6750" value="9421FFF094A1FFFC94C1FFFC80A300086CA500332C0500004082002480A300AC600000003CA5000E90A300AC80A300B0600000003CA5000590A300B084C1000084A10004382100044BD6DBBC" />
+<memory offset="0x802f6750" value="9421FFF094A1FFFC94C1FFFC80A300083CC0802F60C66800906600006CA500332C0500004082002480A300AC600000003CA5000390A300AC80A300B0600000003CA5000190A300B084C1000084A10004382100044BD6DBB0" />
+<memory offset="0x802f67B0" value="881F000A94A1FFFC94C1FFFC3CC0802F60C6680080C6000080A600086CA500332C0500004082003080A602742C050000408200143CA0408090A600E890A600EC4800001438A0000090A600F890A600E890A600EC84C1000084A10004382100044BDED2C8" />
+
+
 
 
 
