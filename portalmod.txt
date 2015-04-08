@@ -88,11 +88,15 @@ i preplayercoll, kolla om r3=portal 1 eller 2, om 1, sätt hastigheter och positi
 från portal 2, och vice versa. sätt skapad portal till 0, så en ny kan skapas.
 
 
-kasta mynt istället för is
-testa med annan adress som jag VET fungerar!
+kasta mynt istället för is, flytta efter skapande
 FUNKAR!!! ANVÄND ALDRIG 80bc0000!!!!
-i adress 80162C40:
+
+i adress 80162C40 (object create):
 b 0x193ad0	#hoppa till 802f6710
+
+i adress 80064350 (beforecreate):
+b 0x292400
+
 
 i 802f6710:
 cmpwi r3, 0x68		#checka om isboll
@@ -102,9 +106,40 @@ li r3, 0x191		#ändra till mynt
 cmpwi r4,0		#kör det som står i 80162c40!
 b -0x193ad0-4*4+4
 
+i 802f6750:
+stwu r1,-16(r1)		#kör det som stod i 80064350
+stwu r5, -0x4(sp)	#spara r5
+stwu r6, -0x4(sp)	#spara r6
+lwz r5, 10(r3)		#r5 = typ av fiende
+cmpwi r5, 0x191		#om r5 = mynt
+bne .exit
+
+.move_coin:
+lfs f5, 0xB0(r3)	#f5 = läge i x-led
+addi f5,f5,d_x@h
+addi f5,f5,d_x@l
+stfs f5,0xB0(r3)
+lfs f5, 0xB4(r3)	#f5 = läge i y-led
+addi f5,f5,d_y@h
+addi f5,f5,d_y@l
+stfs f5,0xB0(r3)
+
+
+
+.exit:
+lwzu r6, 0(sp)
+lwzu r5, 4(sp)
+addi sp,sp,4
+b -0x292400-17*4+4
+
+d_x: .float 20.0
+d_y: .float 40.0
+
 
 <memory offset="0x80162c40" value="48193AD0" />
+<memory offset="0x80064350" value="48292400" />
 <memory offset="0x802f6710" value="2C03006840820008386001912C0400004BE6C524" />
+<memory offset="0x802f6750" value="9421FFF094A1FFFC94C1FFFC80A3000A2C05019140820024C0A300B038A5800038A50048D0A300B0C0A300B438A5800038A5004CD0A300B084C1000084A10004382100044BD6DBC041A0000042200000" />
 
 
 
