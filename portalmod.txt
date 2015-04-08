@@ -74,9 +74,37 @@ nokonokoX.arc	koopa!
 
 
 övergripande plan:
+i objectcreate, kolla om r3=isboll och ingen tidigare portal är skapad,
+ om det är en isboll, ändra till någon fiende som ska agera portal (flygmössa?! :D)
+
+i beforecreate, kolla r3+nåt om det är fienden jag skapat, om det är det,
+spara ner adressen till den, och spara ner att första portalen är skapad
+sätt gravitation och x/y-speed till 0, flytta en bit ifrån mario så han ej skadas
+
+i något ställe som körs ofta, öka x-speed (så småningom x+y med cos och sin)
+medan adress till portalen+0x274 (lower 16 bit) inte är lika med 0.
+
+i preplayercoll, kolla om r3=portal 1 eller 2, om 1, sätt hastigheter och positioner
+från portal 2, och vice versa. sätt skapad portal till 0, så en ny kan skapas.
 
 
+kasta mynt istället för is
+testa med annan adress som jag VET fungerar!
+FUNKAR!!! ANVÄND ALDRIG 80bc0000!!!!
+i adress 80162C40:
+b 0x193ad0	#hoppa till 802f6710
 
+i 802f6710:
+cmpwi r3, 0x68		#checka om isboll
+bne .quit
+li r3, 0x191		#ändra till mynt
+.quit:
+cmpwi r4,0		#kör det som står i 80162c40!
+b -0x193ad0-4*4+4
+
+
+<memory offset="0x80162c40" value="48193AD0" />
+<memory offset="0x802f6710" value="2C03006840820008386001912C0400004BE6C524" />
 
 
 
