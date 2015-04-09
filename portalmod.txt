@@ -5,6 +5,7 @@ MARIO modifierbara:
 8154b8f0	hastighet i y
 8154b8b4	läge i y-led
 8154b8b0	läge i x-led
+8154b904	vänster = 0000d000, höger = 00003000
 
 
 80095950	collision callback, gäller fiender, iaf goomba, verkar gälla fiender emellan också
@@ -119,7 +120,7 @@ b 0x292400		#hoppa till 802f6750
 i 802f6710:
 cmpwi r3, 0x68		#checka om isboll
 bne .quit
-li r3, 0x33		#ändra till goomba
+li r3, 0x85		#ändra till bob-omb
 .quit:
 cmpwi r4,0		#kör det som står i 80162c40!
 b -0x193ad0-4*4+4
@@ -130,9 +131,9 @@ stwu r5, -0x4(sp)	#spara r5
 stwu r6, -0x4(sp)	#spara r6
 lwz r5, 8(r3)		#r5 = typ av fiende
 lis r6,0x802f
-ori r6,r6,0x6800	#r6 = 0x802f6800
-stw r3,0(r6)		#spara ner adressen till portalen i 802f6800
-xoris r5,r5,0x0033
+ori r6,r6,0x6900	#r6 = 0x802f6900
+stw r3,0(r6)		#spara ner adressen till portalen i 802f6900
+xoris r5,r5,0x0085	
 cmpwi r5, 0x0		#om r5 = goomba
 bne .exit
 
@@ -160,8 +161,8 @@ b -0x292400-21*4+4
 #d_y: .float 100.0
 #.set d_x,0x42c80000;
 #.set d_y,0x42c80000;
-.set d_x,0x000f0000;
-.set d_y,0x00030000;
+.set d_x,0x00000000;
+.set d_y,0x00000000;
 
 
 i 800e3ad4: (ställe som körs ofta, uppdaterar tid egentligen va?)
@@ -173,10 +174,11 @@ lbz r0,10(r31)		#original-värde
 stwu r5, -0x4(sp)	#spara r5
 stwu r6, -0x4(sp)	#spara r6
 lis r6,0x802f
-ori r6,r6,0x6800	#r6=0x802f6800, adress till portal1!
+ori r6,r6,0x6900	#r6=0x802f6900, adress till portal1!
 lwz r6, 0(r6)		#r6 = värdet i adressen
 lwz r5, 8(r6)		#r5 = typ av fiende
-xoris r5,r5,0x0033
+xoris r5,r5,0x0085
+andis. r5,r5,0xffff
 cmpwi r5, 0x0		#om r5 = goomba
 bne .exit		#no? go to exit
 			#else continue
@@ -186,37 +188,50 @@ bne .exit		#no? go to exit
 .checkifcanmove:
 lwz r5, 0x274(r6)	#r5 = 0 om vi kan röra på den
 cmpwi r5, 0
-bne .freeze
-
-#testa att sätta x-hast istället!
-.move:
-#li r5,0
-lis r5, 0x4080		
-stw r5,0xe8(r6)		#hastx = 4.0
-stw r5,0xec(r6)		#hasty = 4.0
-b .exit
+beq .check_mario_direction
 
 .freeze:		#disable gravity and speed
 li r5, 0
 stw r5, 0xf8(r6)	#gravity = 0
 stw r5, 0xe8(r6)	#hastx = 0
 stw r5, 0xec(r6)	#hasty = 0
+b .exit
 
+
+.check_mario_direction:
+lis r5,0x8154
+ori r5,r5,0xb904	#r5 = 0x8154b904
+lwz r5, 0(r5)		#r5 = 0000d000 eller 00003000
+cmpwi r5,0x3000		
+beq .move_right
+
+#testa att sätta x-hast istället!
+.move_left:
+#li r5,0
+lis r5, 0xc080		
+stw r5,0xe8(r6)		#hastx = -4.0
+b .exit
+
+.move_right:
+lis r5, 0x4080		
+stw r5,0xe8(r6)		#hastx = 4.0
 
 .exit:
 lwzu r6, 0(sp)
 lwzu r5, 4(sp)
 addi sp,sp,4
 
-b -(0x802f67B0-0x800e3ad4)-24*4+4 	#n = antalet instr förutom denna
+b -(0x802f67B0-0x800e3ad4)-32*4+4 	#n = antalet instr förutom denna
 
 
 <memory offset="0x80162c40" value="48193AD0" />
 <memory offset="0x80064350" value="48292400" />
 <memory offset="0x800e3ad4" value="48212CDC" />
-<memory offset="0x802f6710" value="2C03006840820008386000332C0400004BE6C524" />
-<memory offset="0x802f6750" value="9421FFF094A1FFFC94C1FFFC80A300083CC0802F60C66800906600006CA500332C0500004082002480A300AC600000003CA5000390A300AC80A300B0600000003CA5000190A300B084C1000084A10004382100044BD6DBB0" />
-<memory offset="0x802f67B0" value="881F000A94A1FFFC94C1FFFC3CC0802F60C6680080C6000080A600086CA500332C0500004082003080A602742C050000408200143CA0408090A600E890A600EC4800001438A0000090A600F890A600E890A600EC84C1000084A10004382100044BDED2C8" />
+<memory offset="0x802f6710" value="2C03006840820008386000852C0400004BE6C524" />
+<memory offset="0x802f6750" value="9421FFF094A1FFFC94C1FFFC80A300083CC0802F60C66900906600006CA500852C0500004082002480A300AC600000003CA5000090A300AC80A300B0600000003CA5000090A300B084C1000084A10004382100044BD6DBB0" />
+<memory offset="0x802f67B0" value="881F000A94A1FFFC94C1FFFC3CC0802F60C6690080C6000080A600086CA5008574A5FFFF2C0500004082004C80A602742C0500004182001838A0000090A600F890A600E890A600EC4800002C3CA0815460A5B90480A500002C053000418200103CA0C08090A600E84800000C3CA0408090A600E884C1000084A10004382100044BDED2A8" />
+
+
 
 
 
