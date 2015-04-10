@@ -147,14 +147,33 @@ cmpwi r5,2
 beq .save_first_portal
 
 .save_second_portal:
+lwz r5,4(r6)
+cmpwi r5,0		#har det lagts någon innan?
+beq .load_2
+
+#else, kill the previous one, mohaha
+li r5,0
+#lwz r7,4(r6)
+stw r5, 0x5ec(r6)
+
+.load_2:
 li r5,2
 stw r3,4(r6)		#spara ner adressen till portalen i 802f6904
 b .save_portal
 
 .save_first_portal:
+lwz r5,0(r6)
+cmpwi r5,0		#har det lagts någon innan?
+beq .load_1
+
+#else, kill the previous one, mohaha
+li r5,0
+#lwz r7,0(r6)
+stw r5, 0x5ec(r6)
+
+.load_1:
 li r5,1
 stw r3,0(r6)		#spara ner adressen till portalen i 802f6900
-
 
 .save_portal:
 stw r5,8(r6)		#802f6908 = #portal
@@ -169,18 +188,23 @@ beq .save_right
 .save_left:
 li r5,0
 stw r5,0xf0(r3)
+lis r5, 0xc080
+stw r5, 0xe8(r3)
 b .exit
 
 .save_right:
 li r5,1
 stw r5,0xf0(r3)
+lis r5, 0x4080
+stw r5, 0xe8(r3)
+
 
 .exit:
 lwzu r6, 0(sp)
 lwzu r5, 4(sp)
 addi sp,sp,4
 
-b -(0x802f6740-0x80064350)-28*4+4
+b -(0x802f6740-0x80064350)-49*4+4
 
 
 #d_x: .float 100.0
@@ -192,66 +216,80 @@ b -(0x802f6740-0x80064350)-28*4+4
 
 
 i 800e3ad4: (ställe som körs ofta, uppdaterar tid egentligen va?)
-b (0x802f67D0-0x800e3ad4)
+b (0x803f0000-0x800e3ad4)
 
 
-i 802f67D0:
+#r7 ska hela tiden vara adressen till osv!
+
+i 803f0000:
 lbz r0,10(r31)		#original-värde
 stwu r5, -0x4(sp)	#spara r5
 stwu r6, -0x4(sp)	#spara r6
+stwu r7, -0x4(sp)	#spara r6
+
 lis r6,0x802f
 ori r6,r6,0x6900	#r6=0x802f6900, adress till portal1!
-lwz r6, 0(r6)		#r6 = värdet i adressen
-lwz r5, 8(r6)		#r5 = typ av fiende
+lwz r7, 8(r6)		#vilken portal lade vi ut förra?
+cmpwi r7, 2		#var det två?
+beq .place_first_portal
+
+.place_second_portal:
+lwz r7, 0(r6)		#r7 = värdet i adressen
+b .cont
+
+.place_first_portal:
+lwz r7, 4(r6)		#r7 = värdet i adressen
+
+.cont:
+lwz r5, 8(r7)		#r5 = typ av fiende
 xoris r5,r5,0x0085
 andis. r5,r5,0xffff
-cmpwi r5, 0x0		#om r5 = goomba
-bne .exit		#no? go to exit
+cmpwi r5, 0x0		#om r5 = bobomb
+bne .exit		#yes, go to check if we can move
 			#else continue
-
 
 #denna som ej funkar??? JA VAFAN?!
 .checkifcanmove:
-lwz r5, 0x274(r6)	#r5 = 0 om vi kan röra på den
+lwz r5, 0x274(r7)	#r5 = 0 om vi kan röra på den
 cmpwi r5, 0
 beq .check_mario_direction
 
 .freeze:		#disable gravity and speed
 li r5, 0
-stw r5, 0xf8(r6)	#gravity = 0
-stw r5, 0xe8(r6)	#hastx = 0
-stw r5, 0xec(r6)	#hasty = 0
+stw r5, 0xf8(r7)	#gravity = 0
+stw r5, 0xe8(r7)	#hastx = 0
+stw r5, 0xec(r7)	#hasty = 0
 b .exit
 
 .check_mario_direction:
-lwz r5,0xf0(r6)
+lwz r5,0xf0(r7)
 cmpwi r5,1		
 beq .move_right
 
 #testa att sätta x-hast istället!
 .move_left:
 lis r5, 0xc080		
-stw r5,0xe8(r6)		#hastx = -4.0
+stw r5,0xe8(r7)		#hastx = -4.0
 b .exit
 
 .move_right:
 lis r5, 0x4080		
-stw r5,0xe8(r6)		#hastx = 4.0
+stw r5,0xe8(r7)		#hastx = 4.0
 
 .exit:
-lwzu r6, 0(sp)
+lwzu r7, 0(sp)
+lwzu r6, 4(sp)
 lwzu r5, 4(sp)
 addi sp,sp,4
-
-b -(0x802f67D0-0x800e3ad4)-30*4+4 	#n = antalet instr förutom denna
+b -(0x803f0000-0x800e3ad4)-36*4+4 	#n = antalet instr förutom denna
 
 
 <memory offset="0x80162c40" value="48193AD0" />
 <memory offset="0x80064350" value="482923F0" />
-<memory offset="0x800e3ad4" value="48212CFC" />
+<memory offset="0x800e3ad4" value="4830C52C" />
 <memory offset="0x802f6710" value="2C03006840820008386000852C0400004BE6C524" />
-<memory offset="0x802f6740" value="9421FFF094A1FFFC94C1FFFC80A300083CC0802F60C669006CA500852C0500004082005080A600082C0500024182001038A00002906600044800000C38A000019066000090A600083CA0815460A5B90480A500002C0530004182001038A0000090A300F04800000C38A0000190A300F084C1000084A10004382100044BD6DB98" />
-<memory offset="0x802f67D0" value="881F000A94A1FFFC94C1FFFC3CC0802F60C6690080C6000080A600086CA5008574A5FFFF2C0500004082004480A602742C0500004182001838A0000090A600F890A600E890A600EC4800002480A600F02C050001418200103CA0C08090A600E84800000C3CA0408090A600E884C1000084A10004382100044BDED290" />
+<memory offset="0x802f6740" value="9421FFF094A1FFFC94C1FFFC80A300083CC0802F60C669006CA500852C0500004082008880A600082C0500024182002480A600042C0500004182000C38A0000090A605EC38A00002906600044800002080A600002C0500004182000C38A0000090A605EC38A000019066000090A600083CA0815460A5B90480A500002C0530004182001838A0000090A300F03CA0C08090A300E84800001438A0000190A300F03CA0408090A300E884C1000084A10004382100044BD6DB60" />
+<memory offset="0x803f0000" value="881F000A94A1FFFC94C1FFFC94E1FFFC3CC0802F60C6690080E600082C0700024182000C80E600004800000880E6000480A700086CA5008574A5FFFF2C0500004082004480A702742C0500004182001838A0000090A700F890A700E890A700EC4800002480A700F02C050001418200103CA0C08090A700E84800000C3CA0408090A700E884E1000084C1000484A10004382100044BCF3A48" />
 
 
 
