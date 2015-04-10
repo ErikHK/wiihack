@@ -7,6 +7,8 @@ MARIO modifierbara:
 8154b8b0	läge i x-led
 8154b904	vänster = 0000d000, höger = 00003000
 
++0x38c		så man ej kan interagera etc!
+
 
 80095950	collision callback, gäller fiender, iaf goomba, verkar gälla fiender emellan också
 80095C20	player collision! körs när man krockar in i fiender, dock ej om man dödar dem, eller om man hoppar på taggiga
@@ -293,13 +295,16 @@ i 80095D30: (preplayercollision, här ska vi teleporteras! wooh!)
 b (0x802f8cf0-0x80095d30)
 
 
-#r28 = adress till mario eller vem det nu var som krockade
+#r28 = adress till mario eller vem det nu var som krockade(?)
 
 i 802f8cf0:
 stwu r1,-32(r1)		#ORIG I 80095d30!
 stwu r5, -0x4(sp)	#spara r5
 stwu r6, -0x4(sp)	#spara r6
 stwu r7, -0x4(sp)	#spara r6
+#li r5,0
+#stw r5,0x38c(r28)	#gör mario odödlig
+
 lis r5,0x802f
 ori r5,r5,0x6900	#r5 = 0x802f6900
 
@@ -329,7 +334,10 @@ stw r5, 0xac(r28)	#move mario to that x-pos
 lwz r5, 0xb0(r6)	#r5 = pos i x-led
 stw r5, 0xb0(r28)	#move mario to that x-pos
 
+
 .exit:
+#lis r5,0x0100
+#stw r5,0x38c(r28)	#gör mario dödlig igen :(
 lwzu r7, 0(sp)
 lwzu r6, 4(sp)
 lwzu r5, 4(sp)
@@ -348,6 +356,6 @@ b -(0x802f8cf0-0x80095d30)-26*4+4 	#n = antalet instr förutom denna
 <memory offset="0x802f8df0" value="881F000A94A1FFFC94C1FFFC94E1FFFC3CC0802F60C6690080E600082C0700024182000C80E600004800000880E600042C0700004182005880A700086CA5008574A5FFFF2C0500004082004480A702742C0500004182001838A0000090A700F890A700E890A700EC4800002480A700F02C050001418200103CA0C08090A700E84800000C3CA0408090A700E884E1000084C1000484A10004382100044BDEAC4C" />
 <memory offset="0x802f8cf0" value="9421FFE094A1FFFC94C1FFFC94E1FFFC3CA0802F60A5690080C500007CE330502C0700004182001C80C500047CE330502C0700004082002480C500004800000880C5000480A600AC3CA5000490BC00AC80A600B090BC00B084E1000084C1000484A10004382100044BD9CFDC" />
 
-
-
+#no die?
+<memory offset="0x80095D60" value="480001c4" />
 
