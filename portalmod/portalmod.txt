@@ -322,27 +322,37 @@ bne .exit		#ingen var portal, gå till exit
 
 .teleport_to_1:
 lwz r6,0(r5)
-b .teleport
+b .teleport_and_move_normalized
 
 .teleport_to_2:
 lwz r6,4(r5)
 
-.teleport:
-lfs f5, 0xac(r6)	#f5 = pos i x-led hos portalen
-lfs f7, 0xe8(r28)	#f7 = hastighet i x-led
-lis r8,0x4120		#r8 = 10.0
+.teleport_and_move_normalized:
+###normalize!!!###
+lfs f5, 0xe8(r28)	#x-speed
+lfs f6, 0xec(r28)	#y-speed
+fmuls f7,f5,f5		#f7 = x^2
+fmuls f8,f6,f6		#f8 = y^2
+fadds f7,f7,f8		#f7 = x^2+y^2
+frsqrte f7,f7		#f7 = 1/sqrt(x^2+y^2)
+fmuls f5,f5,f7		#f5 = x-speed/sqrt(x^2+y^2)
+fmuls f6,f6,f7		#f6 = y-speed/sqrt(x^2+y^2)
+
+lfs f7, 0xac(r6)	#f7 = pos i x-led hos portalen
+#f5 = hast i x
+lis r8,0x41a0		#r8 = 20.0
 stw r8, 0xc(r5)
 lfs f8, 0xc(r5)
-fmul f7,f7,r8
-fadds f5,f5,f7		#pos = pos+x_speed
-stfs f5, 0xac(r28)	#move mario to that x-pos
+fmuls f5,f5,r8		
+fadds f7,f7,f5		#pos = pos+x_speed
+stfs f7, 0xac(r28)	#move mario to that x-pos
 
-lfs f5, 0xb0(r6)	#f5 = pos i y-led
-lfs f7, 0xec(r28)	#f7 = hastighet i y-led
+lfs f7, 0xb0(r6)	#f7 = pos i y-led hos portalen
+#f6 = hast i y
 lfs f8,0xc(r5)
-#fmul f7,f7,f8
-fadds f5,f5,f7		#pos = pos+x_speed
-stfs r5, 0xb0(r28)	#move mario to that y-pos
+fmuls f6,f6,f8
+fadds f7,f7,f6		#pos = pos+x_speed
+stfs r7, 0xb0(r28)	#move mario to that y-pos
 
 .exit:
 lwzu r8, 0(sp)
@@ -350,7 +360,30 @@ lwzu r7, 4(sp)
 lwzu r6, 4(sp)
 lwzu r5, 4(sp)
 addi sp,sp,4
-b -(0x802f8cf0-0x80095d30)-26*4+4 	#n = antalet instr förutom denna
+b -(0x802f8cf0-0x80095d30)-43*4+4 	#n = antalet instr förutom denna
+
+
+#TEST MED WIIMOTE-TILT!
+i 0x802f8df0:
+lbz r0,10(r31)		#original-värde
+stwu r5, -0x4(sp)	#spara r5
+stwu r6, -0x4(sp)	#spara r6
+stwu r7, -0x4(sp)	#spara r6
+
+lis r5,0x8076
+ori r5,r5,0x0630	#r5 = addr to wiimote tilt
+lis r6,0x8154
+ori r6,r6,0xb910	#r6 = addr to marios hastighet
+lfs f7,0(r5)		#r7=wiimote tilt
+stfs f7,0(r6)		#marios hastighet = wiimotens hastighet
+
+.exit:
+lwzu r7, 0(sp)
+lwzu r6, 4(sp)
+lwzu r5, 4(sp)
+addi sp,sp,4
+b -(0x802f8df0-0x800e3ad4)-14*4+4 	#n = antalet instr förutom denna
+
 
 
 
@@ -360,9 +393,7 @@ b -(0x802f8cf0-0x80095d30)-26*4+4 	#n = antalet instr förutom denna
 <memory offset="0x80095d30" value="48262FC0" />
 <memory offset="0x802f6710" value="2C03006840820008386000852C0400004BE6C524" />
 <memory offset="0x802f6740" value="9421FFF094A1FFFC94C1FFFC94E1FFFC80A300083CC0802F60C669006CA500852C0500004082006880A600082C0500024182001480A6000438A00002906600044800001080A6000038A000019066000090A600083CA0815460A5B90480A500002C0530004182001838A0000090A300F03CA0C08090A300E84800001438A0000190A300F03CA0408090A300E884E1000084C1000484A10004382100044BD6DB78" />
-<memory offset="0x802f8df0" value="881F000A94A1FFFC94C1FFFC94E1FFFC3CC0802F60C6690080E600082C0700024182000C80E600004800000880E600042C0700004182005880A700086CA5008574A5FFFF2C0500004082004480A702742C0500004182001838A0000090A700F890A700E890A700EC4800002480A700F02C050001418200103CA0C08090A700E84800000C3CA0408090A700E884E1000084C1000484A10004382100044BDEAC4C" />
-<memory offset="0x802f8cf0" value="9421FFE094A1FFFC94C1FFFC94E1FFFC9501FFFC3CA0802F60A5690080C500007CE330502C0700004182001C80C500047CE330502C0700004082004480C500004800000880C50004C0A600ACC0FC00E83D0041209105000CC105000CFCE70232ECA5382AD0BC00ACC0A600B0C0FC00ECC105000CECA5382AD0BC00B08501000084E1000484C1000484A10004382100044BD9CFB4" />
-
-#no die?
+<memory offset="0x802f8df0" value="881F000A94A1FFFC94C1FFFC94E1FFFC3CA0807660A506303CC0815460C6B804C0E50000D0E600E884E1000084C1000484A10004382100044BDEACB0" />
+<memory offset="0x802f8cf0" value="9421FFE094A1FFFC94C1FFFC94E1FFFC9501FFFC3CA0802F60A5690080C500007CE330502C0700004182001C80C500047CE330502C0700004082006080C500004800000880C50004C0BC00E8C0DC00ECECE50172ED0601B2ECE7402AFCE03834ECA501F2ECC601F2C0E600AC3D0042489105000CC105000CECA50232ECE7282AD0FC00ACC0E600B0C105000CECC60232ECE7302AD0FC00B08501000084E1000484C1000484A10004382100044BD9CF98" />
 <memory offset="0x80095D60" value="480001E4" />
 
