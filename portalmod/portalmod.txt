@@ -90,6 +90,7 @@ togezo.arc	taggiga gubbar
 met_toge.arc	taggig gubbe! använd denna som portal tack! 57 som ID!
 kuribo.arc	goomba!
 nokonokoX.arc	koopa!
+bombhei.arc	bob-omb
 
 
 
@@ -426,6 +427,21 @@ lwzu r5, 4(sp)
 addi sp,sp,4
 b -(0x802f8cf0-0x80095d30)-43*4+4 	#n = antalet instr förutom denna
 
+
+TODO:
+måste trycka på A/B för att lägga portalerna!
+fixa x/0-felet
+fixa sikte, kanske goombas som ligger i en linje?? typ göra dom svarta också
+fixa orientation på portalerna
+fixa så att hastigheterna blir speglade när portalerna har samma orientation
+fixa så att hastigheterna även får en min-gräns
+portalerna ska inte kunna skjutas överallt
+(lär mig blr, bl etc)
+fixa speglad cos kring origo
+flytta ut skottet en bit när det skjutits, alt. inaktivera portalen en kort stund
+grafik!
+banor!
+något slags spegel som portalskottet studsar på?
 
 <memory offset="0x80162c40" value="48193AD0" />
 <memory offset="0x80064350" value="482923F0" />
