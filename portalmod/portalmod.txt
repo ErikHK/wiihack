@@ -532,6 +532,9 @@ lwz r6,4(r5)
 ###normalize!!!###
 lfs f5, 0xe8(r28)	#xspeed
 lfs f6, 0xec(r28)	#yspeed
+
+#set min speed etc
+
 fmuls f7,f5,f5		#f7 = x^2
 fmuls f8,f6,f6		#f8 = y^2
 fadds f7,f7,f8		#f7 = x^2+y^2
@@ -686,13 +689,14 @@ X	!!!!!!!fixa x/0-felet!!!!!!!
 	bobomb får inte interagera med andra fiender!
 	måste trycka på A/B för att lägga portalerna!
 /	fixa sikte, kanske goombas som ligger i en linje?? typ göra dom svarta också
+	fixa så att siktet utgår ifrån där skottet kommer ifrån, alt. flytta skottets utgångspunkt
 /	_fixa orientation på portalerna_
 /	fixa så att hastigheterna blir speglade när portalerna har samma orientation
 	fixa så att hastigheterna även får en min-gräns
 	portalerna ska inte kunna skjutas överallt
 /	(lär mig blr, bl etc)
 X	fixa speglad cos kring origo
-/	flytta ut skottet en bit när det skjutits, alt. inaktivera portalen en kort stund
+	flytta ut skottet en bit när det skjutits, alt. _inaktivera portalen en kort stund_
 	grafik!
 	banor!
 	companion cube?
@@ -703,6 +707,7 @@ adresser:
 802f6904	portal 2
 802f6908	aktiv portal
 802f6914	mellanlagra saker till lfs etc
+802f6918	mellanlagra saker till lfs etc
 802f6930	mini-goomba	
 802f6934	mini-goomba
 802f6938	mini-goomba
@@ -718,9 +723,7 @@ adresser:
 
 
 bobomb:
-+0xc4		orientation, 1 höger, 2 upp, 3 vänster, 4 ner
-0xc8 istället..
-NEJ 0x300 istället..
++0x300		orientation, 1 höger, 2 upp, 3 vänster, 4 ner
 
 <memory offset="0x80162c40" value="48193AD0" />
 <memory offset="0x80064350" value="482923F0" />
