@@ -876,7 +876,7 @@ b -(0x802f9100-0x8009597c)-13*4+4 	#n = antalet instr förutom denna
 815e732c
 815e731c
 
-
+80d25d5c	nåt med kamera, kolla var den ändras!
 
 
 
