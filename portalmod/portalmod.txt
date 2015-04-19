@@ -904,38 +904,43 @@ bobomb:
 +0x300		orientation, 1 höger, 2 upp, 3 vänster, 4 ner
 
 
-gör bobombarna odödliga!
-r28 är en av de som krockat, r31 är den andra
-i 8009597c:
-b (802f9100-0x8009597c)
 
-i 802f9100:
-lbz r0, 0x432(r31)	#orig-värde
+hoppa till 80095bd4 om det är en bobomb etc (skip collision)
+r28 är en av de som krockat, r31 är den andra
+i 80095980:
+b (0x80400000-0x80095980)
+
+i 0x80400000:
 stwu r5, -4(sp)
 stwu r6, -4(sp)
 stwu r7, -4(sp)
 
-lhz r5, 0x8(r28)	#r5 = typ av fiende
-subi r5,r5,0xD		#if mario
-cmpwi r5,0
-bne .exit
+.check_if_bobomb28:
+lhz r5, 8(r28)	#r5 = 0x85 om bobomb
+cmpwi r5, 0x85
+beq .skip_collision
 
-#it was mario, check if the other is bobomb 
-lhz r5, 0x8(r31)	#r5 = typ av fiende
-subi r5,r5,0x85		#if bobomb
-cmpwi r5,0
-beq .exit
-
-#it wasn't mario and bobomb, but bobomb and other
-mr r31,r28			#mr x,y flyttar y till x
-b .exit
+.check_if_bobomb31:
+lhz r5, 8(r31)			#r5 = 0x85 om bobomb
+cmpwi r5, 0x85			
+beq .skip_collision
 
 .exit:
 lwzu r7,0(sp)
 lwzu r6,4(sp)
 lwzu r5,4(sp)
 addi sp,sp,4
-b -(0x802f9100-0x8009597c)-13*4+4 	#n = antalet instr förutom denna 
+cmpwi r0,0		#ORIGVÄRDE!
+b -(0x80400000-0x80095980)-n*4+4 	#n = antalet instr förutom denna 
+
+.skip_collision: 	#jump to the end, don't care about collisions etc
+lwzu r7,0(sp)
+lwzu r6,4(sp)
+lwzu r5,4(sp)
+addi sp,sp,4
+cmpwi r0,0		#ORIGVÄRDE!
+b -(0x80400000-0x80095980)-n*4+8+(0x80095bd4-0x80095980)-0xC+5*4
+
 
 <memory offset="0x80162c40" value="48193AD0" />
 <memory offset="0x80064350" value="482923F0" />
@@ -947,11 +952,9 @@ b -(0x802f9100-0x8009597c)-13*4+4 	#n = antalet instr förutom denna
 <memory offset="0x802f8c60" value="9421FFE094A1FFFC94C1FFFC94E1FFFC9501FFFC9781FFFC9461FFFC8384000480630004A0BC00082C05012441820164A0A300082C050124418201583CA0802F60A5690080C500007CE330502C0700004182001C80C500047CE330502C0700004082013080C500004800000880C50004810500202C080014418001183900000091050020C0BC00E8C0DC00ECECE50172ED0601B2ECE7402AD0E50018810500182C08000041820008FCE03834ECA501F2ECC601F23D0041209105000CC105000CECA50232ECC60232C0E600AC3D0040A09105000CC105000CECA50232D0FC00ACC0E600B0D0FC00B080C5000080E500042C0600004182009C2C070000418200948106030080A703007CA828502C050000408200542C0800014182002C2C08000341820024C11C00ECFD004050D11C00ECFCC03050C11C00B0ED08302AD11C00B048000050C11C010CFD004050D11C010CFCA02850C11C00ACED08302AD11C00AC480000308106030080E703007CE838502C0700024182001C2C07FFFE41820014C11C010CC0DC00ECD11C00ECD0DC010C84610000878100048501000484E1000484C1000484A10004382100044BD9CB48" />
 <!-- invincibility -->
 <memory offset="0x80095D60" value="480001E4" />
-<!-- skip collision -->
-<memory offset="0x80095980" value="48000254" />
-
-
-
+<!-- skip collision if one is bobomb -->
+<memory offset="0x80095980" value="4836A680" />
+<memory offset="0x80400000" value="94A1FFFC94C1FFFC94E1FFFCA0BC00082C05008541820028A0BF00082C0500854182001C84E1000084C1000484A10004382100042C0000004BC9594C4BC95B98" />
 
 
 
