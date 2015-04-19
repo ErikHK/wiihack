@@ -374,6 +374,8 @@ cmpwi r5,0x28
 beq .store_right
 
 #else, TODO check if up
+srawi r5,r5,24		#0x04000000 => 0x4
+cmpwi r5, 4
 b .store_up
 
 b .exit
@@ -437,6 +439,12 @@ oris r8,r8, 0xC000	#rotate right
 ori r8,r8, 0xC000	#rotate right
 stw r8, 0x100(r7)	#store it back
 b .exit
+
+.discard_portal:
+li r8,0
+stw r8, 0(r7)
+b .exit
+
 
 .cos:				#experimented to 1-x^2/2+x^3/12 = (x/12-1/2)*x^2+1, only from 0 to pi!
 #f8 = in-value
@@ -944,15 +952,8 @@ b -(0x802f9100-0x8009597c)-13*4+4 	#n = antalet instr förutom denna
 
 
 
-<!-- dont interact with minigoombas -->
-<memory offset="0x8009597c" value="48263784" />
-<memory offset="0x802f9100" value="881F043294A1FFFC94C1FFFC94E1FFFCA0BC000838A5FFF32C0500004082001CA0BF000838A5FF7B2C0500004182000C7F9FE3784800000484E1000084C1000484A10004382100044BD9C838" />
 
 
-<!-- cosine -->
-<memory offset="0x802f9000" value="" />
-<!-- sine -->
-<memory offset="0x802f90c0" value="" />
 
 #802f8d1c	sub etc, breakpoint
 
