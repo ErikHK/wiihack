@@ -910,10 +910,11 @@ bobomb:
 
 hoppa till 80095bd4 om det är en bobomb etc (skip collision)
 r28 är en av de som krockat, r31 är den andra
-i 80095980:
-b (0x80400000-0x80095980)
 
-i 0x80400000:
+i 80095980:
+b (0x803e4bfc-0x80095980)
+
+i 803e4bfc:
 stwu r5, -4(sp)
 stwu r6, -4(sp)
 stwu r7, -4(sp)
@@ -945,7 +946,7 @@ lwzu r6,4(sp)
 lwzu r5,4(sp)
 addi sp,sp,4
 cmpwi r0,0		#ORIGVÄRDE!
-b -(0x80400000-0x80095980)-n*4+4 	#n = antalet instr förutom denna 
+b -(0x803e4bfc-0x80095980)-n*4+4 	#n = antalet instr förutom denna 
 
 .skip_collision: 	#jump to the end, don't care about collisions etc
 lwzu r7,0(sp)
@@ -953,7 +954,7 @@ lwzu r6,4(sp)
 lwzu r5,4(sp)
 addi sp,sp,4
 cmpwi r0,0		#ORIGVÄRDE!
-b -(0x80400000-0x80095980)-n*4+(0x80095bd4-0x80095980)-6*4
+b -(0x803e4bfc-0x80095980)-n*4+(0x80095bd4-0x80095980)-6*4
 
  
 <memory offset="0x80162c40" value="48193AD0" />
@@ -967,8 +968,8 @@ b -(0x80400000-0x80095980)-n*4+(0x80095bd4-0x80095980)-6*4
 <!-- invincibility -->
 <memory offset="0x80095D60" value="480001E4" />
 <!-- skip collision if one is bobomb -->
-<memory offset="0x80095980" value="4836A680" />
-<memory offset="0x80400000" value="94A1FFFC94C1FFFC94E1FFFCA0BC00082C05008541820040A0BF00082C05008541820034A0BC00082C05012441820028A0BF00082C0501244182001C84E1000084C1000484A10004382100042C0000004BC9593484E1000084C1000484A10004382100042C0000004BC95B6C" />
+<memory offset="0x80095980" value="4834F27C" />
+<memory offset="0x803e4bfc" value="94A1FFFC94C1FFFC94E1FFFCA0BC00082C05008541820040A0BF00082C05008541820034A0BC00082C05012441820028A0BF00082C0501244182001C84E1000084C1000484A10004382100042C0000004BCB0D3884E1000084C1000484A10004382100042C0000004BCB0F70" />
 
 
 
