@@ -932,7 +932,7 @@ b -(0x802f9100-0x8009597c)-13*4+4 	#n = antalet instr förutom denna
 <memory offset="0x80095D60" value="480001E4" />
 <!-- skip collision -->
 <memory offset="0x80095980" value="48000254" />
-
+ 
 
 
 <!-- dont interact with minigoombas -->
