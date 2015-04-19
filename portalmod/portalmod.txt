@@ -928,6 +928,17 @@ lhz r5, 8(r31)			#r5 = 0x85 om bobomb
 cmpwi r5, 0x85			
 beq .skip_collision
 
+.check_if_microgoomba28:
+lhz r5, 8(r28)	#r5 = 0x124 om bobomb
+cmpwi r5, 0x124
+beq .skip_collision
+
+.check_if_microgoomba31:
+lhz r5, 8(r31)			#r5 = 0x124 om bobomb
+cmpwi r5, 0x124			
+beq .skip_collision
+
+
 .exit:
 lwzu r7,0(sp)
 lwzu r6,4(sp)
@@ -942,7 +953,7 @@ lwzu r6,4(sp)
 lwzu r5,4(sp)
 addi sp,sp,4
 cmpwi r0,0		#ORIGVÄRDE!
-b -(0x80400000-0x80095980)-n*4+8+(0x80095bd4-0x80095980)-0xC+5*4
+b -(0x80400000-0x80095980)-n*4+(0x80095bd4-0x80095980)-6*4
 
  
 <memory offset="0x80162c40" value="48193AD0" />
@@ -957,7 +968,7 @@ b -(0x80400000-0x80095980)-n*4+8+(0x80095bd4-0x80095980)-0xC+5*4
 <memory offset="0x80095D60" value="480001E4" />
 <!-- skip collision if one is bobomb -->
 <memory offset="0x80095980" value="4836A680" />
-<memory offset="0x80400000" value="94A1FFFC94C1FFFC94E1FFFCA0BC00082C05008541820028A0BF00082C0500854182001C84E1000084C1000484A10004382100042C0000004BC9594C84E1000084C1000484A10004382100042C0000004BC95B84" />
+<memory offset="0x80400000" value="94A1FFFC94C1FFFC94E1FFFCA0BC00082C05008541820040A0BF00082C05008541820034A0BC00082C05012441820028A0BF00082C0501244182001C84E1000084C1000484A10004382100042C0000004BC9593484E1000084C1000484A10004382100042C0000004BC95B6C" />
 
 
 
