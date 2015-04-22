@@ -184,6 +184,7 @@ xoris r5,r5,0x0085
 cmpwi r5, 0x0		#om r5 = bobomb
 bne .exit
 
+
 lwz r5,8(r6)		#r5 = 0/1/2
 cmpwi r5,0
 #beq .save_first_portal
@@ -228,7 +229,7 @@ cmpwi r7,0
 beq .exit
 lhz r5, 8(r7)		#make sure it's a bobomb
 cmpwi r5, 0x85
-bne .exit
+bne .load_1
 lhz r5, 10(r7)		#make sure it's not gone
 cmpwi r5, 2
 beq .load_1
@@ -952,6 +953,8 @@ blr
 TODO:
 X	!!!!!!!fixa x/0-felet!!!!!!!
 	NTSC
+	fixa bugg så man inte kan skjuta genom väggar!
+	fixa så att 802f6900 eller 04 nollas om det ej är en goomba eller den är död
 	hitta bättre minnesplatser etc
 	fixa två olika portaler med olika färger
 	portaler ska ha en timeout, utifall man skjuter ut i tomma intet
