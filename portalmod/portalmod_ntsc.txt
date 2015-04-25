@@ -1049,6 +1049,8 @@ addi sp,sp,4
 cmpwi r0,0		#ORIGVÄRDE!
 b -(0x802f9000-0x80095980)-n*4+(0x80095bd4-0x80095980)-6*4
 
+0x80926770	world map draw func
+
 (((((((((
 
 <memory offset="0x80162b00" value="48193910" />
