@@ -1085,7 +1085,7 @@ stw r5, 0x4(r6)
 lwzu r6,0(sp)
 lwzu r5,4(sp)
 addi sp,sp,4
-b -(0x802fd8d8-0x80926770)-n*4+4
+b -(0x802fd8d8-0x80926770)-11*4+4
 
 
 <!-- object create -->
