@@ -1,0 +1,91 @@
+8154c6bd	is in the air if 01 (player+0xeb9)
+8042bb44	max fall-speed, set to zero when y-speed <= 0 && 2 is being held down
+player+0xea8	01 when 2 is being held down, 3 if both 1 and 2 (7 in emu!)
+
+
+
+game loop:
+i 800e3ad4: (ställe som körs ofta, uppdaterar tid egentligen va?)
+b (0x802f8eb8-0x800e3ad4)
+
+
+i 802f8eb8:
+lbz r0,10(r31)		#original-värde
+stwu r5, -0x4(sp)	#spara r5
+stwu r6, -0x4(sp)	#spara r6
+stwu r7, -0x4(sp)	#spara r6
+stwu r8, -0x4(sp)	#spara r6
+
+lis r5,0x802f
+ori r5,r5,0x6900	#r5 = timer addr
+
+lis r8,0x8154
+ori r8,r8,0xb804	#r8 = addr to player
+
+
+lbz r7, 0xeb9(r8)	#r7 = 01 if in the air
+cmpwi r7,1
+bne .set_bool		#if on the ground, you CAN sail
+
+#else, check if also pressing 2
+lbz r7, 0xea8(r8)	#r7 = 1 or 3 if being held down
+cmpwi r7,1
+beq .add_to_timer
+cmpwi r7,3
+bne .reset_gravity
+
+.add_to_timer:
+lwz r6,0(r5)
+addi r6,r6,1
+stw r6,0(r5)
+#li r7,1
+#stw r7, 4(r5)
+
+#here 2 is pressed and player is in the air
+lwz r7, 4(r5)		#read bool, 1 if we can sail
+cmpwi r7, 1
+bne .reset_gravity
+
+.check_if_timer_less_than:
+cmpwi r6,30						#timer has run for x seconds?
+bgt .reset_bool					#yes, go to reset_bool_and_gravity!
+
+#else, set gravity to zero!
+.set_gravity:
+lis r8, 0x8042
+ori r8,r8,0xbb44
+li r7, 0		#r7 = 0
+stw r7, 0(r8)		#store it to max_speed
+b .exit
+
+.reset_bool:
+li r7,0
+stw r7, 4(r5)		#reset bool
+
+.reset_gravity:
+lis r8, 0x8042
+ori r8,r8,0xbb44
+lis r7, 0xc080		#r7 = -4.0
+stw r7, 0(r8)		#store it to max_speed
+li r7, 0
+stw r7, 0(r5)		#reset timer
+
+.exit:
+lwzu r8, 0(sp)
+lwzu r7, 4(sp)
+lwzu r6, 4(sp)
+lwzu r5, 4(sp)
+addi sp,sp,4
+b -(0x802f8eb8-0x800e3ad4)-43*4+4
+
+
+.set_bool:
+li r7,1
+stw r7, 4(r5)		#set bool
+b .exit
+
+
+
+
+<memory offset="0x800e3ad4" value="482153E4" />
+<memory offset="0x802f8eb8" value="881F000A94A1FFFC94C1FFFC94E1FFFC9501FFFC3CA0802F60A569003D0081546108B80488E80EB92C0700014082008488E80EA82C0700014182000C2C0700034082004080C5000038C6000190C5000080E500042C070001408200282C06003C418100183D0080426108BB4438E0000090E800004800002438E0000090E500043D0080426108BB443CE0C08090E8000038E0000090E500008501000084E1000484C1000484A10004382100044BDEAB7438E0000190E500044BFFFFE0" />
