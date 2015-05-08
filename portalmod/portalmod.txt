@@ -10,6 +10,7 @@ PLAYER 1 modifierbara:
 8154c6ac	nåt med hålla i
 8154c6b0	nåt med hålla i
 8154e27c	nåt med hålla i
+8154c698	zoom?
 
 +0xea8		button presses
 +0xeac		button presses
