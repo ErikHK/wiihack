@@ -149,6 +149,7 @@ vänster		0x00000014
 höger		0x00000028
 där uppe	0x04000000		HÄNGER UNDER ALLTSÅ
 där nere	0x00002000		STÅR PÅ ALLTSÅ, även 0x10 på +0x27c!
+fri			0x00000000
 -------
 
 inaktivera etc:
@@ -568,19 +569,19 @@ fadds f8,f8,f6		#f8 = x^2(x/12-1/2)+1
 #b .cont_move_right_cos
 b .after_cos
 
-.sin:				#experimented to x-x^3/8 = x(1-x^2/8), -pi/2 to pi/2
+.sin:				#experimented to x-x^3/7 = x(1-x^2/7), -pi/2 to pi/2
 #f8 = in-value
-lis r8, 0x4100		#r8 = 8.0
+lis r8, 0x40E0		#r8 = 7.0
 stw r8,0x14(r6)		
-lfs f6,0x14(r6)		#f6 = 8.0
+lfs f6,0x14(r6)		#f6 = 7.0
 fmuls f5,f8,f8		#f5 = x^2
-fdivs f5,f5,f6		#f5 = x^2/8
+fdivs f5,f5,f6		#f5 = x^2/7
 
 lis r8, 0x3f80		#r8 = 1.0
 stw r8,0x14(r6)		
 lfs f6,0x14(r6)		#f6 = 1.0
-fsubs f6,f6,f5		#f6 = 1-x^2/8
-fmuls f8,f8,f6		#f8 = x(1-x^2/8)
+fsubs f6,f6,f5		#f6 = 1-x^2/7
+fmuls f8,f8,f6		#f8 = x(1-x^2/7)
 #b .cont_move_right_sin
 b .after_sin
 
@@ -617,6 +618,9 @@ b .cos
 
 .after_cos:
 #here f8=cos(wiimote)
+#check if goomba is colliding etc
+
+
 lwz r8, 0x100(r7)	#r8 = direction, d000/3000
 srawi r8,r8,12		#d / 3
 cmpwi r8, 0xd
@@ -665,7 +669,7 @@ stfs r8, 0x70(r6)	#store sin(wiimote) to 802f6974
 lis r8, 0x41F0		#r7 = 30.0
 stw r8, 0x14(r6)
 lfs f7, 0x14(r6)	#f7 = 30.0
-fmuls f7,f8,f7		#f7 = 15*sin(wiimote)
+fmuls f7,f8,f7		#f7 = 30*sin(wiimote)
 lfs f5,0xb0(r7)		#f5 = mario.y
 
 
@@ -1014,7 +1018,7 @@ adresser:
 802f6930	mini-goomba	
 802f6934	mini-goomba
 802f6938	mini-goomba
-802f6940
+802f6940	
 
 
 
