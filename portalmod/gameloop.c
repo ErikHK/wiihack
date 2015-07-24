@@ -9,6 +9,7 @@ int main(void)
   int * tmpint = (int*)(base_addr+6);
   float * tmp = (float*)(base_addr+5);
   float * tmp2 = (float*)(base_addr+7);
+  float * tmp3 = (float*)(base_addr+9);
   int * portal_timer = (int*)(base_addr+8);
   int * first_portal = (int*)(base_addr);
   int * second_portal = (int*)(base_addr+1);
@@ -16,6 +17,9 @@ int main(void)
   float * player_addr = (float*)0x8154b804;
   int * player_dir_addr = (int*)0x8154b904;
   float * dist = (float*)(base_addr+10);
+  
+  float * sin_addr = (float*)(base_addr+11);
+  float * cos_addr = (float*)(base_addr+12);
 
   //int * goomba = *goomba_addr;
   
@@ -40,17 +44,25 @@ int main(void)
 	*tmp = 2.0;
 	cosx = cosx - (*angle)*(*angle)/(*tmp); //finito
 	
+	*cos_addr = cosx;
+	
+	//move it outwards!
 	*tmp = 0.0;
-	*tmp2 = 1.0;
-	if(*(*goomba_addr + 157) == *tmp)
+	*tmp2 = 2.0;
+	*tmp3 = 100.0;
+	if(*(*goomba_addr + 157) == *tmp
+	 && *dist < (*tmp3)) //is free to move
 	{
 	  *dist += *tmp2;
 	}
+	else
+	  *dist -= *tmp2;
     
 	//SINE
 	*tmp = 7.0;
 	*tmp2 = 1.0;
 	float sinx = (*angle)* (*tmp2 - (*angle)*(*angle)/(*tmp));
+	*sin_addr = sinx;
 	
 	*tmp = 20.0;
 	float marioy = *(player_addr + 44);
@@ -78,28 +90,27 @@ int main(void)
 	*(*goomba_addr + 43) = *tmp2;
 	float * goombax = (*goomba_addr + 43);
 	
-	//continue moving the guide outwards until it hits a wall!
-	//float * dist = (float*)(base_addr+10);
-	//*dist = fsqrt(mariox*mariox + marioy*marioy);
-	//*dist = sqrt((goombax-mariox)*(goombax-mariox) + (goombax-mariox)*(goombax-mariox));
   }
   
   //increase timer
-  *tmpint = 1.0;
+  *tmpint = 1;
   *portal_timer += *tmpint;
   
   *tmpint = 2;
+  
   if(*curr_portal == *tmpint) //place first portal
   {
     int ** first_portal = (int**)(base_addr);
 	*tmpint = 0x85;
-    if(*(*first_portal+2) == *tmpint) //it's a bobomb!
+	*tmp = 0;
+    if(*(*first_portal+2) == *tmpint &&
+	*(*first_portal + 157) == *tmp) //it's a bobomb, and we can move it!
 	  {
-	    
-	    
+	    *tmp = 7.0;
+		*(*first_portal + 58) = (*tmp) * (*cos_addr);
+	    *(*first_portal + 59) = (*tmp) * (*sin_addr);
 	  }
   }
-  
   
 }
 
