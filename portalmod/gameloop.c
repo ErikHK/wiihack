@@ -103,13 +103,16 @@ int main(void)
     int ** first_portal = (int**)(base_addr);
 	*tmpint = 0x85;
 	*tmp = 0;
-    if(*(*first_portal+2) == *tmpint &&
-	*(*first_portal + 157) == *tmp) //it's a bobomb, and we can move it!
+	
+    if( (int)*(*first_portal+2) == *tmpint 
+	/* && *(*first_portal + 157) == *tmp */
+	) //it's a bobomb, and we can move it!
 	  {
 	    *tmp = 7.0;
 		*(*first_portal + 58) = (*tmp) * (*cos_addr);
 	    *(*first_portal + 59) = (*tmp) * (*sin_addr);
 	  }
+	  
   }
   
 }
