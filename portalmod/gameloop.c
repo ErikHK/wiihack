@@ -1,6 +1,7 @@
 //int main(int argc, char *argv[])
 //#include<stdio.h>
 
+
 int main(void)
 {
   float *base_addr;// = (float*)0x802f6940;
@@ -11,16 +12,19 @@ int main(void)
   float * tmp2 = (float*)(base_addr+7);
   float * tmp3 = (float*)(base_addr+9);
   int * portal_timer = (int*)(base_addr+8);
-  int * first_portal = (int*)(base_addr);
-  int * second_portal = (int*)(base_addr+1);
+  int ** first_portal = (int**)(base_addr);
+  int ** second_portal = (int**)(base_addr+1);
   int * curr_portal = (int*)(base_addr+2);
   float * player_addr = (float*)0x8154b804;
   int * player_dir_addr = (int*)0x8154b904;
   float * dist = (float*)(base_addr+10);
   
-  float * sin_addr = (float*)(base_addr+11);
-  float * cos_addr = (float*)(base_addr+12);
-
+  float * sin_addr = (float*)(base_addr+28);
+  float * cos_addr = (float*)(base_addr+29);
+  
+  float * static_sin_addr = (float*)(base_addr+32);
+  float * static_cos_addr = (float*)(base_addr+33);
+  
   //int * goomba = *goomba_addr;
   
   
@@ -98,22 +102,33 @@ int main(void)
   
   *tmpint = 2;
   
-  if(*curr_portal == *tmpint) //place first portal
-  {
-    int ** first_portal = (int**)(base_addr);
-	*tmpint = 0x85;
-	*tmp = 0;
-	
-    if( (int)*(*first_portal+2) == *tmpint 
-	/* && *(*first_portal + 157) == *tmp */
-	) //it's a bobomb, and we can move it!
+  
+  //if(*curr_portal == *tmpint) //place first portal
+  //{
+    //int ** first_portal = (int**)(base_addr);
+	float ** first_portalf = (float**)(base_addr);
+	float ** second_portalf = (float**)(base_addr+1);
+	*tmpint = 0x00850100;
+
+	*tmp = 7.0;
+	*tmp2 = 0.0;
+    if( *(*first_portal+2) == *tmpint 
+	&& *(*first_portalf+157) == *tmp2) //it's a bobomb and we can move it!
 	  {
-	    *tmp = 7.0;
-		*(*first_portal + 58) = (*tmp) * (*cos_addr);
-	    *(*first_portal + 59) = (*tmp) * (*sin_addr);
+	    
+		*(*first_portalf + 58) = (*tmp) * (*static_cos_addr);
+	    *(*first_portalf + 59) = (*tmp) * (*static_sin_addr);
+	  }
+	
+	if( *(*second_portal+2) == *tmpint
+	&& *(*second_portalf+157) == *tmp2)  
+	  {
+		*(*second_portalf + 58) = (*tmp) * (*static_cos_addr);
+	    *(*second_portalf + 59) = (*tmp) * (*static_sin_addr);
 	  }
 	  
-  }
+  //}
+  
   
 }
 
