@@ -19,6 +19,8 @@ int main(void)
   int * player_dir_addr = (int*)0x8154b904;
   float * dist = (float*)(base_addr+10);
   
+  int *timer = (int*)(base_addr+40); //0x802f69a0
+  
   float * sin_addr = (float*)(base_addr+28);
   float * cos_addr = (float*)(base_addr+29);
   
@@ -27,6 +29,8 @@ int main(void)
   
   //int * goomba = *goomba_addr;
   
+  *tmpint = 1;
+  *timer += *tmpint;
   
   float * tilt_addr = (float*)0x807612c8;
   *(base_addr+5) = 1.57;	//pi/2

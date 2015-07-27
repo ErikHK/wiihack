@@ -1,0 +1,1 @@
+$ clang teleport.c -S -target powerpc -nobuiltininc -fno-rtti -fshort-wchar -fno-threadsafe-statics -std=c99 -fsanitize-memory-track-origins -O3
