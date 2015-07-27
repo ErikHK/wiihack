@@ -34,7 +34,7 @@ int main(void)
   
   float * tilt_addr = (float*)0x807612c8;
   *(base_addr+5) = 1.57;	//pi/2
-  float * angle = (base_addr+24);
+  float * angle = (float*)(base_addr+24);
   *angle = *(base_addr+5)*(*tilt_addr);	//pi/2
   //float * goomba = &goomba_addr;
   //float *tmp = base_addr+5;
@@ -45,19 +45,20 @@ int main(void)
   {
 	//COSINE!
 	float cosx = fabs((*angle)*(*angle)*(*angle));
-	*tmp = 12.0;
+	*tmp = 12.0f;
 	cosx = cosx/(*tmp);
-	*tmp = 1.0;
+	*tmp = 1.0f;
 	cosx = *tmp + cosx; //cosx = 1+a^3/12;
-	*tmp = 2.0;
+	*tmp = 2.0f;
 	cosx = cosx - (*angle)*(*angle)/(*tmp); //finito
 	
 	*cos_addr = cosx;
+
 	
 	//move it outwards!
-	*tmp = 0.0;
-	*tmp2 = 2.0;
-	*tmp3 = 100.0;
+	*tmp = 0.0f;
+	*tmp2 = 2.0f;
+	*tmp3 = 100.0f;
 	if(*(*goomba_addr + 157) == *tmp
 	 && *dist < (*tmp3)) //is free to move
 	{
@@ -90,9 +91,9 @@ int main(void)
     float mariox = *(player_addr + 43);
 	
 	if(*tmpint == 0x00003000) //stands to the right
-	  *tmp2 = mariox + (*dist) * cosx;
+	  *tmp2 = mariox + (*dist) * (*cos_addr);
 	else
-	  *tmp2 = mariox - (*dist) * cosx;
+	  *tmp2 = mariox - (*dist) * (*cos_addr);
 	
 	  
 	*(*goomba_addr + 43) = *tmp2;
