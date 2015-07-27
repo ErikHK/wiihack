@@ -32,7 +32,7 @@ int main(void)
   *timer += *tmpint;
   
   float * tilt_addr = (float*)0x807612c8;
-  *(base_addr+5) = 1.57;	//pi/2
+  *(base_addr+5) = 1.571;	//pi/2
   float * angle = (float*)(base_addr+24);
   *angle = *(base_addr+5)*(*tilt_addr);	//pi/2
   //float * goomba = &goomba_addr;
@@ -86,13 +86,13 @@ int main(void)
 	//*tmpint = (int)*(player_addr + 64);
 	//*tmpint = (int)*(0x8154b904);
 	*tmpint = *(player_dir_addr);
-	*tmp = 20.0;
+	//*tmp = 20.0;
     float mariox = *(player_addr + 43);
 	
 	if(*tmpint == 0x00003000) //stands to the right
-	  *tmp2 = mariox + (*dist) * (*cos_addr);
+	  *tmp2 = mariox + (*dist) * (*cos_addr) + *tmp;
 	else
-	  *tmp2 = mariox - (*dist) * (*cos_addr);
+	  *tmp2 = mariox - (*dist) * (*cos_addr) - *tmp;
 	
 	  
 	*(*goomba_addr + 43) = *tmp2;
@@ -165,20 +165,20 @@ int main(void)
     *(*second_portal + 64) = 0x80008000;
     
   //side left
-  *tmpint = 0x14;
-  if(*(*first_portal + 157) == *tmpint)
-    *(*first_portal + 64) = 0x4000C000;
-  
-  if(*(*second_portal + 157) == *tmpint)
-    *(*second_portal + 64) = 0x4000C000;
-    
-  //side right
   *tmpint = 0x28;
   if(*(*first_portal + 157) == *tmpint)
     *(*first_portal + 64) = 0xC000C000;
-    
+  
   if(*(*second_portal + 157) == *tmpint)
     *(*second_portal + 64) = 0xC000C000;
+    
+  //side right
+  *tmpint = 0x14;
+  if(*(*first_portal + 157) == *tmpint)
+    *(*first_portal + 64) = 0x4000C000;
+    
+  if(*(*second_portal + 157) == *tmpint)
+    *(*second_portal + 64) = 0x4000C000;
 
   return 0;
 }
