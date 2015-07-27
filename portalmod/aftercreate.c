@@ -20,6 +20,15 @@ int main(void)
   int * second_goomba = (int*)(base_addr+13);
   int * third_goomba = (int*)(base_addr+14);
   
+  float * sin_addr = (float*)(base_addr+28);
+  float * cos_addr = (float*)(base_addr+29);
+  
+  float * static_sin_addr = (float*)(base_addr+32);
+  float * static_cos_addr = (float*)(base_addr+33);
+  
+  int * player_dir_addr = (int*)0x8154b904;
+  
+  
   int *portalnum = (int*)(base_addr+2);
   
   float *tmp = (float*)(base_addr+22);
@@ -46,20 +55,52 @@ int main(void)
     //newly created is a bobomb
     if(*portalnum == 0)
     {
-      *first_portal_addr = *created_actor_addr;
+      if(*first_portal_addr == 0)
+        *first_portal_addr = *created_actor_addr;
+      else
+      {
+        *(*first_portal + 73) = 0;
+        *(*first_portal + 349) = 0;
+        *first_portal_addr = *created_actor_addr;
+      }
       *portalnum = 1;
     }
     else if(*portalnum == 1)
     {
-      *second_portal_addr = *created_actor_addr;
+      if(*second_portal_addr == 0)
+        *second_portal_addr = *created_actor_addr;
+      else
+      {
+        *(*second_portal + 73) = 0;
+        *(*second_portal + 349) = 0;
+        *second_portal_addr = *created_actor_addr;
+      }
       *portalnum = 2;
     }
     else if(*portalnum == 2)
     {
-      *first_portal_addr = *created_actor_addr;
+      if(*first_portal_addr == 0)
+        *first_portal_addr = *created_actor_addr;
+      else
+      {
+        *(*first_portal + 73) = 0;
+        *(*first_portal + 349) = 0;
+        *first_portal_addr = *created_actor_addr;
+      }
       *portalnum = 1;
     }
       
+    *static_sin_addr = *sin_addr;
+    
+    if(*player_dir_addr == 0x00003000)
+    {  
+      *static_cos_addr = *cos_addr;
+    }else
+    {
+      *tmp = -1.0;
+      *static_cos_addr = *cos_addr*(*tmp);
+    }
+    
   }
   
   return 0;
