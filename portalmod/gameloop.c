@@ -1,7 +1,6 @@
 //int main(int argc, char *argv[])
 //#include<stdio.h>
 
-
 int main(void)
 {
   float *base_addr;// = (float*)0x802f6940;
@@ -154,5 +153,33 @@ int main(void)
   //}
   
   
+  
+  //rotate it correctly!
+  
+  //up
+  *tmpint = 0x04000000;
+  if(*(*first_portal + 157) >= *tmpint)
+    *(*first_portal + 64) = 0x80008000;
+    
+  if(*(*second_portal + 157) >= *tmpint)
+    *(*second_portal + 64) = 0x80008000;
+    
+  //side left
+  *tmpint = 0x14;
+  if(*(*first_portal + 157) == *tmpint)
+    *(*first_portal + 64) = 0x4000C000;
+  
+  if(*(*second_portal + 157) == *tmpint)
+    *(*second_portal + 64) = 0x4000C000;
+    
+  //side right
+  *tmpint = 0x28;
+  if(*(*first_portal + 157) == *tmpint)
+    *(*first_portal + 64) = 0xC000C000;
+    
+  if(*(*second_portal + 157) == *tmpint)
+    *(*second_portal + 64) = 0xC000C000;
+
+  return 0;
 }
 

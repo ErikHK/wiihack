@@ -1,0 +1,25 @@
+0x802f6900	portal 1		0
+0x802f6904	portal 2		1
+0x802f6908	portal number		2
+0x802f690c				3
+0x802f6910				4
+0x802f6914	tmp game loop		5
+0x802f6918	tmp2 game loop		6
+0x802f691c	timer			7
+0x802f6920	tmp3 game loop		8
+0x802f6924				9
+0x802f6928				10
+0x802f692c				11
+0x802f6930	micro goomba		12
+0x802f6934	micro goomba		13
+0x802f6938	micro goomba		14
+0x802f693c				15
+0x802f6940				16
+0x802f6944				17
+0x802f6948				18
+0x802f694c				19
+0x802f6950	collider1		20
+0x802f6954	collider2		21
+0x802f6958				22
+0x802f695c				23
+0x802f6960				24
