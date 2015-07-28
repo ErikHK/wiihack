@@ -6,6 +6,8 @@ int main(void)
   float *base_addr;// = (float*)0x802f6940;
   base_addr = (float*)0x802f6900;
   float ** goomba_addr = (float**)0x802f6930;
+  int * goomba_addri = (int*)0x802f6930;
+  
   int * tmpint = (int*)(base_addr+6);
   float * tmp = (float*)(base_addr+5);
   float * tmp2 = (float*)(base_addr+7);
@@ -13,6 +15,10 @@ int main(void)
   int * portal_timer = (int*)(base_addr+8);
   int ** first_portal = (int**)(base_addr);
   int ** second_portal = (int**)(base_addr+1);
+  
+  int * first_portal_addr = (int*)(base_addr);
+  int * second_portal_addr = (int*)(base_addr+1);
+  
   int * curr_portal = (int*)(base_addr+2);
   float * player_addr = (float*)0x8154b804;
   int * player_dir_addr = (int*)0x8154b904;
@@ -38,9 +44,9 @@ int main(void)
   //float * goomba = &goomba_addr;
   //float *tmp = base_addr+5;
   
-  //*tmp = 0;
+  *tmpint = 0;
   
-  if( **goomba_addr != *tmp)
+  if( *goomba_addri != *tmpint) //null pointer check
   {
 	//COSINE!
 	float cosx = fabs((*angle)*(*angle)*(*angle));
@@ -118,19 +124,23 @@ int main(void)
 	*tmp2 = 0.0;
 	
 	//null pointer check here!!
-	//if(first_portal == NULL)
-	//  return 0;
+	if(*first_portal_addr == 0)
+	  return 0;
+  
+  if(*second_portal_addr == 0)
+	  return 0;
+  
 	
     if( *(*first_portal+2) == *tmpint) //it's a bobomb
 	  {
 	  if(*(*first_portalf+157) == *tmp2) //and we can move it!
 	  {
-		*(*first_portalf + 58) = (*tmp) * (*static_cos_addr);
+		  *(*first_portalf + 58) = (*tmp) * (*static_cos_addr);
 	    *(*first_portalf + 59) = (*tmp) * (*static_sin_addr);
 	  }else{ //can't move it, freeze it!
 	    *(*first_portalf + 62) = *tmp2; //gravity = 0
-		*(*first_portalf + 58) = *tmp2; //hastx = 0
-		*(*first_portalf + 59) = *tmp2; //hasty = 0
+		  *(*first_portalf + 58) = *tmp2; //hastx = 0
+		  *(*first_portalf + 59) = *tmp2; //hasty = 0
 	  }
 	  
 	  
@@ -140,13 +150,13 @@ int main(void)
 	  {
 	  if(*(*second_portalf+157) == *tmp2) //can move
 	  {
-		*(*second_portalf + 58) = (*tmp) * (*static_cos_addr);
+		  *(*second_portalf + 58) = (*tmp) * (*static_cos_addr);
 	    *(*second_portalf + 59) = (*tmp) * (*static_sin_addr);
 	  }
 	  else{
 	    *(*second_portalf + 62) = *tmp2; //gravity = 0
-		*(*second_portalf + 58) = *tmp2; //hastx = 0
-		*(*second_portalf + 59) = *tmp2; //hasty = 0
+		  *(*second_portalf + 58) = *tmp2; //hastx = 0
+		  *(*second_portalf + 59) = *tmp2; //hasty = 0
 	  }
 	  }
 	  
