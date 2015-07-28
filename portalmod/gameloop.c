@@ -126,9 +126,6 @@ int main(void)
 	if(*first_portal_addr == 0)
 	  return 0;
   
-  if(*second_portal_addr == 0)
-	  return 0;
-  
   /*
   //might be lost (outside of screen etc), remove it
   if(*(*first_portal+2) != *tmpint)
@@ -155,9 +152,16 @@ int main(void)
         *(*first_portalf + 58) = *tmp2; //hastx = 0
         *(*first_portalf + 59) = *tmp2; //hasty = 0
       }
-	  }
+	  }else if( *(*first_portal+4) == 0)
+    {
+      *first_portal_addr = 0;
+    }
+  
+  //null pointer
+  if(*second_portal_addr == 0)
+	  return 0;
     
-	
+    
 	if( *(*second_portal+2) == 0x00850100)  
 	  {
       if(*(*second_portalf+157) == *tmp2) //can move
@@ -171,6 +175,10 @@ int main(void)
         *(*second_portalf + 59) = *tmp2; //hasty = 0
       }
 	  }
+    else if( *(*second_portal+4) == 0)
+    {
+      *second_portal_addr = 0;
+    }
 	  
   //}
   
