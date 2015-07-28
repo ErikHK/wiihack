@@ -1,18 +1,18 @@
 //store colliding adresses to 802f6950 and -54
-
+/*
 #define BASE_ADDR 0x802f6900
 #define MARIO_ADDR 0x8154b804
 #define XSPEED  67
 #define YSPEED  59
-
-
+*/
 
 __asm__("lis 5, 0x802f;lwz 4, 4(23);lwz 3, 4(24);stw 3, 0x6950(5);stw 4, 0x6954(5)");
 
 int main(void)
 { 
   float *base_addr;// = (float*)0x802f6940;
-  base_addr = (float*)BASE_ADDR;
+  //base_addr = (float*)BASE_ADDR;
+  base_addr = (float*)0x802f6900;
   int * collider1 = (int*)0x802f6950;
   int * collider2 = (int*)0x802f6954;
   
@@ -22,7 +22,7 @@ int main(void)
   float ** collider1f = (float**)(0x802f6950);
   float ** collider2f = (float**)(0x802f6954);
   
-  float * mario = (float*)MARIO_ADDR;
+  //float * mario = (float*)MARIO_ADDR;
   
   float *tmp = (float*)(base_addr+37); //0x802f6994
   float *tmp2 = (float*)(base_addr+38); //0x802f6998
@@ -48,9 +48,6 @@ int main(void)
 	cosx = *tmp2 - (*angle)*(*angle)/(*tmp); //finito
 	
 	*tmp = cosx;
-
-  
-  
   
   
   float ** first_portalf = (float**)(base_addr);
@@ -60,13 +57,13 @@ int main(void)
   int ** second_portal = (int**)(base_addr+1);
   
   //INCREASE TIMER IN GAME LOOP!!!
-  *tmpint = 32;
+  //*tmpint = 32;
   
   //make sure that one of them isn't a micro goomba
   if(*(*collider1_addr + 2) != 0x01240100 && *(*collider2_addr + 2) != 0x01240100)
   {
     //check if one of the colliders is a portal
-    if(*collider1 == *portal1_addr && *collider2 != *portal2_addr && *timer > *tmpint
+    if(*collider1 == *portal1_addr && *collider2 != *portal2_addr && *timer > 32
     && *(*collider1_addr + 73) != 0 && *(*collider2_addr + 73) != 0)
     {
       //set to non-hurting
@@ -84,7 +81,7 @@ int main(void)
       *has_teleported = 1;
     }
 	
-    if(*collider1 == *portal2_addr && *collider2 != *portal1_addr && *timer > *tmpint
+    if(*collider1 == *portal2_addr && *collider2 != *portal1_addr && *timer > 32
     && *(*collider1_addr + 73) != 0 && *(*collider2_addr + 73) != 0)
     {
 
@@ -99,7 +96,7 @@ int main(void)
     }
 	
 	
-    if(*collider2 == *portal2_addr && *collider1 != *portal1_addr && *timer > *tmpint
+    if(*collider2 == *portal2_addr && *collider1 != *portal1_addr && *timer > 32
     && *(*collider1_addr + 73) != 0 && *(*collider2_addr + 73) != 0)
     {
       
@@ -113,11 +110,9 @@ int main(void)
       *has_teleported = 1;
     }
     
-    if(*collider2 == *portal1_addr && *collider1 != *portal2_addr && *timer > *tmpint
+    if(*collider2 == *portal1_addr && *collider1 != *portal2_addr && *timer > 32
     && *(*collider1_addr + 73) != 0 && *(*collider2_addr + 73) != 0)
     {
-     
-      
       //move collider1 to portal 2 if there is one
       *(*collider1f + 43) = *(*second_portalf + 43);
       *(*collider1f + 44) = *(*second_portalf + 44);
@@ -141,8 +136,8 @@ int main(void)
       || (*(*first_portal + 157) >= 0x4000000 && *(*second_portal + 157) >= 0x4000000))
       {
         *tmp = -1.0;
-        *(*collider1f + YSPEED) *= *tmp; //flip y
-        *(*collider2f + YSPEED) *= *tmp; //flip y
+        *(*collider1f + 59) *= *tmp; //flip y
+        *(*collider2f + 59) *= *tmp; //flip y
       }
       
       //_|  _| OR |_  |_, flip x speed
@@ -150,8 +145,8 @@ int main(void)
       || (*(*first_portal + 157) == 0x14 && *(*second_portal + 157) == 0x14))
       {
         *tmp = -1.0;
-        *(*collider1f + XSPEED) *= *tmp; //flip x
-        *(*collider2f + XSPEED) *= *tmp; //flip x
+        *(*collider1f + 67) *= *tmp; //flip x
+        *(*collider2f + 67) *= *tmp; //flip x
       }
       
       
@@ -177,13 +172,13 @@ int main(void)
       || (*(*second_portal + 157) == 0x14 && *(*first_portal + 157) == 0x2000)
       || (*(*second_portal + 157) == 0x2000 && *(*first_portal + 157) == 0x14))
       {
-        *tmp = *(*collider1f + YSPEED);
-        *(*collider1f + YSPEED) = *(*collider1f + XSPEED);
-        *(*collider1f + XSPEED) = *tmp;
+        *tmp = *(*collider1f + 59);
+        *(*collider1f + 59) = *(*collider1f + 67);
+        *(*collider1f + 67) = *tmp;
         
-        *tmp = *(*collider2f + YSPEED);
-        *(*collider2f + YSPEED) = *(*collider2f + XSPEED);
-        *(*collider2f + XSPEED) = *tmp;
+        *tmp = *(*collider2f + 59);
+        *(*collider2f + 59) = *(*collider2f + 67);
+        *(*collider2f + 67) = *tmp;
       }
       
     

@@ -110,8 +110,7 @@ int main(void)
   *tmpint = 1;
   *portal_timer += *tmpint;
   
-  *tmpint = 2;
-  
+  //*tmpint = 2;
   
   //if(*curr_portal == *tmpint) //place first portal
   //{
@@ -145,7 +144,7 @@ int main(void)
   }
   */
   
-    if( *(*first_portal+2) == *tmpint) //it's a bobomb
+    if( *(*first_portal+2) == 0x00850100) //it's a bobomb
 	  {
       if(*(*first_portalf+157) == *tmp2) //and we can move it!
       {
@@ -158,9 +157,8 @@ int main(void)
       }
 	  }
     
-    
 	
-	if( *(*second_portal+2) == *tmpint)  
+	if( *(*second_portal+2) == 0x00850100)  
 	  {
       if(*(*second_portalf+157) == *tmp2) //can move
       {
@@ -176,10 +174,8 @@ int main(void)
 	  
   //}
   
-  
-  
   //rotate it correctly!
-  
+  /*
   //up
   *tmpint = 0x04000000;
   if(*(*first_portal + 157) >= *tmpint)
@@ -203,7 +199,7 @@ int main(void)
     
   if(*(*second_portal + 157) == *tmpint)
     *(*second_portal + 64) = 0x4000C000;
-
+  */
   return 0;
 }
 
