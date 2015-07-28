@@ -49,7 +49,6 @@ int main(void)
 	
 	*tmp = cosx;
   
-  
   float ** first_portalf = (float**)(base_addr);
   float ** second_portalf = (float**)(base_addr+1);
   
@@ -70,7 +69,10 @@ int main(void)
       //*(*collider1f + 227) = 0;
       //*(*collider2f + 227) = 0;
 
-
+      //null pointer
+      if(*portal2_addr == 0)
+        return 0;
+      
       //move collider2 to portal 2 if there is one
       *(*collider2f + 43) = *(*second_portalf + 43);
       *(*collider2f + 44) = *(*second_portalf + 44);
@@ -85,8 +87,11 @@ int main(void)
     && *(*collider1_addr + 73) != 0 && *(*collider2_addr + 73) != 0)
     {
 
+      //null pointer
+      if(*portal1_addr == 0)
+        return 0;
+        
       //move collider2 to portal 1 if the portal is not dead
-
        *(*collider2f + 43) = *(*first_portalf + 43);
        *(*collider2f + 44) = *(*first_portalf + 44);
        //reset timer
@@ -100,6 +105,10 @@ int main(void)
     && *(*collider1_addr + 73) != 0 && *(*collider2_addr + 73) != 0)
     {
       
+      //null pointer
+      if(*portal1_addr == 0)
+        return 0;
+        
       //move collider1 to portal 1 if there is one
       *(*collider1f + 43) = *(*first_portalf + 43);
       *(*collider1f + 44) = *(*first_portalf + 44);
@@ -113,6 +122,10 @@ int main(void)
     if(*collider2 == *portal1_addr && *collider1 != *portal2_addr && *timer > 32
     && *(*collider1_addr + 73) != 0 && *(*collider2_addr + 73) != 0)
     {
+      //null pointer
+      if(*portal2_addr == 0)
+        return 0;
+    
       //move collider1 to portal 2 if there is one
       *(*collider1f + 43) = *(*second_portalf + 43);
       *(*collider1f + 44) = *(*second_portalf + 44);

@@ -28,12 +28,15 @@ int main(void)
   
   int * player_dir_addr = (int*)0x8154b904;
   
-  
   int *portalnum = (int*)(base_addr+2);
   
   float *tmp = (float*)(base_addr+22);
   float *tmp2 = (float*)(base_addr+23);
   int *tmpint = (int*)(base_addr+24);
+  
+  //null pointer
+  if(*created_actor == 0)
+    return 0;
   
   *tmpint = 0x01240000;
   //if micro goomba
@@ -55,7 +58,6 @@ int main(void)
     //newly created is a bobomb
     if(*portalnum == 0)
     {
-      
       if(*first_portal_addr == 0)
         *first_portal_addr = *created_actor_addr;
       else

@@ -155,12 +155,13 @@ int main(void)
 	  }else if( *(*first_portal+4) == 0)
     {
       *first_portal_addr = 0;
+      return 0;
     }
+  
   
   //null pointer
   if(*second_portal_addr == 0)
 	  return 0;
-    
     
 	if( *(*second_portal+2) == 0x00850100)  
 	  {
@@ -178,6 +179,7 @@ int main(void)
     else if( *(*second_portal+4) == 0)
     {
       *second_portal_addr = 0;
+      return 0;
     }
 	  
   //}
