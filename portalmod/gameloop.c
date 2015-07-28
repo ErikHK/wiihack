@@ -175,7 +175,7 @@ int main(void)
   //}
   
   //rotate it correctly!
-  /*
+  
   //up
   *tmpint = 0x04000000;
   if(*(*first_portal + 157) >= *tmpint)
@@ -199,7 +199,7 @@ int main(void)
     
   if(*(*second_portal + 157) == *tmpint)
     *(*second_portal + 64) = 0x4000C000;
-  */
+  
   return 0;
 }
 
