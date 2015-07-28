@@ -55,6 +55,7 @@ int main(void)
     //newly created is a bobomb
     if(*portalnum == 0)
     {
+      
       if(*first_portal_addr == 0)
         *first_portal_addr = *created_actor_addr;
       else
@@ -63,6 +64,7 @@ int main(void)
         *(*first_portal + 349) = 0;
         *first_portal_addr = *created_actor_addr;
       }
+      
       *portalnum = 1;
     }
     else if(*portalnum == 1)
