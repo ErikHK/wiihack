@@ -33,6 +33,8 @@ int main(void)
   int * portal1_addr = (int*)(base_addr);
   int * portal2_addr = (int*)(base_addr+1);
   
+  float ** teleporter = (float**)collider1f;
+  
   //*tmpint = 0;
   
   float *angle = (float*)(0x802f6800);
@@ -76,6 +78,9 @@ int main(void)
       //move collider2 to portal 2 if there is one
       *(*collider2f + 43) = *(*second_portalf + 43);
       *(*collider2f + 44) = *(*second_portalf + 44);
+      
+      
+      teleporter = collider2f;
             
       //reset timer
       *tmpint = 0;
@@ -94,6 +99,9 @@ int main(void)
       //move collider2 to portal 1 if the portal is not dead
        *(*collider2f + 43) = *(*first_portalf + 43);
        *(*collider2f + 44) = *(*first_portalf + 44);
+       
+       teleporter = collider2f;
+       
        //reset timer
        *tmpint = 0;
        *timer = *tmpint;
@@ -113,6 +121,8 @@ int main(void)
       *(*collider1f + 43) = *(*first_portalf + 43);
       *(*collider1f + 44) = *(*first_portalf + 44);
       
+      teleporter = collider1f;
+      
       //reset timer
       *tmpint = 0;
       *timer = *tmpint;
@@ -130,6 +140,8 @@ int main(void)
       *(*collider1f + 43) = *(*second_portalf + 43);
       *(*collider1f + 44) = *(*second_portalf + 44);
       
+      teleporter = collider1f;
+      
       //reset timer
        *tmpint = 0;
        *timer = *tmpint;
@@ -141,25 +153,64 @@ int main(void)
     if(*has_teleported)
     {
       //check orientation of portals
-      
-      //_  _ OR ^^, flip y speed
-      if((*(*second_portal + 157) == 0x2000 && *(*first_portal + 157) == 0x2000)
-      || (*(*first_portal + 157) == 0x2000 && *(*second_portal + 157) == 0x2000)
-      || (*(*second_portal + 157) >= 0x4000000 && *(*first_portal + 157) >= 0x4000000)
-      || (*(*first_portal + 157) >= 0x4000000 && *(*second_portal + 157) >= 0x4000000))
+      //_  _, flip y speed
+      if(*(*second_portal + 157) == 0x2000 && *(*first_portal + 157) == 0x2000)
       {
-        *tmp = -1.0;
-        *(*collider1f + 59) *= *tmp; //flip y
-        *(*collider2f + 59) *= *tmp; //flip y
+        //check for ~zero speed
+        *tmp = 3.0;
+        *tmp2 = 5.0;
+        if(fabs(*(*teleporter + 59)) < *tmp)
+          *(*teleporter + 59) = *tmp2;
+        else
+        {
+          *tmp = -1.0;
+          *(*teleporter + 59) *= *tmp; //flip y
+        }
       }
       
-      //_|  _| OR |_  |_, flip x speed
-      if((*(*second_portal + 157) == 0x28 && *(*first_portal + 157) == 0x28)
-      || (*(*first_portal + 157) == 0x14 && *(*second_portal + 157) == 0x14))
+      //^ ^, flip y speed
+      else if(*(*second_portal + 157) >= 0x4000000 && *(*first_portal + 157) >= 0x4000000)
       {
-        *tmp = -1.0;
-        *(*collider1f + 67) *= *tmp; //flip x
-        *(*collider2f + 67) *= *tmp; //flip x
+        //check for ~zero speed
+        *tmp = .5;
+        *tmp2 = 2.0;
+        if(fabs(*(*teleporter + 59)) < *tmp)
+          *(*teleporter + 59) = -*tmp2;
+        else
+        {
+          *tmp = -1.0;
+          *(*teleporter + 59) *= *tmp; //flip y
+        }
+      }
+      
+      //_|  _|, flip x speed
+      else if(*(*second_portal + 157) == 0x28 && *(*first_portal + 157) == 0x28)
+      {
+        //check for ~zero speed
+        *tmp = .5;
+        *tmp2 = 2.0;
+        if(fabs(*(*teleporter + 67)) < *tmp)
+          *(*teleporter + 67) = *tmp2;
+        else
+        {
+          *tmp = -1.0;
+          *(*teleporter + 67) *= *tmp; //flip x
+        }
+      }
+      
+      // |_  |_, flip x speed
+      else if(*(*first_portal + 157) == 0x14 && *(*second_portal + 157) == 0x14)
+      {
+        //check for ~zero speed
+        *tmp = .5;
+        *tmp2 = 2.0;
+        if(fabs(*(*teleporter + 67)) < *tmp)
+          *(*teleporter + 67) = -*tmp2;
+        else
+        {
+          *tmp = -1.0;
+          *(*teleporter + 67) *= *tmp; //flip x
+        }
       }
       
       
@@ -169,14 +220,9 @@ int main(void)
       {
         *tmp2 = -1.0;
         
-        *tmp = *(*collider1f + 59);
-        *(*collider1f + 59) = *(*collider1f + 67)*(*tmp2);
-        *(*collider1f + 67) = *tmp*(*tmp2);
-        
-        *tmp = *(*collider2f + 59);
-        *(*collider2f + 59) = *(*collider2f + 67)*(*tmp2);
-        *(*collider2f + 67) = *tmp*(*tmp2);
-        
+        *tmp = *(*teleporter + 59);
+        *(*teleporter + 59) = *(*teleporter + 67)*(*tmp2);
+        *(*teleporter + 67) = *tmp*(*tmp2);
       }
       
       //_| ^ OR |_ _, flip y and x
@@ -185,13 +231,9 @@ int main(void)
       || (*(*second_portal + 157) == 0x14 && *(*first_portal + 157) == 0x2000)
       || (*(*second_portal + 157) == 0x2000 && *(*first_portal + 157) == 0x14))
       {
-        *tmp = *(*collider1f + 59);
-        *(*collider1f + 59) = *(*collider1f + 67);
-        *(*collider1f + 67) = *tmp;
-        
-        *tmp = *(*collider2f + 59);
-        *(*collider2f + 59) = *(*collider2f + 67);
-        *(*collider2f + 67) = *tmp;
+        *tmp = *(*teleporter + 59);
+        *(*teleporter + 59) = *(*teleporter + 67);
+        *(*teleporter + 67) = *tmp;
       }
       
     
