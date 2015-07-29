@@ -66,8 +66,6 @@ int main(void)
         *(*first_portal + 73) = 0;
         //make old one untouchable
         *(*first_portal + 121) = 0;
-        //??
-        //*(*first_portal + 349) = 0;
         //set a new one!
         *first_portal_addr = *created_actor_addr;
       }
@@ -84,7 +82,6 @@ int main(void)
         *(*second_portal + 73) = 0;
         //make untouchable
         *(*second_portal + 121) = 0;
-        //*(*second_portal + 349) = 0;
         *second_portal_addr = *created_actor_addr;
       }
       *portalnum = 2;

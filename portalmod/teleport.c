@@ -34,6 +34,8 @@ int main(void)
   int * portal2_addr = (int*)(base_addr+1);
   
   float ** teleporter = (float**)collider1f;
+  float ** enter_portal = (float**)collider2f;
+  float ** exit_portal = (float**)collider2f;
   
   //*tmpint = 0;
   
@@ -61,184 +63,199 @@ int main(void)
   //*tmpint = 32;
   
   //make sure that one of them isn't a micro goomba
-  if(*(*collider1_addr + 2) != 0x01240100 && *(*collider2_addr + 2) != 0x01240100)
+  if(*(*collider1_addr + 2) == 0x01240100 || *(*collider2_addr + 2) == 0x01240100)
+    return 0;
+    
+  //make sure both of them aren't portals!
+  if(*(*collider1_addr + 2) == 0x00850100 && *(*collider2_addr + 2) == 0x00850100)
+    return 0;
+  
+  //check if one or the other (or both) are invisible
+  if(*(*collider1_addr + 73) == 0 || *(*collider2_addr + 73) == 0)
+    return 0;
+  
+  //check if one of the colliders is a stored portal
+  if(*collider1 == *portal1_addr && *collider2 != *portal2_addr && *timer > 10)
   {
-    //check if one of the colliders is a portal
-    if(*collider1 == *portal1_addr && *collider2 != *portal2_addr && *timer > 32
-    && *(*collider1_addr + 73) != 0 && *(*collider2_addr + 73) != 0)
-    {
-      //set to non-hurting
-      //*(*collider1f + 227) = 0;
-      //*(*collider2f + 227) = 0;
-
-      //null pointer
-      if(*portal2_addr == 0)
-        return 0;
+    //null pointer
+    if(*portal2_addr == 0)
+      return 0;
       
-      //move collider2 to portal 2 if there is one
-      *(*collider2f + 43) = *(*second_portalf + 43);
-      *(*collider2f + 44) = *(*second_portalf + 44);
-      
-      
-      teleporter = collider2f;
+    //move collider2 to portal 2 if there is one
+    *(*collider2f + 43) = *(*second_portalf + 43);
+    *(*collider2f + 44) = *(*second_portalf + 44);
+          
+    teleporter = collider2f;
+    enter_portal = collider1f;
+    exit_portal = second_portalf;
             
-      //reset timer
-      *tmpint = 0;
-      *timer = *tmpint;
-      *has_teleported = 1;
-    }
+    //reset timer
+    *tmpint = 0;
+    *timer = *tmpint;
+    *has_teleported = 1;
+  }
 	
-    if(*collider1 == *portal2_addr && *collider2 != *portal1_addr && *timer > 32
-    && *(*collider1_addr + 73) != 0 && *(*collider2_addr + 73) != 0)
-    {
+  else if(*collider1 == *portal2_addr && *collider2 != *portal1_addr && *timer > 10)
+  {
 
-      //null pointer
-      if(*portal1_addr == 0)
-        return 0;
+    //null pointer
+    if(*portal1_addr == 0)
+      return 0;
         
-      //move collider2 to portal 1 if the portal is not dead
-       *(*collider2f + 43) = *(*first_portalf + 43);
-       *(*collider2f + 44) = *(*first_portalf + 44);
+    //move collider2 to portal 1 if the portal is not dead
+    *(*collider2f + 43) = *(*first_portalf + 43);
+    *(*collider2f + 44) = *(*first_portalf + 44);
        
-       teleporter = collider2f;
+    teleporter = collider2f;
+    enter_portal = collider1f;
+    exit_portal = first_portalf;
        
-       //reset timer
-       *tmpint = 0;
-       *timer = *tmpint;
-       *has_teleported = 1;
-    }
+    //reset timer
+    *tmpint = 0;
+    *timer = *tmpint;
+    *has_teleported = 1;
+  }
 	
 	
-    if(*collider2 == *portal2_addr && *collider1 != *portal1_addr && *timer > 32
-    && *(*collider1_addr + 73) != 0 && *(*collider2_addr + 73) != 0)
-    {
-      
-      //null pointer
-      if(*portal1_addr == 0)
-        return 0;
+  else if(*collider2 == *portal2_addr && *collider1 != *portal1_addr && *timer > 10)
+  {
+    //null pointer
+    if(*portal1_addr == 0)
+      return 0;
         
-      //move collider1 to portal 1 if there is one
-      *(*collider1f + 43) = *(*first_portalf + 43);
-      *(*collider1f + 44) = *(*first_portalf + 44);
+    //move collider1 to portal 1 if there is one
+    *(*collider1f + 43) = *(*first_portalf + 43);
+    *(*collider1f + 44) = *(*first_portalf + 44);
       
-      teleporter = collider1f;
-      
-      //reset timer
-      *tmpint = 0;
-      *timer = *tmpint;
-      *has_teleported = 1;
-    }
+    teleporter = collider1f;
+    enter_portal = collider2f;
+    exit_portal = first_portalf;    
     
-    if(*collider2 == *portal1_addr && *collider1 != *portal2_addr && *timer > 32
-    && *(*collider1_addr + 73) != 0 && *(*collider2_addr + 73) != 0)
+    //reset timer
+    *tmpint = 0;
+    *timer = *tmpint;
+    *has_teleported = 1;
+  }
+    
+  else if(*collider2 == *portal1_addr && *collider1 != *portal2_addr && *timer > 10)
+  {
+    //null pointer
+    if(*portal2_addr == 0)
+      return 0;
+    
+    //move collider1 to portal 2 if there is one
+    *(*collider1f + 43) = *(*second_portalf + 43);
+    *(*collider1f + 44) = *(*second_portalf + 44);
+      
+    teleporter = collider1f;
+    enter_portal = collider2f;
+    exit_portal = second_portalf;
+    
+    //reset timer
+    *tmpint = 0;
+    *timer = *tmpint;
+    *has_teleported = 1;
+  }
+    
+    
+  //here it has teleported through the portal,
+  //move it out from the portal and mirror/switch speed,
+  //and make sure the speed isn't zero!
+  //entered portal is enter_portal, actor is teleporter,
+  //destination is exit_portal
+  if(*has_teleported)
+  {
+    
+    //first take care of moving and minimum speed
+    //if exit portal is on the ground, move teleporter up
+    if(*(*exit_portal + 157) == 0x2000)
     {
-      //null pointer
-      if(*portal2_addr == 0)
-        return 0;
-    
-      //move collider1 to portal 2 if there is one
-      *(*collider1f + 43) = *(*second_portalf + 43);
-      *(*collider1f + 44) = *(*second_portalf + 44);
-      
-      teleporter = collider1f;
-      
-      //reset timer
-       *tmpint = 0;
-       *timer = *tmpint;
-       *has_teleported = 1;
+      *tmp2 = 20.0;
+      *tmp = *(*teleporter + 44);
+      *tmp += *tmp2;
+      *(*teleporter + 44) = *tmp;
     }
     
-    
-    
-    if(*has_teleported)
+    //if exit portal is up, move teleporter down
+    else if(*(*exit_portal + 157) >= 0x04000000)
     {
-      //check orientation of portals
-      //_  _, flip y speed
-      if(*(*second_portal + 157) == 0x2000 && *(*first_portal + 157) == 0x2000)
+      *tmp2 = -20.0;
+      *tmp = *(*teleporter + 44);
+      *tmp += *tmp2;
+      *(*teleporter + 44) = *tmp;
+    }
+    
+    //if exit portal is to the left, move teleporter right
+    else if(*(*exit_portal + 157) == 0x28)
+    {
+      *tmp2 = 20.0;
+      *tmp = *(*teleporter + 43);
+      *tmp += *tmp2;
+      *(*teleporter + 43) = *tmp;
+    }
+  
+    //if exit portal is to the right, move teleporter left
+    else if(*(*exit_portal + 157) == 0x14)
+    {
+      *tmp2 = -20.0;
+      *tmp = *(*teleporter + 43);
+      *tmp += *tmp2;
+      *(*teleporter + 43) = *tmp;
+    }
+  
+    //check orientation of portals
+    //_  _ OR ^ ^, flip y speed
+    if((*(*enter_portal + 157) == 0x2000 && *(*exit_portal + 157) == 0x2000)
+    || (*(*enter_portal + 157) >= 0x4000000 && *(*exit_portal + 157) >= 0x4000000))
+    {
+      *tmp = -1.0;
+      *(*teleporter + 59) *= *tmp; //flip y
+    }
+    
+    //_|  _| OR |_ |_ flip x speed
+    else if( (*(*enter_portal + 157) == 0x28 && *(*exit_portal + 157) == 0x28)
+    || (*(*enter_portal + 157) == 0x14 && *(*exit_portal + 157) == 0x14))
+    {
+      //check for ~zero speed
+      *tmp = .5;
+      *tmp2 = 2.0;
+      if(fabs(*(*teleporter + 67)) < *tmp)
+        *(*teleporter + 67) = *tmp2;
+      else
       {
-        //check for ~zero speed
-        *tmp = 3.0;
-        *tmp2 = 5.0;
-        if(fabs(*(*teleporter + 59)) < *tmp)
-          *(*teleporter + 59) = *tmp2;
-        else
-        {
-          *tmp = -1.0;
-          *(*teleporter + 59) *= *tmp; //flip y
-        }
+        *tmp = -1.0;
+        *(*teleporter + 67) *= *tmp; //flip x
       }
+    }
+     
       
-      //^ ^, flip y speed
-      else if(*(*second_portal + 157) >= 0x4000000 && *(*first_portal + 157) >= 0x4000000)
-      {
-        //check for ~zero speed
-        *tmp = .5;
-        *tmp2 = 2.0;
-        if(fabs(*(*teleporter + 59)) < *tmp)
-          *(*teleporter + 59) = -*tmp2;
-        else
-        {
-          *tmp = -1.0;
-          *(*teleporter + 59) *= *tmp; //flip y
-        }
-      }
+    //enter into portal on the right, exit from floor
+    //set new yspeed to old xspeed
+    //move teleporter up a bit and set a minimal yspeed
+    else if( (*(*enter_portal + 157) == 0x28 && *(*exit_portal + 157) == 0x2000))
+    {
+      *tmp = *(*teleporter + 59);
+      *(*teleporter + 59) = *(*teleporter + 67)*(*tmp2);
+      *(*teleporter + 67) = *tmp*(*tmp2);
+    }
+    
+    
+    
       
-      //_|  _|, flip x speed
-      else if(*(*second_portal + 157) == 0x28 && *(*first_portal + 157) == 0x28)
-      {
-        //check for ~zero speed
-        *tmp = .5;
-        *tmp2 = 2.0;
-        if(fabs(*(*teleporter + 67)) < *tmp)
-          *(*teleporter + 67) = *tmp2;
-        else
-        {
-          *tmp = -1.0;
-          *(*teleporter + 67) *= *tmp; //flip x
-        }
-      }
-      
-      // |_  |_, flip x speed
-      else if(*(*first_portal + 157) == 0x14 && *(*second_portal + 157) == 0x14)
-      {
-        //check for ~zero speed
-        *tmp = .5;
-        *tmp2 = 2.0;
-        if(fabs(*(*teleporter + 67)) < *tmp)
-          *(*teleporter + 67) = -*tmp2;
-        else
-        {
-          *tmp = -1.0;
-          *(*teleporter + 67) *= *tmp; //flip x
-        }
-      }
-      
-      
-      //_| _  flip y and x and neg
-      else if( (*(*second_portal + 157) == 0x28 && *(*first_portal + 157) == 0x2000) ||
-      (*(*first_portal + 157) == 0x28 && *(*second_portal + 157) == 0x2000))
-      {
-        *tmp2 = -1.0;
-        
-        *tmp = *(*teleporter + 59);
-        *(*teleporter + 59) = *(*teleporter + 67)*(*tmp2);
-        *(*teleporter + 67) = *tmp*(*tmp2);
-      }
-      
-      //_| ^ OR |_ _, flip y and x
-      else if((*(*second_portal + 157) == 0x28 && *(*first_portal + 157) == 0x2000)
-      || (*(*second_portal + 157) == 0x2000 && *(*first_portal + 157) == 0x28)
-      || (*(*second_portal + 157) == 0x14 && *(*first_portal + 157) == 0x2000)
-      || (*(*second_portal + 157) == 0x2000 && *(*first_portal + 157) == 0x14))
-      {
-        *tmp = *(*teleporter + 59);
-        *(*teleporter + 59) = *(*teleporter + 67);
-        *(*teleporter + 67) = *tmp;
-      }
+    //_| ^ OR |_ _, flip y and x
+    else if((*(*second_portal + 157) == 0x28 && *(*first_portal + 157) == 0x2000)
+    || (*(*second_portal + 157) == 0x2000 && *(*first_portal + 157) == 0x28)
+    || (*(*second_portal + 157) == 0x14 && *(*first_portal + 157) == 0x2000)
+    || (*(*second_portal + 157) == 0x2000 && *(*first_portal + 157) == 0x14))
+    {
+      *tmp = *(*teleporter + 59);
+      *(*teleporter + 59) = *(*teleporter + 67);
+      *(*teleporter + 67) = *tmp;
+    }
       
     
-    }
-    }
+  }
+    
 	
 	//reset colliders
 	*tmpint = 0;
