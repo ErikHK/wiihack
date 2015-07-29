@@ -87,7 +87,7 @@ int main(void)
     //move collider2 to portal 2 if there is one
     *(*collider2f + 43) = *(*second_portalf + 43);
     *(*collider2f + 44) = *(*second_portalf + 44);
-          
+    
     teleporter = collider2f;
     enter_portalf = collider1f;
     enter_portal = collider1_addr;
@@ -179,11 +179,12 @@ int main(void)
   {
     
     //first take care of moving and minimum speed
-    //if exit portal is on the ground, move teleporter up
+    //TODO: MAX SPEED!
     
+    //if exit portal is on the ground, move teleporter up
     if(*(*exit_portal + 157) == 0x2000)
     {
-      *tmp2 = 20.0;
+      *tmp2 = 15.0;
       *tmp = *(*teleporter + 44);
       *tmp += *tmp2;
       *(*teleporter + 44) = *tmp;
@@ -192,7 +193,7 @@ int main(void)
     //if exit portal is up, move teleporter down
     else if(*(*exit_portal + 157) >= 0x04000000)
     {
-      *tmp2 = -20.0;
+      *tmp2 = -15.0;
       *tmp = *(*teleporter + 44);
       *tmp += *tmp2;
       *(*teleporter + 44) = *tmp;
@@ -201,7 +202,7 @@ int main(void)
     //if exit portal is to the left, move teleporter right
     else if(*(*exit_portal + 157) == 0x28)
     {
-      *tmp2 = 20.0;
+      *tmp2 = 15.0;
       *tmp = *(*teleporter + 43);
       *tmp += *tmp2;
       *(*teleporter + 43) = *tmp;
@@ -210,14 +211,12 @@ int main(void)
     //if exit portal is to the right, move teleporter left
     else if(*(*exit_portal + 157) == 0x14)
     {
-      *tmp2 = -20.0;
+      *tmp2 = -15.0;
       *tmp = *(*teleporter + 43);
       *tmp += *tmp2;
       *(*teleporter + 43) = *tmp;
     }
     
-  
-  
     //check orientation of portals
     //_  _ OR ^ ^, flip y speed
     //*tmp2 = 0x2000;

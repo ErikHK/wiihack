@@ -53,7 +53,7 @@ int main(void)
   
   //check if bobomb instead
   *tmpint = 0x00850000;
-  if(*(*created_actor + 2) == *tmpint)
+  if((*(*created_actor + 2) & 0xffff0000) == *tmpint)
   {
     //newly created is a bobomb
     if(*portalnum == 0)
