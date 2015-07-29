@@ -18,6 +18,7 @@ int main(void)
   
   int * first_portal_addr = (int*)(base_addr);
   int * second_portal_addr = (int*)(base_addr+1);
+  int * last_direction = (int*)(base_addr+15);
   
   int * curr_portal = (int*)(base_addr+2);
   float * player_addr = (float*)0x8154b804;
@@ -38,7 +39,8 @@ int main(void)
   *timer += *tmpint;
   
   float * tilt_addr = (float*)0x807612c8;
-  *(base_addr+5) = 1.571;	//pi/2
+  //*(base_addr+5) = 1.571;	//pi/2
+  *(base_addr+5) = 1.7;	//pi/2 + x
   float * angle = (float*)(base_addr+24);
   *angle = *(base_addr+5)*(*tilt_addr);	//pi/2
   //float * goomba = &goomba_addr;
@@ -60,9 +62,16 @@ int main(void)
 	*cos_addr = cosx;
 
 	
+  if(*last_direction != *player_dir_addr)
+  {
+    *dist = 0;
+  }
+  
+  *last_direction = *player_dir_addr;
+  
 	//move crosshairs outwards!
 	*tmp = 0.0f;
-	*tmp2 = 2.0f;
+	*tmp2 = 3.0f;
 	*tmp3 = 100.0f;
 	if(*(*goomba_addr + 157) == *tmp
 	 && *dist < (*tmp3)) //is free to move
@@ -80,7 +89,10 @@ int main(void)
 	
 	*tmp = 20.0;
 	float marioy = *(player_addr + 44);
-	*tmp2 = marioy + (*dist) * sinx;
+  if(*player_dir_addr == 0x00003000)
+    *tmp2 = marioy + (*dist) * sinx;
+  else
+    *tmp2 = marioy - (*dist) * sinx;
 	*(*goomba_addr + 44) = *tmp2;
 	*tmp = 15.0;
 	*(*goomba_addr + 44) = *(*goomba_addr + 44) + *tmp;
@@ -91,14 +103,19 @@ int main(void)
 	//*tmpint = 0x0000d000;
 	//*tmpint = (int)*(player_addr + 64);
 	//*tmpint = (int)*(0x8154b904);
-	*tmpint = *(player_dir_addr);
 	//*tmp = 20.0;
     float mariox = *(player_addr + 43);
 	
-	if(*tmpint == 0x00003000) //stands to the right
+	if(*(player_dir_addr) == 0x00003000) //stands to the right
+  {
 	  *tmp2 = mariox + (*dist) * (*cos_addr) + *tmp;
+  }
 	else
+  {
 	  *tmp2 = mariox - (*dist) * (*cos_addr) - *tmp;
+  }
+  
+  
 	
 	  
 	*(*goomba_addr + 43) = *tmp2;

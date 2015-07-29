@@ -105,15 +105,16 @@ int main(void)
       *portalnum = 1;
     }
       
-    *static_sin_addr = *sin_addr;
     
     if(*player_dir_addr == 0x00003000)
     {  
       *static_cos_addr = *cos_addr;
+      *static_sin_addr = *sin_addr;
     }else
     {
       *tmp = -1.0;
       *static_cos_addr = *cos_addr*(*tmp);
+      *static_sin_addr = *sin_addr*(*tmp);
     }
     
   }
