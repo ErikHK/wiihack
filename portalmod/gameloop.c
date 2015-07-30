@@ -1,8 +1,13 @@
 //int main(int argc, char *argv[])
 //#include<stdio.h>
 
+typedef unsigned short u16;
+
 int main(void)
 {
+  //create actor
+  int (*CreateActor)(u16 classID, int settings, float * pos, char rot, char layer) = 0x80064610;
+  
   float *base_addr;// = (float*)0x802f6940;
   base_addr = (float*)0x802f6900;
   float ** goomba_addr = (float**)0x802f6930;
@@ -126,6 +131,18 @@ int main(void)
   //increase timer
   *tmpint = 1;
   *portal_timer += *tmpint;
+  
+  
+  
+  
+  
+  //test create actor!!
+  if(*portal_timer > 30)
+  {
+    
+    (*CreateActor)(0x68, 0x1000, (player_addr+43), 0, 0);
+  }
+  
   
   //*tmpint = 2;
   

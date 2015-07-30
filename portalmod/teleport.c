@@ -250,8 +250,17 @@ int main(void)
     if((*(*enter_portal + 157) >= 0x04000000 && *(*exit_portal + 157) == 0x28)
     || (*(*enter_portal + 157) == 0x2000 && *(*exit_portal + 157) == 0x14))
     {
+      *tmp2 = -1.0;
       *tmp = *(*teleporter + 59); // *tmp = yspeed
-      *(*teleporter + 67) = *tmp; //xspeed = yspeed
+      
+      //check if |yspeed| > 1.0
+      if(*tmp < *tmp2)
+      {
+        //*tmp2 = 1.0;
+        *(*teleporter + 67) = *tmp2; //xspeed = -1.0
+      }
+      else
+        *(*teleporter + 67) = *tmp; //xspeed = yspeed
     }
     
     //enter to up, exit from right OR enter to down, exit from left
@@ -260,8 +269,13 @@ int main(void)
     || (*(*enter_portal + 157) == 0x2000 && *(*exit_portal + 157) == 0x28))
     {
       *tmp2 = -1.0;
-      *tmp = *(*teleporter + 59); // *tmp = yspeed
-      *(*teleporter + 67) = *tmp * (*tmp2); //xspeed = yspeed
+      *tmp = *(*teleporter + 59) * (*tmp2); // *tmp = -yspeed
+      //check if |yspeed| > 1.0
+      if(*tmp > fabs(*tmp2))
+      {
+        *(*teleporter + 67) = fabs(*tmp2); //xspeed = 1.0
+      }
+      *(*teleporter + 67) = *tmp; //xspeed = -yspeed
     }
     
     
