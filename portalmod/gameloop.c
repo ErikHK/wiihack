@@ -12,6 +12,8 @@ int main(void)
   base_addr = (float*)0x802f6900;
   float ** goomba_addr = (float**)0x802f6930;
   int * goomba_addri = (int*)0x802f6930;
+  int * button_presses = (int*)0x8154c6ac;
+  int * button_store = (int*)(base_addr+4);
   
   int * tmpint = (int*)(base_addr+6);
   float * tmp = (float*)(base_addr+5);
@@ -119,10 +121,7 @@ int main(void)
   {
 	  *tmp2 = mariox - (*dist) * (*cos_addr) - *tmp;
   }
-  
-  
-	
-	  
+   
 	*(*goomba_addr + 43) = *tmp2;
 	float * goombax = (*goomba_addr + 43);
 	
@@ -133,16 +132,40 @@ int main(void)
   *portal_timer += *tmpint;
   
   
+  //if((*button_presses & 0x06000000) == 0x06000000 && *portal_timer > 30)
+  //{
+  //  (*CreateActor)(0x68, 0x1000, (player_addr+43), 0, 0);
+  //}
   
+  //store button presses as a 1 if the button is held down, and its
+  //value is already zero, so as to shoot just one portal at a time.
+  //0x02000000 on the wii, 0x06000000 in dolphin!
   
+  if((*button_presses & 0x06000000) == 0x06000000 && *button_store == 0)
+  {
+    (*CreateActor)(0x68, 0x1000, (player_addr+43), 0, 0);
+    *button_store = 1;
+  }
+    
+  //create portal if *button_store == 1
+  //if(*button_store == 1 && *portal_timer > 30)
+  //{
+    
+  //}
+    
+  //clear *button_store if button is released
+  if(*button_presses == 0)
+    *button_store = 0;
   
   //test create actor!!
+  //WORKS!!!!!
+  /*
   if(*portal_timer > 30)
   {
     
     (*CreateActor)(0x68, 0x1000, (player_addr+43), 0, 0);
   }
-  
+  */
   
   //*tmpint = 2;
   
@@ -220,6 +243,7 @@ int main(void)
   
   //rotate it correctly!
   
+  /*
   //up
   *tmpint = 0x04000000;
   if(*(*first_portal + 157) >= *tmpint)
@@ -243,7 +267,7 @@ int main(void)
     
   if(*(*second_portal + 157) == *tmpint)
     *(*second_portal + 64) = 0x4000C000;
-  
+  */
   return 0;
 }
 

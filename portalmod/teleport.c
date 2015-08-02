@@ -76,6 +76,11 @@ int main(void)
   //check if one or the other (or both) are invisible
   if(*(*collider1_addr + 73) == 0 || *(*collider2_addr + 73) == 0)
     return 0;
+    
+  //make sure the portals are stationary, you shouldn't be able to teleport
+  //when the portal is flying!
+  if(*(*collider1_addr + 157) == 0 || *(*collider2_addr + 157) == 0)
+    return 0;
   
   //check if one of the colliders is a stored portal
   if(*collider1 == *portal1_addr && *collider2 != *portal2_addr && *timer > 10)

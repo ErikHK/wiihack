@@ -2,7 +2,7 @@
 0x802f6904	portal 2		1
 0x802f6908	portal number		2
 0x802f690c	number of portals	3
-0x802f6910	illegal portal addr	4
+0x802f6910	button store		4
 0x802f6914	tmp game loop		5
 0x802f6918	tmp2 game loop		6
 0x802f691c	timer			7
