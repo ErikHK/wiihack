@@ -2,6 +2,9 @@ __asm__("lis 5, 0x802f;stw 3, 0x6958(5)");
 
 int main(void)
 { 
+
+  int (*delete_actor)(int *addr) = 0x80162650;
+  
   float *base_addr = (float*)0x802f6900;
   int ** created_actor = (int**)(0x802f6958);
   int * created_actor_addr = (int*)(0x802f6958);
@@ -69,9 +72,12 @@ int main(void)
       {
         //make old one invisible
         //TODO: Delete!
-        *(*first_portal + 73) = 0;
+        //delete!
+        *(*first_portal+1) = 0;
+        (*delete_actor)(*first_portal_addr);
+        //*(*first_portal + 73) = 0;
         //make old one untouchable
-        *(*first_portal + 121) = 0;
+        //*(*first_portal + 121) = 0;
         //set a new one!
         *first_portal_addr = *created_actor_addr;
       }
@@ -85,9 +91,11 @@ int main(void)
       else
       {
         //make invisible
-        *(*second_portal + 73) = 0;
+        //*(*second_portal + 73) = 0;
         //make untouchable
-        *(*second_portal + 121) = 0;
+        //*(*second_portal + 121) = 0;
+        *(*second_portal+1) = 0;
+        (*delete_actor)(*second_portal_addr);
         *second_portal_addr = *created_actor_addr;
       }
       *portalnum = 2;
@@ -99,10 +107,12 @@ int main(void)
       else
       {
         //make invisible
-        *(*first_portal + 73) = 0;
+        //*(*first_portal + 73) = 0;
         //make untouchable
-        *(*first_portal + 121) = 0;
+        //*(*first_portal + 121) = 0;
         //*(*first_portal + 349) = 0;
+        *(*first_portal+1) = 0;
+        (*delete_actor)(*first_portal_addr);
         *first_portal_addr = *created_actor_addr;
       }
       *portalnum = 1;
