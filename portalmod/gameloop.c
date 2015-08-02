@@ -132,42 +132,24 @@ int main(void)
   *portal_timer += *tmpint;
   
   
-  //if((*button_presses & 0x06000000) == 0x06000000 && *portal_timer > 30)
-  //{
-  //  (*CreateActor)(0x68, 0x1000, (player_addr+43), 0, 0);
-  //}
-  
   //store button presses as a 1 if the button is held down, and its
   //value is already zero, so as to shoot just one portal at a time.
   //0x02000000 on the wii, 0x06000000 in dolphin!
   
   if((*button_presses & 0x06000000) == 0x06000000 && *button_store == 0)
   {
+    *tmp = 10.0;
+    *(player_addr+44) += *tmp;
     (*CreateActor)(0x68, 0x1000, (player_addr+43), 0, 0);
+    *tmp = -10.0;
+    *(player_addr+44) += *tmp;
     *button_store = 1;
   }
-    
-  //create portal if *button_store == 1
-  //if(*button_store == 1 && *portal_timer > 30)
-  //{
-    
-  //}
     
   //clear *button_store if button is released
   if(*button_presses == 0)
     *button_store = 0;
   
-  //test create actor!!
-  //WORKS!!!!!
-  /*
-  if(*portal_timer > 30)
-  {
-    
-    (*CreateActor)(0x68, 0x1000, (player_addr+43), 0, 0);
-  }
-  */
-  
-  //*tmpint = 2;
   
   //if(*curr_portal == *tmpint) //place first portal
   //{

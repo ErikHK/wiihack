@@ -56,6 +56,11 @@ int main(void)
   if((*(*created_actor + 2) & 0xffff0000) == *tmpint)
   {
     //newly created is a bobomb
+    //move it up from the bottom of Mario where it's created
+    //*tmp2 = 10.0;
+    //*tmp = *(*created_actorf + 44);
+    //*(*created_actorf + 44) = *tmp + *tmp2;
+    
     if(*portalnum == 0)
     {
       if(*first_portal_addr == 0)
@@ -63,6 +68,7 @@ int main(void)
       else
       {
         //make old one invisible
+        //TODO: Delete!
         *(*first_portal + 73) = 0;
         //make old one untouchable
         *(*first_portal + 121) = 0;
