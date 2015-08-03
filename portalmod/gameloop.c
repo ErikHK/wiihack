@@ -45,28 +45,49 @@ int main(void)
   *tmpint = 1;
   *timer += *tmpint;
   
+  *tmp2 = 1.7;
+  
   float * tilt_addr = (float*)0x807612c8;
-  //*(base_addr+5) = 1.571;	//pi/2
-  *(base_addr+5) = 1.7;	//pi/2 + x
   float * angle = (float*)(base_addr+24);
-  *angle = *(base_addr+5)*(*tilt_addr);	//pi/2
+  //*(base_addr+5) = 1.571;	//pi/2
+  *tmp = *tmp2;	//pi/2 + x
+  
+  *angle = (*tilt_addr);	//pi/2
+  *angle *= *tmp;
+  
   //float * goomba = &goomba_addr;
   //float *tmp = base_addr+5;
   
-  *tmpint = 0;
+  // *tmpint = 0;
   
-  if( *goomba_addri != *tmpint) //null pointer check
-  {
+  if( *goomba_addri == 0) //null pointer check
+    return 0;
 	//COSINE!
-	float cosx = fabs((*angle)*(*angle)*(*angle));
-	*tmp = 12.0f;
-	cosx = cosx/(*tmp);
-	*tmp = 1.0f;
-	cosx = *tmp + cosx; //cosx = 1+a^3/12;
-	*tmp = 2.0f;
-	cosx = cosx - (*angle)*(*angle)/(*tmp); //finito
+	//float cosx = fabs((*angle)*(*angle)*(*angle));
+  
+	//*tmp = 12.0f;
+	//cosx = cosx/(*tmp);
+	//*tmp = 1.0f;
+	//cosx = *tmp + cosx; //cosx = 1+a^3/12;
+	//*tmp = 2.0f;
+	//cosx = cosx - (*angle)*(*angle)/(*tmp); //finito, 1+a^3/12-a^2/2
 	
-	*cos_addr = cosx;
+	//*cos_addr = cosx;
+  *cos_addr = fabs((*angle)*(*angle)*(*angle));
+  *tmp = 12.0;
+  *tmp2 = *cos_addr;
+  *cos_addr = *tmp2/(*tmp); //cosx = x^3/12
+  *tmp2 = 1.0;
+  *tmp = *cos_addr;
+  *cos_addr = *tmp + *tmp2; //cosx = 1+x^3/12
+  *tmp2 = -2;
+  *tmp = (*angle)*(*angle);
+  *tmp3 = *tmp/(*tmp2); //*tmp3 = -x^2/2
+  *tmp = *cos_addr; //*tmp = 1+x^3/12
+  *cos_addr = *tmp + *tmp3; //yey, cosx = 1+x^3/12-x^2/2
+  
+  
+  
 
 	
   if(*last_direction != *player_dir_addr)
@@ -77,34 +98,44 @@ int main(void)
   *last_direction = *player_dir_addr;
   
 	//move crosshairs outwards!
-	*tmp = 0.0f;
+	*tmp = 100.0f;
 	*tmp2 = 3.0f;
 	*tmp3 = 100.0f;
-	if(*(*goomba_addr + 157) == *tmp
-	 && *dist < (*tmp3)) //is free to move
+	if(*(goomba_addri + 157) == 0
+	 && *dist < (*tmp)) //is free to move
 	{
 	  *dist += *tmp2;
 	}
 	else
 	  *dist -= *tmp2;
     
+    
 	//SINE
 	*tmp = 7.0;
 	*tmp2 = 1.0;
-	float sinx = (*angle)* (*tmp2 - (*angle)*(*angle)/(*tmp));
-	*sin_addr = sinx;
+	//float sinx = (*angle)* (*tmp2 - (*angle)*(*angle)/(*tmp));
+  *sin_addr =  (*angle)*(*angle)/(*tmp);
+  *tmp = *sin_addr; //*tmp = a^2/7
+  *sin_addr = *tmp2 - *tmp; //1 - a^2/7
+  *tmp = *sin_addr;
+  *sin_addr = *tmp * (*angle);
+  
+	//*sin_addr = sinx;
 	
+  
+  
 	*tmp = 20.0;
 	float marioy = *(player_addr + 44);
   if(*player_dir_addr == 0x00003000)
-    *tmp2 = marioy + (*dist) * sinx;
+    *tmp2 = marioy + (*dist) * (*sin_addr);
   else
-    *tmp2 = marioy - (*dist) * sinx;
-	*(*goomba_addr + 44) = *tmp2;
+    *tmp2 = marioy - (*dist) * (*sin_addr);
+	*(*goomba_addr + 44) = *tmp2; //store sin etc
 	*tmp = 15.0;
-	*(*goomba_addr + 44) = *(*goomba_addr + 44) + *tmp;
+  *tmp2 = *(*goomba_addr + 44);
+	*(*goomba_addr + 44) = *tmp2 + *tmp;
 	float goombay = *(*goomba_addr + 44);
-
+  
 	//check direction of mario!
 	//float dir = *(player_addr + 64);
 	//*tmpint = 0x0000d000;
@@ -125,7 +156,6 @@ int main(void)
 	*(*goomba_addr + 43) = *tmp2;
 	float * goombax = (*goomba_addr + 43);
 	
-  }
   
   //increase timer
   *tmpint = 1;
@@ -138,10 +168,11 @@ int main(void)
   if((*button_presses & 0x06000000) == 0x06000000 && *button_store == 0)
   {
     *tmp = 10.0;
-    *(player_addr+44) += *tmp;
+    *tmp2 = *(player_addr+44);
+    *(player_addr+44) = *tmp + *tmp2;
     (*CreateActor)(0x85, 0x1000, (player_addr+43), 0, 0);
-    *tmp = -10.0;
-    *(player_addr+44) += *tmp;
+    
+    *(player_addr+44) = *tmp2 - *tmp;
     *button_store = 1;
   }
     
@@ -164,24 +195,10 @@ int main(void)
 	if(*first_portal_addr == 0)
 	  return 0;
   
-  /*
-  //might be lost (outside of screen etc), remove it
-  if(*(*first_portal+2) != *tmpint)
-  {
-    *first_portal_addr = 0;
-    return 0;
-  }
-  //might be lost (outside of screen etc), remove it
-  if(*(*second_portal+2) != *tmpint) 
-  {
-    *second_portal_addr = 0;
-    return 0;
-  }
-  */
   
     if( *(*first_portal+2) == 0x00850100) //it's a bobomb
 	  {
-      if(*(*first_portalf+157) == *tmp2) //and we can move it!
+      if(*(*first_portal+157) == 0) //and we can move it!
       {
         *(*first_portalf + 58) = (*tmp) * (*static_cos_addr);
         *(*first_portalf + 59) = (*tmp) * (*static_sin_addr);
@@ -203,7 +220,7 @@ int main(void)
     
 	if( *(*second_portal+2) == 0x00850100)  
 	  {
-      if(*(*second_portalf+157) == *tmp2) //can move
+      if(*(*second_portal+157) == 0) //can move
       {
         *(*second_portalf + 58) = (*tmp) * (*static_cos_addr);
         *(*second_portalf + 59) = (*tmp) * (*static_sin_addr);
@@ -224,7 +241,7 @@ int main(void)
   
   //rotate it correctly!
   
-  /*
+  
   //up
   *tmpint = 0x04000000;
   if(*(*first_portal + 157) >= *tmpint)
@@ -248,7 +265,7 @@ int main(void)
     
   if(*(*second_portal + 157) == *tmpint)
     *(*second_portal + 64) = 0x4000C000;
-  */
+  
   return 0;
 }
 
