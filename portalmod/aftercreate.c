@@ -2,7 +2,7 @@ __asm__("lis 5, 0x802f;stw 3, 0x6958(5)");
 
 int main(void)
 { 
-
+  //delete actor function, execute this to kill things!
   int (*delete_actor)(int *addr) = 0x80162650;
   
   float *base_addr = (float*)0x802f6900;

@@ -122,14 +122,14 @@ int main(void)
   
 	//*sin_addr = sinx;
 	
-  
-  
 	*tmp = 20.0;
 	float marioy = *(player_addr + 44);
+  
   if(*player_dir_addr == 0x00003000)
     *tmp2 = marioy + (*dist) * (*sin_addr);
   else
     *tmp2 = marioy - (*dist) * (*sin_addr);
+  
 	*(*goomba_addr + 44) = *tmp2; //store sin etc
 	*tmp = 15.0;
   *tmp2 = *(*goomba_addr + 44);
@@ -156,11 +156,9 @@ int main(void)
 	*(*goomba_addr + 43) = *tmp2;
 	float * goombax = (*goomba_addr + 43);
 	
-  
   //increase timer
   *tmpint = 1;
   *portal_timer += *tmpint;
-  
   
   //store button presses as a 1 if the button is held down, and its
   //value is already zero, so as to shoot just one portal at a time.
@@ -180,7 +178,6 @@ int main(void)
   if(*button_presses == 0)
     *button_store = 0;
   
-  
   //if(*curr_portal == *tmpint) //place first portal
   //{
     //int ** first_portal = (int**)(base_addr);
@@ -194,7 +191,6 @@ int main(void)
 	//null pointer check!!
 	if(*first_portal_addr == 0)
 	  return 0;
-  
   
     if( *(*first_portal+2) == 0x00850100) //it's a bobomb
 	  {
@@ -236,12 +232,8 @@ int main(void)
       *second_portal_addr = 0;
       return 0;
     }
-	  
-  //}
   
   //rotate it correctly!
-  
-  
   //up
   *tmpint = 0x04000000;
   if(*(*first_portal + 157) >= *tmpint)

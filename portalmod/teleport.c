@@ -79,12 +79,17 @@ int main(void)
     
   //make sure the portals are stationary, you shouldn't be able to teleport
   //when the portal is flying!
-  if(*(*collider1_addr + 157) == 0 || *(*collider2_addr + 157) == 0)
-    return 0;
+  //BUG!!!! ONE OF THEM CAN BE MARIO, HE SHOULD BE ABLE TO FLY!!!
+ //|| *(*collider2_addr + 157) == 0)
+  //  return 0;
   
   //check if one of the colliders is a stored portal
   if(*collider1 == *portal1_addr && *collider2 != *portal2_addr && *timer > 10)
   {
+    //if portal is flying, can't teleport
+    if(*(*collider1_addr + 157) == 0)
+       return 0;
+  
     //null pointer
     if(*portal2_addr == 0)
       return 0;
@@ -108,7 +113,11 @@ int main(void)
 	
   else if(*collider1 == *portal2_addr && *collider2 != *portal1_addr && *timer > 10)
   {
-
+  
+    //if portal is flying, can't teleport
+    if(*(*collider1_addr + 157) == 0)
+      return 0;
+  
     //null pointer
     if(*portal1_addr == 0)
       return 0;
@@ -132,6 +141,10 @@ int main(void)
 	
   else if(*collider2 == *portal2_addr && *collider1 != *portal1_addr && *timer > 10)
   {
+    //if portal is flying, can't teleport
+    if(*(*collider2_addr + 157) == 0)
+      return 0;
+  
     //null pointer
     if(*portal1_addr == 0)
       return 0;
@@ -154,6 +167,10 @@ int main(void)
     
   else if(*collider2 == *portal1_addr && *collider1 != *portal2_addr && *timer > 10)
   {
+    //if portal is flying, can't teleport
+    if(*(*collider2_addr + 157) == 0)
+      return 0;
+      
     //null pointer
     if(*portal2_addr == 0)
       return 0;
@@ -187,6 +204,7 @@ int main(void)
     //TODO: MAX SPEED!
     
     //if exit portal is on the ground, move teleporter up
+    //TODO: move to the side if possible!
     if(*(*exit_portal + 157) == 0x2000)
     {
       *tmp2 = 15.0;
@@ -231,6 +249,7 @@ int main(void)
     {
       *tmp = -1.0;
       *(*teleporter + 59) *= *tmp; //flip y
+      
     }
     
     //_|  _| OR |_ |_ flip x speed
