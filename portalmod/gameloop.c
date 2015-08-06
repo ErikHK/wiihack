@@ -3,10 +3,14 @@
 
 typedef unsigned short u16;
 
+//active wiimote = 8042A748
+
+
 int main(void)
 {
   //create actor
   int (*CreateActor)(u16 classID, int settings, float * pos, char rot, char layer) = 0x80064610;
+  float * (*get_player)(int ID) = 0x8005FB90;
   
   float *base_addr;// = (float*)0x802f6940;
   base_addr = (float*)0x802f6900;
@@ -28,8 +32,13 @@ int main(void)
   int * last_direction = (int*)(base_addr+15);
   
   int * curr_portal = (int*)(base_addr+2);
-  float * player_addr = (float*)0x8154b804;
-  int * player_dir_addr = (int*)0x8154b904;
+  //float * player_addr = (float*)0x8154b804;
+  float * player_addr;
+  
+  //get pointer to player number 0
+  player_addr = get_player(0);
+  
+  int * player_dir_addr = (int*)(player_addr+64);
   float * dist = (float*)(base_addr+10);
   
   int *timer = (int*)(base_addr+40); //0x802f69a0
@@ -46,8 +55,9 @@ int main(void)
   *timer += *tmpint;
   
   *tmp2 = 1.7;
+  float ** wiimoteptr = (float **)0x80377F88;
   
-  float * tilt_addr = (float*)0x807612c8;
+  float * tilt_addr = (float *)((*wiimoteptr+0) + 11);
   float * angle = (float*)(base_addr+24);
   //*(base_addr+5) = 1.571;	//pi/2
   *tmp = *tmp2;	//pi/2 + x
