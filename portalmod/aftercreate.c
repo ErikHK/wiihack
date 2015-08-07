@@ -44,9 +44,9 @@ int main(void)
   
   int *portalnum = (int*)(base_addr+2);
   
-  float *tmp = (float*)(base_addr+22);
-  float *tmp2 = (float*)(base_addr+23);
-  int *tmpint = (int*)(base_addr+24);
+  float *tmp = (float*)(base_addr+23);
+  float *tmp2 = (float*)(base_addr+24);
+  int *tmpint = (int*)(base_addr+25);
   
   //null pointer
   if(*created_actor == 0)
@@ -71,9 +71,23 @@ int main(void)
   {
     //newly created is a bobomb
     //move it up from the bottom of Mario where it's created
-    //*tmp2 = 10.0;
-    //*tmp = *(*created_actorf + 44);
-    //*(*created_actorf + 44) = *tmp + *tmp2;
+    *tmp2 = 10.0;
+    *tmp = *(*created_actorf + 44);
+    *(*created_actorf + 44) = *tmp + *tmp2;
+    
+    
+    if(*player_dir_addr == 0x00003000)
+    {
+      *tmp2 = 20.0;
+      *tmp = *(*created_actorf + 43);
+      *(*created_actorf + 43) = *tmp + *tmp2;
+    }
+    else
+    {
+      *tmp2 = 20.0;
+      *tmp = *(*created_actorf + 43);
+      *(*created_actorf + 43) = *tmp - *tmp2;
+    }
     
     if(*portalnum == 0)
     {
@@ -134,11 +148,13 @@ int main(void)
     {  
       *static_cos_addr = *cos_addr;
       *static_sin_addr = *sin_addr;
+      
     }else
     {
       *tmp = -1.0;
       *static_cos_addr = *cos_addr*(*tmp);
       *static_sin_addr = *sin_addr*(*tmp);
+      
     }
     
   }

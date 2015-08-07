@@ -194,13 +194,28 @@ int main(void)
   if(((*button_presses & 0x06000000) == 0x06000000 || (*button_presses & 0x02000000) == 0x02000000)
   && *button_store == 0)
   {
-  
+    /*
     *tmp = 6.0;
     *tmp2 = *(player_addr+44);
+    
+    //move mario 6 units up
     *(player_addr+44) = *tmp + *tmp2;
+    
+    *tmp = 10.0;
+    *tmp2 = *(player_addr+43);
+    *(player_addr+43) = *tmp + *tmp2;
+    */
     (*CreateActor)(0x85, 0x1000, (player_addr+43), 0, 0);
     
+    /*
+    *tmp = 10.0;
+    //move him back
+    *(player_addr+43) = *tmp2 - *tmp;
+    
+    *tmp = 6.0;
+    *tmp2 = *(player_addr+44);
     *(player_addr+44) = *tmp2 - *tmp;
+    */
     *button_store = 1;
   }
     
