@@ -10,13 +10,13 @@ int main(void)
 {
   //create actor
   int (*CreateActor)(u16 classID, int settings, float * pos, char rot, char layer) = 0x80064610;
-  float * (*get_player)(int ID) = 0x8005FB90;
+  int (*get_player)(int ID) = 0x8005FB90;
   
   float *base_addr;// = (float*)0x802f6940;
   base_addr = (float*)0x802f6900;
   float ** goomba_addr = (float**)0x802f6930;
   int * goomba_addri = (int*)0x802f6930;
-  int * button_presses = (int*)0x8154c6ac;
+  
   int * button_store = (int*)(base_addr+4);
   
   int * tmpint = (int*)(base_addr+6);
@@ -34,11 +34,27 @@ int main(void)
   int * curr_portal = (int*)(base_addr+2);
   //float * player_addr = (float*)0x8154b804;
   float * player_addr;
+  //int * player_addri;
+  
+  int * player_store_addr = (int*)(base_addr+11);
   
   //get pointer to player number 0
-  player_addr = get_player(0);
+  *player_store_addr = get_player(0);
+  
+  //NULL pointer!
+  if(*player_store_addr == 0)
+    return 0;
+  
+  player_addr = *player_store_addr;
+  
+  //*player_store_addr = player_addr;
+  
+  //if((int*)player_addr == 0)
+  //  return 0;
   
   int * player_dir_addr = (int*)(player_addr+64);
+  //int * button_presses = (int*)0x8154c6ac;
+  int * button_presses = (int*)(player_addr+938);
   float * dist = (float*)(base_addr+10);
   
   int *timer = (int*)(base_addr+40); //0x802f69a0
@@ -57,7 +73,9 @@ int main(void)
   *tmp2 = 1.7;
   float ** wiimoteptr = (float **)0x80377F88;
   
+  //choose id 0
   float * tilt_addr = (float *)((*wiimoteptr+0) + 11);
+  
   float * angle = (float*)(base_addr+24);
   //*(base_addr+5) = 1.571;	//pi/2
   *tmp = *tmp2;	//pi/2 + x
@@ -109,7 +127,7 @@ int main(void)
   
 	//move crosshairs outwards!
 	*tmp = 100.0f;
-	*tmp2 = 3.0f;
+	*tmp2 = 6.0f;
 	*tmp3 = 100.0f;
 	if(*(goomba_addri + 157) == 0
 	 && *dist < (*tmp)) //is free to move
@@ -173,9 +191,11 @@ int main(void)
   //store button presses as a 1 if the button is held down, and its
   //value is already zero, so as to shoot just one portal at a time.
   //0x02000000 on the wii, 0x06000000 in dolphin!
-  if((*button_presses & 0x06000000) == 0x06000000 && *button_store == 0)
+  if(((*button_presses & 0x06000000) == 0x06000000 || (*button_presses & 0x02000000) == 0x02000000)
+  && *button_store == 0)
   {
-    *tmp = 10.0;
+  
+    *tmp = 6.0;
     *tmp2 = *(player_addr+44);
     *(player_addr+44) = *tmp + *tmp2;
     (*CreateActor)(0x85, 0x1000, (player_addr+43), 0, 0);

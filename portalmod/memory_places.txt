@@ -4,12 +4,12 @@
 0x802f690c	number of portals	3
 0x802f6910	button store		4
 0x802f6914	tmp game loop		5
-0x802f6918	tmp2 game loop		6
-0x802f691c	timer			7
-0x802f6920	tmp3 game loop		8
-0x802f6924				9
-0x802f6928				10
-0x802f692c				11
+0x802f6918	tmpint			6
+0x802f691c	tmp2 game loop		7
+0x802f6920	timer			8
+0x802f6924	tmp3 game loop		9
+0x802f6928	dist			10
+0x802f692c	player_addr		11
 0x802f6930	micro goomba		12
 0x802f6934	micro goomba		13
 0x802f6938	micro goomba		14

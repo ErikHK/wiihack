@@ -1,9 +1,10 @@
 __asm__("lis 5, 0x802f;stw 3, 0x6958(5)");
 
 int main(void)
-{ 
+{
   //delete actor function, execute this to kill things!
   int (*delete_actor)(int *addr) = 0x80162650;
+  //float * (*get_player)(int ID) = 0x8005FB90;
   
   float *base_addr = (float*)0x802f6900;
   int ** created_actor = (int**)(0x802f6958);
@@ -29,7 +30,17 @@ int main(void)
   float * static_sin_addr = (float*)(base_addr+32);
   float * static_cos_addr = (float*)(base_addr+33);
   
-  int * player_dir_addr = (int*)0x8154b904;
+  int * player_addr = (int*)(base_addr+11);
+  float * player_addrf;
+  
+  //NULL pointer!
+  if(*player_addr == 0)
+    return 0;
+    
+  player_addrf = *player_addr;
+  
+  int * player_dir_addr = (int*)(player_addrf+64);
+  //int * player_dir_addr = (int*)0x8154b904;
   
   int *portalnum = (int*)(base_addr+2);
   
