@@ -28,7 +28,7 @@ int main(void)
   float *tmp2 = (float*)(base_addr+38); //0x802f6998
   int *tmpint = (int*)(base_addr+39); //0x802f699c
   int *timer = (int*)(base_addr+40); //0x802f69a0
-  int *has_teleported = (int*)(base_addr+41);
+  int *has_teleported = (int*)(base_addr+41); //0x802f69a4
   
   int * portal1_addr = (int*)(base_addr);
   int * portal2_addr = (int*)(base_addr+1);
