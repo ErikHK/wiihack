@@ -75,7 +75,6 @@ int main(void)
     *tmp = *(*created_actorf + 44);
     *(*created_actorf + 44) = *tmp + *tmp2;
     
-    
     if(*player_dir_addr == 0x00003000)
     {
       *tmp2 = 20.0;
