@@ -93,26 +93,28 @@ int main(void)
       *(*created_actorf + 43) = *tmp - *tmp2;
     }
     
-    if(*portalnum == 0)
+    if(*portalnum == 0 || *portalnum == 2)
     {
       if(*first_portal_addr == 0)
         *first_portal_addr = *created_actor_addr;
       else
       {
-        //make old one invisible
-        //TODO: Delete!
         //delete!
-        *(*first_portal+1) = 0;
-        (*delete_actor)(*first_portal_addr);
-        //*(*first_portal + 73) = 0;
+        //*(*first_portal+1) = 0;
+        //(*delete_actor)(*first_portal_addr);
+      
+        //make old one invisible
+        *(*first_portal + 73) = 0;
+        
         //make old one untouchable
-        //*(*first_portal + 121) = 0;
+        *(*first_portal + 121) = 0;
         //set a new one!
         *first_portal_addr = *created_actor_addr;
       }
       
       *portalnum = 1;
     }
+    
     else if(*portalnum == 1)
     {
       if(*second_portal_addr == 0)
@@ -120,33 +122,18 @@ int main(void)
       else
       {
         //make invisible
-        //*(*second_portal + 73) = 0;
+        *(*second_portal + 73) = 0;
         //make untouchable
-        //*(*second_portal + 121) = 0;
-        *(*second_portal+1) = 0;
-        (*delete_actor)(*second_portal_addr);
+        *(*second_portal + 121) = 0;
+        
+        //delete
+        //*(*second_portal+1) = 0;
+        //(*delete_actor)(*second_portal_addr);
+        
         *second_portal_addr = *created_actor_addr;
       }
       *portalnum = 2;
     }
-    else if(*portalnum == 2)
-    {
-      if(*first_portal_addr == 0)
-        *first_portal_addr = *created_actor_addr;
-      else
-      {
-        //make invisible
-        //*(*first_portal + 73) = 0;
-        //make untouchable
-        //*(*first_portal + 121) = 0;
-        //*(*first_portal + 349) = 0;
-        *(*first_portal+1) = 0;
-        (*delete_actor)(*first_portal_addr);
-        *first_portal_addr = *created_actor_addr;
-      }
-      *portalnum = 1;
-    }
-      
     
     if(*player_dir_addr == 0x00003000)
     {  
@@ -162,6 +149,5 @@ int main(void)
     }
     
   }
-  
   return 0;
 }

@@ -10,6 +10,7 @@ int main(void)
 {
   //create actor
   int (*CreateActor)(u16 classID, int settings, float * pos, char rot, char layer) = 0x80064610;
+  //int (*get_player)(int ID, int some_addr, int one1, int zero, int one2) = 0x8005FB90;
   int (*get_player)(int ID) = 0x8005FB90;
   
   float *base_addr;// = (float*)0x802f6940;
@@ -37,15 +38,25 @@ int main(void)
   //int * player_addri;
   
   int * player_store_addr = (int*)(base_addr+11);
+  int * get_player_timer = (int*)(base_addr+16);
   
-  //get pointer to player number 0, always mario?
-  *player_store_addr = get_player(0);
+  *get_player_timer += 1;
+  if(*get_player_timer > 100)
+  {
+    //get pointer to player number 0, always mario?
+    //this isn't that reliable, it gives 0 sometimes, when?
+    //*player_store_addr = get_player(0, 0x8043fcb0, 1, 0, 1);
+    *player_store_addr = get_player(0);
+    *get_player_timer = 0;
+  }
   
   //*player_store_addr = 0x8154b804;
-  
+
   //NULL pointer!
   if(*player_store_addr == 0)
+  {
     return 0;
+  }
   
   player_addr = *player_store_addr;
   

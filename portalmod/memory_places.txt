@@ -9,12 +9,12 @@
 0x802f6920	timer			8
 0x802f6924	tmp3 game loop		9
 0x802f6928	dist			10
-0x802f692c	player_addr		11
+0x802f692c	player_store_addr	11
 0x802f6930	micro goomba		12
 0x802f6934	micro goomba		13
 0x802f6938	micro goomba		14
 0x802f693c	last_direction		15
-0x802f6940				16
+0x802f6940	get_player_timer	16
 0x802f6944				17
 0x802f6948				18
 0x802f694c				19
