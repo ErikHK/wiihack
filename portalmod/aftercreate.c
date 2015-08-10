@@ -1,3 +1,5 @@
+
+
 __asm__("lis 5, 0x802f;stw 3, 0x6958(5)");
 
 int main(void)
@@ -30,8 +32,31 @@ int main(void)
   float * static_sin_addr = (float*)(base_addr+32);
   float * static_cos_addr = (float*)(base_addr+33);
   
+  float *tmp = (float*)(base_addr+23);
+  float *tmp2 = (float*)(base_addr+24);
+  int *tmpint = (int*)(base_addr+25);
+  
   int * player_addr = (int*)(base_addr+11);
   float * player_addrf;
+  
+  //null pointer
+  if(*created_actor == 0)
+    return 0;
+  
+  
+  // *tmpint = 0x01240000;
+  //if micro goomba
+  if(*(*created_actor + 2) == 0x01240000)
+  {
+    //*tmpint = 0;
+    if(*first_goomba == 0)
+      *first_goomba = *created_actor_addr;
+    else if(*second_goomba == 0)
+      *second_goomba = *created_actor_addr;
+    else if(*third_goomba == 0)
+      *third_goomba = *created_actor_addr;
+  }
+  
   
   //NULL pointer!
   if(*player_addr == 0)
@@ -43,27 +68,7 @@ int main(void)
   //int * player_dir_addr = (int*)0x8154b904;
   
   int *portalnum = (int*)(base_addr+2);
-  
-  float *tmp = (float*)(base_addr+23);
-  float *tmp2 = (float*)(base_addr+24);
-  int *tmpint = (int*)(base_addr+25);
-  
-  //null pointer
-  if(*created_actor == 0)
-    return 0;
-  
-  *tmpint = 0x01240000;
-  //if micro goomba
-  if(*(*created_actor + 2) == *tmpint)
-  {
-    *tmpint = 0;
-    if(*first_goomba == *tmpint)
-      *first_goomba = *created_actor_addr;
-    else if(*second_goomba == *tmpint)
-      *second_goomba = *created_actor_addr;
-    else if(*third_goomba == *tmpint)
-      *third_goomba = *created_actor_addr;
-  }
+
   
   //check if bobomb instead
   *tmpint = 0x00850000;

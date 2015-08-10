@@ -38,8 +38,10 @@ int main(void)
   
   int * player_store_addr = (int*)(base_addr+11);
   
-  //get pointer to player number 0
+  //get pointer to player number 0, always mario?
   *player_store_addr = get_player(0);
+  
+  //*player_store_addr = 0x8154b804;
   
   //NULL pointer!
   if(*player_store_addr == 0)
@@ -75,6 +77,7 @@ int main(void)
   
   //choose id 0
   float * tilt_addr = (float *)((*wiimoteptr+0) + 11);
+  //float * tilt_addr = (float*)0x807612c8;
   
   float * angle = (float*)(base_addr+24);
   //*(base_addr+5) = 1.571;	//pi/2
