@@ -65,6 +65,7 @@ int main(void)
   //if((int*)player_addr == 0)
   //  return 0;
   
+  int * player_free_addr = (int*)(player_addr+157);
   int * player_dir_addr = (int*)(player_addr+64);
   //int * button_presses = (int*)0x8154c6ac;
   int * button_presses = (int*)(player_addr+938);
@@ -206,7 +207,7 @@ int main(void)
   //value is already zero, so as to shoot just one portal at a time.
   //0x02000000 on the wii, 0x06000000 in dolphin!
   if(((*button_presses & 0x06000000) == 0x06000000 || (*button_presses & 0x02000000) == 0x02000000)
-  && *button_store == 0)
+  && *button_store == 0 && (*player_free_addr & 0x000000ff) == 0)
   {
     /*
     *tmp = 6.0;
@@ -258,9 +259,13 @@ int main(void)
         *(*first_portalf + 58) = (*tmp) * (*static_cos_addr);
         *(*first_portalf + 59) = (*tmp) * (*static_sin_addr);
       }else{ //can't move it, freeze it!
-        *(*first_portalf + 62) = *tmp2; //gravity = 0
-        *(*first_portalf + 58) = *tmp2; //hastx = 0
-        *(*first_portalf + 59) = *tmp2; //hasty = 0
+        //TODO: check if it landed on a legal place!
+        if(*(*first_portal+159) == 0)
+        {
+          *(*first_portalf + 62) = *tmp2; //gravity = 0
+          *(*first_portalf + 58) = *tmp2; //hastx = 0
+          *(*first_portalf + 59) = *tmp2; //hasty = 0
+        }
       }
 	  }else if( *(*first_portal+4) == 0)
     {
@@ -281,9 +286,12 @@ int main(void)
         *(*second_portalf + 59) = (*tmp) * (*static_sin_addr);
       }
       else{
+      if(*(*second_portal+159) == 0)
+      {
         *(*second_portalf + 62) = *tmp2; //gravity = 0
         *(*second_portalf + 58) = *tmp2; //hastx = 0
         *(*second_portalf + 59) = *tmp2; //hasty = 0
+      }
       }
 	  }
     else if( *(*second_portal+4) == 0)

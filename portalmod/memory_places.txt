@@ -15,8 +15,8 @@
 0x802f6938	micro goomba		14
 0x802f693c	last_direction		15
 0x802f6940	get_player_timer	16
-0x802f6944				17
-0x802f6948				18
+0x802f6944	first_portal_frozen	17
+0x802f6948	second_portal_frozen	18
 0x802f694c				19
 0x802f6950	collider1		20
 0x802f6954	collider2		21

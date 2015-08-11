@@ -44,6 +44,7 @@ int main(void)
     return 0;
   
   
+  
   // *tmpint = 0x01240000;
   //if micro goomba
   if(*(*created_actor + 2) == 0x01240000)
@@ -76,19 +77,19 @@ int main(void)
   {
     //newly created is a bobomb
     //move it up from the bottom of Mario where it's created
-    *tmp2 = 10.0;
+    *tmp2 = 15.0;
     *tmp = *(*created_actorf + 44);
     *(*created_actorf + 44) = *tmp + *tmp2;
     
     if(*player_dir_addr == 0x00003000)
     {
-      *tmp2 = 20.0;
+      *tmp2 = 15.0;
       *tmp = *(*created_actorf + 43);
       *(*created_actorf + 43) = *tmp + *tmp2;
     }
     else
     {
-      *tmp2 = 20.0;
+      *tmp2 = 15.0;
       *tmp = *(*created_actorf + 43);
       *(*created_actorf + 43) = *tmp - *tmp2;
     }
