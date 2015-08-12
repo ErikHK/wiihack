@@ -266,9 +266,10 @@ int main(void)
         (*(*first_portal+157+10) == 2) ) //right
         //(*(*first_portal+157+11) == 2)) //left, ILLEGAL PLACE?
         {
-          *(*first_portalf + 73) = *tmp2; //make invisible
-          //*first_portal_addr = 0;
-          //return 0;
+          //*(*first_portalf + 73) = *tmp2; //make invisible
+          *(*first_portal + 73) = 0; //make invisible
+          *first_portal_addr = 0;
+          return 0;
         }
         
         else 
@@ -307,9 +308,9 @@ int main(void)
         //(*(*second_portal+157+11) == 2)) //left, ILLEGAL PLACE?
       {
         //make portal invisible!
-        *(*second_portalf + 73) = *tmp2;
-        //*second_portal_addr = 0;
-        //return 0;
+        *(*second_portal + 73) = 0;
+        *second_portal_addr = 0;
+        return 0;
       }
       
       else 
