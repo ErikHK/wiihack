@@ -258,24 +258,28 @@ int main(void)
       {
         *(*first_portalf + 58) = (*tmp) * (*static_cos_addr);
         *(*first_portalf + 59) = (*tmp) * (*static_sin_addr);
-      }else{ //can't move it, freeze it!
+      }
+        
         //TODO: check if it landed on a legal place!
-        if(*(*first_portal+157+8) == 2 || //hangs under
+        else if(*(*first_portal+157+8) == 2 || //hangs under
         (*(*first_portal+157+2) == 8) ||  //ground
         (*(*first_portal+157+10) == 2) ) //right
-        //(*(*first_portal+157+12) == 0x10100000)) //left
+        //(*(*first_portal+157+11) == 2)) //left, ILLEGAL PLACE?
         {
           *(*first_portalf + 73) = *tmp2; //make invisible
           //*first_portal_addr = 0;
+          //return 0;
         }
-        else
+        
+        else 
         {
           *(*first_portalf + 62) = *tmp2; //gravity = 0
           *(*first_portalf + 58) = *tmp2; //hastx = 0
           *(*first_portalf + 59) = *tmp2; //hasty = 0
         }
         
-      }
+      
+      
 	  }else if( *(*first_portal+4) == 0)
     {
       *first_portal_addr = 0;
@@ -294,20 +298,21 @@ int main(void)
         *(*second_portalf + 58) = (*tmp) * (*static_cos_addr);
         *(*second_portalf + 59) = (*tmp) * (*static_sin_addr);
       }
-      else{
       
       //check illegalcheck.txt for info
       
-      if(*(*second_portal+157+8) == 2 || //hangs under
+      else if(*(*second_portal+157+8) == 2 || //hangs under
         ((*(*second_portal+157+2) == 8) || //ground
-        (*(*second_portal+157+10) == 2)) ) //ground
-        //(*(*second_portal+157+12) == 0x10100000)) //right or left
+        (*(*second_portal+157+10) == 2)) ) //right
+        //(*(*second_portal+157+11) == 2)) //left, ILLEGAL PLACE?
       {
+        //make portal invisible!
         *(*second_portalf + 73) = *tmp2;
         //*second_portal_addr = 0;
+        //return 0;
       }
       
-      else //make portal invisible!
+      else 
       {
         
         *(*second_portalf + 62) = *tmp2; //gravity = 0
@@ -316,7 +321,7 @@ int main(void)
       }
       
       
-      }
+      
       
 	  }
     else if( *(*second_portal+4) == 0)
