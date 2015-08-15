@@ -17,6 +17,7 @@ int main(void)
   base_addr = (float*)0x802f6900;
   float ** goomba_addr = (float**)0x802f6930;
   int * goomba_addri = (int*)0x802f6930;
+  int ** goomba_addrii = (int**)0x802f6930;
   
   int * button_store = (int*)(base_addr+4);
   
@@ -105,17 +106,13 @@ int main(void)
   
   if( *goomba_addri == 0) //null pointer check
     return 0;
-	//COSINE!
-	//float cosx = fabs((*angle)*(*angle)*(*angle));
-  
-	//*tmp = 12.0f;
-	//cosx = cosx/(*tmp);
-	//*tmp = 1.0f;
-	//cosx = *tmp + cosx; //cosx = 1+a^3/12;
-	//*tmp = 2.0f;
-	//cosx = cosx - (*angle)*(*angle)/(*tmp); //finito, 1+a^3/12-a^2/2
 	
-	//*cos_addr = cosx;
+  if( *(*goomba_addrii + 4) == 0) //null pointer check
+    *goomba_addri = 0;
+	
+  
+  
+  //COSINE!
   *cos_addr = fabs((*angle)*(*angle)*(*angle));
   *tmp = 12.0;
   *tmp2 = *cos_addr;
@@ -141,10 +138,11 @@ int main(void)
   *last_direction = *player_dir_addr;
   
 	//move crosshairs outwards!
+	
 	*tmp = 100.0f;
 	*tmp2 = 6.0f;
 	*tmp3 = 100.0f;
-	if(*(goomba_addri + 157) == 0
+	if(*(*goomba_addrii + 157) == 0
 	 && *dist < (*tmp)) //is free to move
 	{
 	  *dist += *tmp2;

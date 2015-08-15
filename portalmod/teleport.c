@@ -242,8 +242,6 @@ int main(void)
     
     //check orientation of portals
     //_  _ OR ^ ^, flip y speed
-    //*tmp2 = 0x2000;
-    //*tmp3 = 0x04000000;
     if( (*(*first_portal + 157) == 0x2000 && *(*second_portal + 157) == 0x2000)
     || (*(*first_portal + 157) >= 0x04000000 && *(*second_portal + 157) >= 0x04000000))
     {
@@ -262,15 +260,22 @@ int main(void)
     
     //enter to right, exit from up OR enter to left, exit from down
     //yspeed = xspeed
+    //xspeed = 0
     if((*(*enter_portal + 157) == 0x14 && *(*exit_portal + 157) >= 0x04000000)
     || (*(*enter_portal + 157) == 0x28 && *(*exit_portal + 157) == 0x2000))
     {
       *tmp = *(*teleporter + 67); // *tmp = xspeed
       *(*teleporter + 59) *= *tmp; //yspeed = xspeed
+      
+      *tmp = 0;
+      *(*teleporter + 67) = *tmp;
+      *(*teleporter + 58) = *tmp;
+      
     }
     
     //enter to up, exit from left OR enter to down, exit from right
     //xspeed = yspeed
+    //yspeed = 0
     if((*(*enter_portal + 157) >= 0x04000000 && *(*exit_portal + 157) == 0x28)
     || (*(*enter_portal + 157) == 0x2000 && *(*exit_portal + 157) == 0x14))
     {
@@ -282,9 +287,13 @@ int main(void)
       {
         //*tmp2 = 1.0;
         *(*teleporter + 67) = *tmp2; //xspeed = -1.0
+        *(*teleporter + 58) = *tmp2; //xspeed = -1.0
       }
       else
+      {
         *(*teleporter + 67) = *tmp; //xspeed = yspeed
+        *(*teleporter + 58) = *tmp; //xspeed = yspeed
+      }
     }
     
     //enter to up, exit from right OR enter to down, exit from left
