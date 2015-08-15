@@ -106,11 +106,10 @@ int main(void)
   
   if( *goomba_addri == 0) //null pointer check
     return 0;
-	
-  if( *(*goomba_addrii + 4) == 0) //null pointer check
-    *goomba_addri = 0;
-	
   
+  //if(( *(*goomba_addrii + 2) & 0xFFFF0000) != 0x0124) //null pointer check
+  //  *goomba_addri = 0;
+	
   
   //COSINE!
   *cos_addr = fabs((*angle)*(*angle)*(*angle));
@@ -204,31 +203,10 @@ int main(void)
   //store button presses as a 1 if the button is held down, and its
   //value is already zero, so as to shoot just one portal at a time.
   //0x02000000 on the wii, 0x06000000 in dolphin!
-  if(((*button_presses & 0x06000000) == 0x06000000 || (*button_presses & 0x02000000) == 0x02000000)
+  if(((*button_presses & 0x06000000) == 0x06000000 || (*button_presses & 0x02000002) == 0x02000002)
   && *button_store == 0 && (*player_free_addr & 0x000000ff) == 0)
   {
-    /*
-    *tmp = 6.0;
-    *tmp2 = *(player_addr+44);
-    
-    //move mario 6 units up
-    *(player_addr+44) = *tmp + *tmp2;
-    
-    *tmp = 10.0;
-    *tmp2 = *(player_addr+43);
-    *(player_addr+43) = *tmp + *tmp2;
-    */
     (*CreateActor)(0x85, 0x1000, (player_addr+43), 0, 0);
-    
-    /*
-    *tmp = 10.0;
-    //move him back
-    *(player_addr+43) = *tmp2 - *tmp;
-    
-    *tmp = 6.0;
-    *tmp2 = *(player_addr+44);
-    *(player_addr+44) = *tmp2 - *tmp;
-    */
     *button_store = 1;
   }
     
