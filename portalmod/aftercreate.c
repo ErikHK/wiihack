@@ -43,19 +43,24 @@ int main(void)
   if(*created_actor == 0)
     return 0;
   
-  
-  
   // *tmpint = 0x01240000;
   //if micro goomba
   if(*(*created_actor + 2) == 0x01240000)
   {
     //*tmpint = 0;
     if(*first_goomba == 0)
+	{
       *first_goomba = *created_actor_addr;
+	  
+	}
     else if(*second_goomba == 0)
+	{
       *second_goomba = *created_actor_addr;
+	}
     else if(*third_goomba == 0)
+	{
       *third_goomba = *created_actor_addr;
+	}
   }
   
   

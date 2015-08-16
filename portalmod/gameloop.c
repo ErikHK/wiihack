@@ -99,17 +99,16 @@ int main(void)
   *angle = (*tilt_addr);	//pi/2
   *angle *= *tmp;
   
-  //float * goomba = &goomba_addr;
-  //float *tmp = base_addr+5;
   
-  // *tmpint = 0;
-  
-  if( *goomba_addri == 0) //null pointer check
-    return 0;
-  
-  //if(( *(*goomba_addrii + 2) & 0xFFFF0000) != 0x0124) //null pointer check
-  //  *goomba_addri = 0;
-	
+  //SINE
+  *tmp = 7.0;
+  *tmp2 = 1.0;
+  //float sinx = (*angle)* (*tmp2 - (*angle)*(*angle)/(*tmp));
+  *sin_addr =  (*angle)*(*angle)/(*tmp);
+  *tmp = *sin_addr; //*tmp = a^2/7
+  *sin_addr = *tmp2 - *tmp; //1 - a^2/7
+  *tmp = *sin_addr;
+  *sin_addr = *tmp * (*angle);
   
   //COSINE!
   *cos_addr = fabs((*angle)*(*angle)*(*angle));
@@ -127,17 +126,10 @@ int main(void)
   
   
   
-
-	
-  if(*last_direction != *player_dir_addr)
+  
+  if( *goomba_addri != 0 && *(goomba_addri+1) != 0) //null pointer check
   {
-    *dist = 0;
-  }
-  
-  *last_direction = *player_dir_addr;
-  
-	//move crosshairs outwards!
-	
+    //move crosshairs outwards!
 	*tmp = 100.0f;
 	*tmp2 = 6.0f;
 	*tmp3 = 100.0f;
@@ -148,54 +140,65 @@ int main(void)
 	}
 	else
 	  *dist -= *tmp2;
-    
-    
-	//SINE
-	*tmp = 7.0;
-	*tmp2 = 1.0;
-	//float sinx = (*angle)* (*tmp2 - (*angle)*(*angle)/(*tmp));
-  *sin_addr =  (*angle)*(*angle)/(*tmp);
-  *tmp = *sin_addr; //*tmp = a^2/7
-  *sin_addr = *tmp2 - *tmp; //1 - a^2/7
-  *tmp = *sin_addr;
-  *sin_addr = *tmp * (*angle);
   
-	//*sin_addr = sinx;
-	
-	*tmp = 20.0;
-	float marioy = *(player_addr + 44);
+  
+  *tmp = 20.0;
+  *tmp = 15.0;
+  float marioy = *(player_addr + 44);
   
   if(*player_dir_addr == 0x00003000)
+  {
     *tmp2 = marioy + (*dist) * (*sin_addr);
-  else
-    *tmp2 = marioy - (*dist) * (*sin_addr);
-  
-	*(*goomba_addr + 44) = *tmp2; //store sin etc
-	*tmp = 15.0;
-  *tmp2 = *(*goomba_addr + 44);
-	*(*goomba_addr + 44) = *tmp2 + *tmp;
-	float goombay = *(*goomba_addr + 44);
-  
-	//check direction of mario!
-	//float dir = *(player_addr + 64);
-	//*tmpint = 0x0000d000;
-	//*tmpint = (int)*(player_addr + 64);
-	//*tmpint = (int)*(0x8154b904);
-	//*tmp = 20.0;
-    float mariox = *(player_addr + 43);
-	
-	if(*(player_dir_addr) == 0x00003000) //stands to the right
-  {
-	  *tmp2 = mariox + (*dist) * (*cos_addr) + *tmp;
+	*tmp2 += *tmp;
   }
-	else
+  else
   {
-	  *tmp2 = mariox - (*dist) * (*cos_addr) - *tmp;
+    *tmp2 = marioy - (*dist) * (*sin_addr);
+	*tmp2 += *tmp;
+  }
+  
+  *(*goomba_addr + 44) = *tmp2; //store sin etc
+  *tmp3 = marioy + *tmp;
+  *(*(goomba_addr+1) + 44) = *tmp3;
+  //*tmp = 15.0;
+  //*tmp2 = *(*goomba_addr + 44);
+  //*(*goomba_addr + 44) = *tmp2 + *tmp;
+  
+  
+  float goombay = *(*goomba_addr + 44);
+  
+  float mariox = *(player_addr + 43);
+  
+  
+  //check direction of mario!	
+  if(*(player_dir_addr) == 0x00003000) //stands to the right
+  {
+	*tmp2 = mariox + (*dist) * (*cos_addr) + *tmp;
+	*tmp3 = mariox + *tmp;
+  }
+  else
+  {
+	*tmp2 = mariox - (*dist) * (*cos_addr) - *tmp;
+	*tmp3 = mariox - *tmp;
   }
    
-	*(*goomba_addr + 43) = *tmp2;
-	float * goombax = (*goomba_addr + 43);
+  *(*goomba_addr + 43) = *tmp2;
+  *(*(goomba_addr+1) + 43) = *tmp3;
+  //float * goombax = (*goomba_addr + 43);
+  }
+  
+  //if(( *(*goomba_addrii + 2) & 0xFFFF0000) != 0x0124) //null pointer check
+  //  *goomba_addri = 0;
 	
+  
+  if(*last_direction != *player_dir_addr)
+  {
+    *dist = 0;
+  }
+  
+  *last_direction = *player_dir_addr;
+    
+  
   //increase timer
   *tmpint = 1;
   *portal_timer += *tmpint;
@@ -203,20 +206,21 @@ int main(void)
   //store button presses as a 1 if the button is held down, and its
   //value is already zero, so as to shoot just one portal at a time.
   //0x02000000 on the wii, 0x06000000 in dolphin!
-  if(((*button_presses & 0x06000000) == 0x06000000 || (*button_presses & 0x02000002) == 0x02000002)
+  if(((*button_presses & 0x06000000) == 0x06000000)
+  //  || (*button_presses & 0x02020000) == 0x02020000)
   && *button_store == 0 && (*player_free_addr & 0x000000ff) == 0)
   {
     (*CreateActor)(0x85, 0x1000, (player_addr+43), 0, 0);
     *button_store = 1;
   }
     
-  //clear *button_store if button is released
-  if(*button_presses == 0)
+  //clear *button_store if button 1 is released
+  if((*button_presses & 0x02000000) == 0)
     *button_store = 0;
   
   //if(*curr_portal == *tmpint) //place first portal
   //{
-    //int ** first_portal = (int**)(base_addr);
+  //int ** first_portal = (int**)(base_addr);
 	float ** first_portalf = (float**)(base_addr);
 	float ** second_portalf = (float**)(base_addr+1);
 	*tmpint = 0x00850100;
@@ -228,7 +232,7 @@ int main(void)
 	if(*first_portal_addr == 0)
 	  return 0;
   
-    if( *(*first_portal+2) == 0x00850100) //it's a bobomb
+    if( *(*first_portal+2) == 0x00850100) //it's a living bobomb
 	  {
       if(*(*first_portal+157) == 0) //and we can move it!
       {
