@@ -127,7 +127,7 @@ int main(void)
   
   
   
-  if( *goomba_addri != 0 && *(goomba_addri+1) != 0) //null pointer check
+  if( *goomba_addri != 0 && *(goomba_addri+1) != 0 &&  *(goomba_addri+2) != 0) //null pointer check
   {
     //move crosshairs outwards!
 	*tmp = 100.0f;
@@ -145,51 +145,64 @@ int main(void)
   *tmp = 20.0;
   *tmp = 15.0;
   float marioy = *(player_addr + 44);
+  float distancey = (*dist) * (*sin_addr);
   
   if(*player_dir_addr == 0x00003000)
   {
-    *tmp2 = marioy + (*dist) * (*sin_addr);
-	*tmp2 += *tmp;
+    *(*goomba_addr + 44) = marioy + distancey;
+	*(*goomba_addr + 44) += *tmp;
+	
+	*(*(goomba_addr+1) + 44) = marioy + *tmp;
+	*tmp2 = 2.0;
+	*(*(goomba_addr+2) + 44) = distancey;
+	*(*(goomba_addr+2) + 44) /= *tmp2; //distance/2
+	*(*(goomba_addr+2) + 44) += marioy + *tmp; //marioy+ distance/2 + tmp
   }
   else
   {
-    *tmp2 = marioy - (*dist) * (*sin_addr);
-	*tmp2 += *tmp;
+    *(*goomba_addr + 44) = marioy - distancey;
+	*(*goomba_addr + 44) += *tmp;
+	
+	*(*(goomba_addr+1) + 44) = marioy + *tmp;
+	*tmp2 = -2.0;
+	*(*(goomba_addr+2) + 44) = distancey;
+	*(*(goomba_addr+2) + 44) /= *tmp2; //distance/2
+	*(*(goomba_addr+2) + 44) += marioy + *tmp; //marioy+ distance/2 + tmp
   }
   
-  *(*goomba_addr + 44) = *tmp2; //store sin etc
-  *tmp3 = marioy + *tmp;
-  *(*(goomba_addr+1) + 44) = *tmp3;
+   //= *tmp2; //store sin etc
+  //*tmp3 = marioy + *tmp;
+  //*(*(goomba_addr+1) + 44) = *tmp3;
   //*tmp = 15.0;
   //*tmp2 = *(*goomba_addr + 44);
   //*(*goomba_addr + 44) = *tmp2 + *tmp;
   
-  
   float goombay = *(*goomba_addr + 44);
-  
   float mariox = *(player_addr + 43);
-  
+  float distancex = (*dist) * (*cos_addr);
   
   //check direction of mario!	
   if(*(player_dir_addr) == 0x00003000) //stands to the right
   {
-	*tmp2 = mariox + (*dist) * (*cos_addr) + *tmp;
-	*tmp3 = mariox + *tmp;
+	*(*goomba_addr + 43) = mariox + (*dist) * (*cos_addr) + *tmp;
+	*(*(goomba_addr+1) + 43) = mariox + *tmp;
+	*tmp2 = 2.0;
+	*(*(goomba_addr+2) + 43) = distancex;
+	*(*(goomba_addr+2) + 43) /= *tmp2; //distance/2
+	*(*(goomba_addr+2) + 43) += mariox + *tmp; //marioy+ distance/2 + tmp
+	
   }
   else
   {
-	*tmp2 = mariox - (*dist) * (*cos_addr) - *tmp;
-	*tmp3 = mariox - *tmp;
+	*(*goomba_addr + 43) = mariox - (*dist) * (*cos_addr) - *tmp;
+	*(*(goomba_addr+1) + 43) = mariox - *tmp;
+	*tmp2 = -2.0;
+	*(*(goomba_addr+2) + 43) = distancex;
+	*(*(goomba_addr+2) + 43) /= *tmp2; //distance/2
+	*(*(goomba_addr+2) + 43) += mariox - *tmp; //marioy+ distance/2 + tmp
   }
    
-  *(*goomba_addr + 43) = *tmp2;
-  *(*(goomba_addr+1) + 43) = *tmp3;
-  //float * goombax = (*goomba_addr + 43);
   }
-  
-  //if(( *(*goomba_addrii + 2) & 0xFFFF0000) != 0x0124) //null pointer check
-  //  *goomba_addri = 0;
-	
   
   if(*last_direction != *player_dir_addr)
   {
