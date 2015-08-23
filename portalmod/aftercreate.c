@@ -77,7 +77,7 @@ int main(void)
 
   
   //check if bobomb instead
-  *tmpint = 0x00850000;
+  *tmpint = 0x00380000;
   if((*(*created_actor + 2) & 0xffff0000) == *tmpint)
   {
     //newly created is a bobomb

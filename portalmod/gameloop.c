@@ -223,7 +223,7 @@ int main(void)
   //  || (*button_presses & 0x02020000) == 0x02020000)
   && *button_store == 0 && (*player_free_addr & 0x000000ff) == 0)
   {
-    (*CreateActor)(0x85, 0x1000, (player_addr+43), 0, 0);
+    (*CreateActor)(0x38, 0x1000, (player_addr+43), 0, 0);
     *button_store = 1;
   }
     
@@ -236,7 +236,7 @@ int main(void)
   //int ** first_portal = (int**)(base_addr);
 	float ** first_portalf = (float**)(base_addr);
 	float ** second_portalf = (float**)(base_addr+1);
-	*tmpint = 0x00850100;
+	*tmpint = 0x00380100;
 
 	*tmp = 7.0;
 	*tmp2 = 0.0;
@@ -245,7 +245,7 @@ int main(void)
 	if(*first_portal_addr == 0)
 	  return 0;
   
-    if( *(*first_portal+2) == 0x00850100) //it's a living bobomb
+    if( *(*first_portal+2) == 0x00380100) //it's a living bobomb
 	  {
       if(*(*first_portal+157) == 0) //and we can move it!
       {
@@ -285,7 +285,7 @@ int main(void)
   if(*second_portal_addr == 0)
 	  return 0;
     
-	if( *(*second_portal+2) == 0x00850100)  
+	if( *(*second_portal+2) == 0x00380100)  
 	  {
       if(*(*second_portal+157) == 0) //can move
       {

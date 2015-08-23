@@ -70,7 +70,7 @@ int main(void)
     return 0;
     
   //make sure both of them aren't portals!
-  if(*(*collider1_addr + 2) == 0x00850100 && *(*collider2_addr + 2) == 0x00850100)
+  if(*(*collider1_addr + 2) == 0x00380100 && *(*collider2_addr + 2) == 0x00380100)
     return 0;
   
   //check if one or the other (or both) are invisible
