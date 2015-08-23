@@ -47,11 +47,13 @@ int main(void)
   //if micro goomba
   if(*(*created_actor + 2) == 0x01240000)
   {
+    //make it non-interactive
+	*(*created_actor + 121) = 0;
+     
     //*tmpint = 0;
     if(*first_goomba == 0)
 	{
-      *first_goomba = *created_actor_addr;
-	  
+	  *first_goomba = *created_actor_addr;
 	}
     else if(*second_goomba == 0)
 	{
