@@ -125,8 +125,6 @@ int main(void)
   *cos_addr = *tmp + *tmp3; //yey, cosx = 1+x^3/12-x^2/2
   
   
-  
-  
   if( *goomba_addri != 0 && *(goomba_addri+1) != 0 &&  *(goomba_addri+2) != 0) //null pointer check
   {
     //move crosshairs outwards!
