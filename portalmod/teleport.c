@@ -5,11 +5,13 @@
 #define XSPEED  67
 #define YSPEED  59
 */
+typedef unsigned short u16;
 
 __asm__("lis 5, 0x802f;lwz 4, 4(23);lwz 3, 4(24);stw 3, 0x6950(5);stw 4, 0x6954(5)");
 
 int main(void)
 { 
+  int (*CreateActor)(u16 classID, int settings, float * pos, char rot, char layer) = 0x80064610;
   float *base_addr;// = (float*)0x802f6940;
   //base_addr = (float*)BASE_ADDR;
   base_addr = (float*)0x802f6900;
@@ -240,15 +242,32 @@ int main(void)
       *(*teleporter + 43) = *tmp;
     }
     
+	
     //check orientation of portals
     //_  _ OR ^ ^, flip y speed
-    if( (*(*first_portal + 157) == 0x2000 && *(*second_portal + 157) == 0x2000)
-    || (*(*first_portal + 157) >= 0x04000000 && *(*second_portal + 157) >= 0x04000000))
+    if( (*(*first_portal + 157) == 0x2000 && *(*second_portal + 157) == 0x2000) )
     {
-      *tmp = -1.0;
-      *(*teleporter + 59) *= *tmp; //flip y
-      
+	  *tmp = -1.0;
+	  *tmp2 = *(*teleporter + 59);
+	  if(*tmp2 > *tmp)
+      {
+        *tmp = 4.0;
+		*(*teleporter + 59) = *tmp; //flip y
+	  
+      }
+	  else
+	  {
+	    *tmp = -1.0;
+	    *(*teleporter + 59) *= *tmp; //flip y
+	  }
     }
+	//^ ^, flip y speed
+	if( (*(*first_portal + 157) >= 0x04000000 && *(*second_portal + 157) >= 0x04000000))
+	{
+	    *tmp = -1.0;
+	    *(*teleporter + 59) *= *tmp; //flip y
+	}
+	
     
     //_|  _| OR |_ |_ flip x speed
     if( (*(*enter_portal + 157) == 0x28 && *(*exit_portal + 157) == 0x28)
@@ -258,11 +277,10 @@ int main(void)
       *(*teleporter + 67) *= *tmp; //flip x
     }
     
-    //enter to right, exit from up OR enter to left, exit from down
+    //enter to right, exit from up 
     //yspeed = xspeed
     //xspeed = 0
-    if((*(*enter_portal + 157) == 0x14 && *(*exit_portal + 157) >= 0x04000000)
-    || (*(*enter_portal + 157) == 0x28 && *(*exit_portal + 157) == 0x2000))
+    if(*(*enter_portal + 157) == 0x14 && *(*exit_portal + 157) >= 0x04000000)
     {
       *tmp = *(*teleporter + 67); // *tmp = xspeed
       *(*teleporter + 59) *= *tmp; //yspeed = xspeed
@@ -272,38 +290,75 @@ int main(void)
       *(*teleporter + 58) = *tmp;
       
     }
+	
+	//enter to right, exit from down
+	//yspeed = xspeed
+    //xspeed = 1 for mario
+	//xspeed = yspeed for others
+	if(*(*enter_portal + 157) == 0x14 && *(*exit_portal + 157) == 0x2000)
+	{
+	  int ** teleporteri = (int**)teleporter;
+	  *tmp = 3.0;
+	  *tmp2 = *(*teleporter + 67);
+	  if(*(*teleporteri + 2) == 0x000d0100) //IF MARIO or other player
+	  {
+	    if(*tmp2 < *tmp) //if xspeed < 3
+	    {
+	      *tmp2 = 5.0;
+		  *(*teleporter + 59) = *tmp2;
+        }
+	    else
+	    {
+	      *tmp = *(*teleporter + 67); // *tmp = xspeed
+          *(*teleporter + 59) *= *tmp; //yspeed = xspeed
+	    }
+	  
+	    //give a little x speed so he won't fall down the portal again!	  
+	    *tmp = 1.0;
+        *(*teleporter + 67) = *tmp;
+	  }
+	  else //NOT a player, it's an enemy or similar!
+	  {
+	    *tmp = *(*teleporter + 58); // *tmp = xspeed
+		*(*teleporter + 58) = *(*teleporter + 59); //xspeed = yspeed
+        *(*teleporter + 59) = *tmp; //yspeed = xspeed 
+	  }
+	  
+	}
     
-    //enter to up, exit from left OR enter to down, exit from right
+    //enter to up, exit from left
     //xspeed = yspeed
     //yspeed = 0
-    if((*(*enter_portal + 157) >= 0x04000000 && *(*exit_portal + 157) == 0x28)
-    || (*(*enter_portal + 157) == 0x2000 && *(*exit_portal + 157) == 0x14))
+    if(*(*enter_portal + 157) >= 0x04000000 && *(*exit_portal + 157) == 0x28)
     {
-      *tmp2 = -1.0;
+      *tmp2 = 1.0;
       *tmp = *(*teleporter + 59); // *tmp = yspeed
       
       //check if |yspeed| > 1.0
-      if(*tmp < *tmp2)
+      if(*tmp > *tmp2)
       {
         //*tmp2 = 1.0;
-        *(*teleporter + 67) = *tmp2; //xspeed = -1.0
-        *(*teleporter + 58) = *tmp2; //xspeed = -1.0
+        *(*teleporter + 67) = *tmp2; //xspeed = 1.0
+        *(*teleporter + 58) = *tmp2; //xspeed = 1.0
       }
       else
       {
         *(*teleporter + 67) = *tmp; //xspeed = yspeed
         *(*teleporter + 58) = *tmp; //xspeed = yspeed
       }
+	  *tmp = 0;
+	  *(*teleporter + 59) = *tmp; //yspeed = 0
     }
-    
-    //enter to up, exit from right OR enter to down, exit from left
+	
+	//enter to up, exit from right OR enter to down, exit from left
     //xspeed = -yspeed
     if((*(*enter_portal + 157) >= 0x04000000 && *(*exit_portal + 157) == 0x14)
     || (*(*enter_portal + 157) == 0x2000 && *(*exit_portal + 157) == 0x28))
     {
       *tmp2 = -1.0;
       *tmp = *(*teleporter + 59) * (*tmp2); // *tmp = -yspeed
-      //check if |yspeed| > 1.0
+      
+	  //check if |yspeed| > 1.0
       if(*tmp > fabs(*tmp2))
       {
         *(*teleporter + 67) = fabs(*tmp2); //xspeed = 1.0
@@ -312,25 +367,102 @@ int main(void)
     }
     
     
-    //enter to right, exit from up OR enter to left, exit from down
+    //enter to right, exit from up
     //yspeed = -xspeed
-    if((*(*enter_portal + 157) == 0x14 && *(*exit_portal + 157) >= 0x04000000)
-    || (*(*enter_portal + 157) == 0x28 && *(*exit_portal + 157) == 0x2000))
+	//xspeed = 0
+    if(*(*enter_portal + 157) == 0x14 && *(*exit_portal + 157) >= 0x04000000)
     {
       *tmp2 = -1.0;
       *tmp = *(*teleporter + 67); // *tmp = yspeed
-      *(*teleporter + 59) = *tmp * (*tmp2); //xspeed = yspeed
+      *(*teleporter + 59) = *tmp * (*tmp2); //yspeed = -xspeed
     }
+	
+	//enter to left, exit from down
+	//yspeed = -xspeed
+	//xspeed = -1 for mario
+	//xspeed = -yspeed for others
+	if(*(*enter_portal + 157) == 0x28 && *(*exit_portal + 157) == 0x2000)
+	{
+	  int ** teleporteri = (int**)teleporter;
+	  
+	  if(*(*teleporteri + 2) == 0x000D0100)
+	  {
+	  
+	  *tmp = -3;
+	  *tmp2 = *(*teleporter + 67);
+	  
+	  if(*tmp2 > *tmp) //if |xspeed| < 3
+	  {
+	    *tmp2 = 5.0;
+		*(*teleporter + 59) = *tmp2;
+		
+      }
+	  else
+	  {
+	  
+	    *tmp2 = -1.0;
+        *tmp = *(*teleporter + 67); // *tmp = xspeed
+        *(*teleporter + 59) = *tmp * (*tmp2); //yspeed = -xspeed
+	  }
+	  
+	  //give a little x speed so he won't fall down the portal again!
+	  *tmp = -1.0;
+      *(*teleporter + 67) = *tmp;
+	  
+	  }
+	  else //not mario or other player!
+	  {
+	    *tmp2 = -1.0;
+        *tmp = *(*teleporter + 58); // *tmp = xspeed
+		*(*teleporter + 58) = *(*teleporter + 59); //xspeed = yspeed
+		*(*teleporter + 58) *= *tmp2;	//xspeed = -yspeed
+        *(*teleporter + 59) = *tmp * (*tmp2); //yspeed = -xspeed
+	  }
+	  
+	}
+	
+	//enter to down, exit from right
+	//xspeed = yspeed for mario
+	//xspeed = yspeed for others
+	//yspeed = 0 for mario
+	//yspeed = xspeed for others
+	if(*(*enter_portal + 157) == 0x2000 && *(*exit_portal + 157) == 0x14)
+	{
+	  int ** teleporteri = (int**)teleporter;
+	  
+	  //if mario or other player
+	  if(*(*teleporteri + 2) == 0x000D0100)
+	  {
+	    *tmp2 = 2.0;
+	    *tmp = *(*teleporter + 59);
+		*tmp /= *tmp2;	//*tmp = yspeed/2
+		*(*teleporter + 59) = 0;
+		*(*teleporter + 67) = *tmp;
+	    
+	  }
+	  else //if enemy or similar!
+	  {
+	    //*tmp = -.6;
+		//*tmp2 = *(*teleporter + 59);
+		*(*teleporter + 59) = *(*teleporter + 58); //yspeed = xspeed
+	  }
+	  
+	  *tmp2 = -fabs(*(*teleporter + 58));
+		
+      //flip x!
+	  *(*teleporter + 58) = *tmp2;
+	  
+	}
+	
     
   }
     
-	
-	//reset colliders
-	*tmpint = 0;
-	*collider1 = *tmpint;
-	*collider2 = *tmpint;
+  //reset colliders
+  //*tmpint = 0;
+  *collider1 = 0;
+  *collider2 = 0;
   
-  *has_teleported = *tmpint;
+  *has_teleported = 0;
   
   return 0;
 }
