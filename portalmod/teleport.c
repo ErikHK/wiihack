@@ -10,7 +10,7 @@ typedef unsigned short u16;
 __asm__("lis 5, 0x802f;lwz 4, 4(23);lwz 3, 4(24);stw 3, 0x6950(5);stw 4, 0x6954(5)");
 
 int main(void)
-{ 
+{
   int (*CreateActor)(u16 classID, int settings, float * pos, char rot, char layer) = 0x80064610;
   float *base_addr;// = (float*)0x802f6940;
   //base_addr = (float*)BASE_ADDR;

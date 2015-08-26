@@ -46,7 +46,7 @@ int main(void)
   {
     //get pointer to player number 0, always mario?
     //this isn't that reliable, it gives 0 sometimes, when?
-    //*player_store_addr = get_player(0, 0x8043fcb0, 1, 0, 1);
+	//I think this crashes everything sometimes as well..
     *player_store_addr = get_player(0);
     *get_player_timer = 0;
   }
@@ -128,16 +128,24 @@ int main(void)
   if( *goomba_addri != 0 && *(goomba_addri+1) != 0 &&  *(goomba_addri+2) != 0) //null pointer check
   {
     //move crosshairs outwards!
-	*tmp = 100.0f;
-	*tmp2 = 6.0f;
-	*tmp3 = 100.0f;
+	*tmp = 200.0f;
+	*tmp2 = 4.0f;
+	*tmp3 = 200.0f;
 	if(*(*goomba_addrii + 157) == 0
 	 && *dist < (*tmp)) //is free to move
 	{
-	  *dist += *tmp2;
+	  //*dist += *tmp2;
+	  //*tmp = (*dist + *tmp2); //dist = currdist
+	  //*tmp = *tmp / (*tmp3);  //tmp3 = currdist / maxdist
+	  *dist += *tmp2; //dist += 1 / (currdist/maxdist)
 	}
 	else
+	{
+	  //*tmp = (*dist + *tmp2);
+	  //*tmp = (*tmp) / (*tmp3);
+	  //*dist -= *tmp2 / (*tmp);
 	  *dist -= *tmp2;
+	}
   
   
   *tmp = 20.0;
@@ -204,7 +212,7 @@ int main(void)
   
   if(*last_direction != *player_dir_addr)
   {
-    *dist = 0;
+    *dist = 0.1;
   }
   
   *last_direction = *player_dir_addr;
@@ -324,6 +332,7 @@ int main(void)
   
   //rotate it correctly!
   //up
+  /*
   *tmpint = 0x04000000;
   if(*(*first_portal + 157) >= *tmpint)
     *(*first_portal + 64) = 0x80008000;
@@ -346,6 +355,6 @@ int main(void)
     
   if(*(*second_portal + 157) == *tmpint)
     *(*second_portal + 64) = 0x4000C000;
-  
+  */
   return 0;
 }
