@@ -287,6 +287,21 @@ int main(void)
     }
   
   
+  //*tmpint = 0x04000000;
+  if(*(*first_portal + 157) >= 0x04000000)
+    *(*first_portal + 64) = 0x80008000;
+    
+  //side left
+  //*tmpint = 0x28;
+  if(*(*first_portal + 157) == 0x28)
+    *(*first_portal + 64) = 0xC000C000;
+    
+  //side right
+  //*tmpint = 0x14;
+  if(*(*first_portal + 157) == 0x14)
+    *(*first_portal + 64) = 0x4000C000;
+  
+  
   //null pointer
   if(*second_portal_addr == 0)
 	  return 0;
@@ -324,7 +339,7 @@ int main(void)
       
       
 	  }
-    else if( *(*second_portal+4) == 0)
+    if( *(*second_portal+4) == 0)
     {
       *second_portal_addr = 0;
       return 0;
@@ -332,29 +347,29 @@ int main(void)
   
   //rotate it correctly!
   //up
-  /*
-  *tmpint = 0x04000000;
-  if(*(*first_portal + 157) >= *tmpint)
-    *(*first_portal + 64) = 0x80008000;
+  
+  //*tmpint = 0x04000000;
+  //if(*(*first_portal + 157) >= *tmpint)
+  //  *(*first_portal + 64) = 0x80008000;
     
-  if(*(*second_portal + 157) >= *tmpint)
+  if(*(*second_portal + 157) >= 0x04000000)
     *(*second_portal + 64) = 0x80008000;
     
   //side left
-  *tmpint = 0x28;
-  if(*(*first_portal + 157) == *tmpint)
-    *(*first_portal + 64) = 0xC000C000;
+  //*tmpint = 0x28;
+  //if(*(*first_portal + 157) == *tmpint)
+  //  *(*first_portal + 64) = 0xC000C000;
   
-  if(*(*second_portal + 157) == *tmpint)
+  if(*(*second_portal + 157) == 0x28)
     *(*second_portal + 64) = 0xC000C000;
     
   //side right
-  *tmpint = 0x14;
-  if(*(*first_portal + 157) == *tmpint)
-    *(*first_portal + 64) = 0x4000C000;
+  //*tmpint = 0x14;
+  //if(*(*first_portal + 157) == *tmpint)
+  //  *(*first_portal + 64) = 0x4000C000;
     
-  if(*(*second_portal + 157) == *tmpint)
+  if(*(*second_portal + 157) == 0x14)
     *(*second_portal + 64) = 0x4000C000;
-  */
+  
   return 0;
 }

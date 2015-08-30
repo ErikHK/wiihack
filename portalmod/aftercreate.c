@@ -1,5 +1,4 @@
 
-
 __asm__("lis 5, 0x802f;stw 3, 0x6958(5)");
 
 int main(void)
@@ -82,7 +81,7 @@ int main(void)
   *tmpint = 0x00380000;
   if((*(*created_actor + 2) & 0xffff0000) == *tmpint)
   {
-    //newly created is a bobomb
+    //newly created is a portal
     //move it up from the bottom of Mario where it's created
     *tmp2 = 15.0;
     *tmp = *(*created_actorf + 44);
@@ -147,7 +146,6 @@ int main(void)
     {  
       *static_cos_addr = *cos_addr;
       *static_sin_addr = *sin_addr;
-      
     }else
     {
       *tmp = -1.0;
