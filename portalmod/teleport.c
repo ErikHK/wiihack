@@ -64,9 +64,6 @@ int main(void)
   int ** first_portal = (int**)(base_addr);
   int ** second_portal = (int**)(base_addr+1);
   
-  //INCREASE TIMER IN GAME LOOP!!!
-  //*tmpint = 32;
-  
   //make sure that one of them isn't a micro goomba
   if(*(*collider1_addr + 2) == 0x01240100 || *(*collider2_addr + 2) == 0x01240100)
     return 0;
@@ -82,7 +79,7 @@ int main(void)
   //make sure the portals are stationary, you shouldn't be able to teleport
   //when the portal is flying!
   //BUG!!!! ONE OF THEM CAN BE MARIO, HE SHOULD BE ABLE TO FLY!!!
- //|| *(*collider2_addr + 157) == 0)
+  //|| *(*collider2_addr + 157) == 0)
   //  return 0;
   
   //check if one of the colliders is a stored portal
@@ -139,8 +136,8 @@ int main(void)
     *timer = *tmpint;
     *has_teleported = 1;
   }
-	
-	
+  
+  
   else if(*collider2 == *portal2_addr && *collider1 != *portal1_addr && *timer > 10)
   {
     //if portal is flying, can't teleport
@@ -244,22 +241,25 @@ int main(void)
     
 	
     //check orientation of portals
-    //_  _ OR ^ ^, flip y speed
+    //_  _ flip y speed
     if( (*(*first_portal + 157) == 0x2000 && *(*second_portal + 157) == 0x2000) )
     {
-	  *tmp = -1.0;
+	  *tmp = -3.0;
 	  *tmp2 = *(*teleporter + 59);
 	  if(*tmp2 > *tmp)
       {
-        *tmp = 4.0;
+        *tmp = 5.0;
 		*(*teleporter + 59) = *tmp; //flip y
-	  
       }
 	  else
 	  {
 	    *tmp = -1.0;
 	    *(*teleporter + 59) *= *tmp; //flip y
 	  }
+	  
+	  //give a little x speed so he won't fall down the portal again!	  
+	  *tmp = 1.0;
+      *(*teleporter + 67) = *tmp;
     }
 	//^ ^, flip y speed
 	if( (*(*first_portal + 157) >= 0x04000000 && *(*second_portal + 157) >= 0x04000000))

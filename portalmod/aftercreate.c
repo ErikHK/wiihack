@@ -75,9 +75,9 @@ int main(void)
   //int * player_dir_addr = (int*)0x8154b904;
   
   int *portalnum = (int*)(base_addr+2);
-
   
-  //check if bobomb instead
+  
+  //check if buzzy beetle instead
   *tmpint = 0x00380000;
   if((*(*created_actor + 2) & 0xffff0000) == *tmpint)
   {
