@@ -79,7 +79,10 @@ int main(void)
   
   //check if buzzy beetle instead
   *tmpint = 0x00380000;
-  if((*(*created_actor + 2) & 0xffff0000) == *tmpint)
+  if((*(*created_actor + 2) & 0xffff0000) == *tmpint
+  
+  //check if it's tagged as created from the portal gun
+  && *(*created_actor + 1) != 0x00000001)
   {
     //newly created is a portal
     //move it up from the bottom of Mario where it's created

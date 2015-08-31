@@ -22,6 +22,8 @@ int main(void)
   int * button_store = (int*)(base_addr+4);
   
   int * tmpint = (int*)(base_addr+6);
+  int ** created_actor = (int**)(base_addr+6);
+  
   float * tmp = (float*)(base_addr+5);
   float * tmp2 = (float*)(base_addr+7);
   float * tmp3 = (float*)(base_addr+9);
@@ -229,8 +231,14 @@ int main(void)
   //  || (*button_presses & 0x02020000) == 0x02020000)
   && *button_store == 0 && (*player_free_addr & 0x000000ff) == 0)
   {
-    (*CreateActor)(0x38, 0x1000, (player_addr+43), 0, 0);
+    *created_actor = (*CreateActor)(0x38, 0x1000, (player_addr+43), 0, 0);
     *button_store = 1;
+	
+	//tag the newly created beetle as being shot from the portal gun!
+	if(*created_actor != 0)
+	{
+	  *(*created_actor + 1) = 0x00000001;
+	}
   }
     
   //clear *button_store if button 1 is released
@@ -352,7 +360,7 @@ int main(void)
   //*tmpint = 0x04000000;
   //if(*(*first_portal + 157) >= *tmpint)
   //  *(*first_portal + 64) = 0x80008000;
-    
+    /*
   if(*(*second_portal + 157) >= 0x04000000)
     *(*second_portal + 64) = 0x80008000;
     
@@ -371,6 +379,6 @@ int main(void)
     
   if(*(*second_portal + 157) == 0x14)
     *(*second_portal + 64) = 0x4000C000;
-  
+  */
   return 0;
 }
