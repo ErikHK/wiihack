@@ -288,10 +288,11 @@ int main(void)
         }
         
       
-      
+      //gone?
 	  }else if( *(*first_portal+4) == 0)
     {
       *first_portal_addr = 0;
+	  *curr_portal = 2;
       return 0;
     }
   
@@ -348,9 +349,11 @@ int main(void)
       
       
 	  }
+	//gone?
     if( *(*second_portal+4) == 0)
     {
       *second_portal_addr = 0;
+	  *curr_portal = 1;
       return 0;
     }
   
