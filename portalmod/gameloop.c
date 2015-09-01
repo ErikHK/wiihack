@@ -129,6 +129,21 @@ int main(void)
   
   if( *goomba_addri != 0 && *(goomba_addri+1) != 0 &&  *(goomba_addri+2) != 0) //null pointer check
   {
+    //make crosshairs visible when B is held down, invisible otherwise!
+    if(((*button_presses & 0x04000000) == 0x04000000))
+	{
+      *(*goomba_addrii + 73) = 0x01000000;
+	  *(*(goomba_addrii+1) + 73) = 0x01000000;
+	  *(*(goomba_addrii+2) + 73) = 0x01000000;
+	}
+	else
+	{
+	  *(*goomba_addrii + 73) = 0;
+	  *(*(goomba_addrii+1) + 73) = 0;
+	  *(*(goomba_addrii+2) + 73) = 0;
+	  *dist = 0.1;
+	}
+  
     //move crosshairs outwards!
 	*tmp = 200.0f;
 	*tmp2 = 4.0f;
@@ -273,7 +288,6 @@ int main(void)
         (*(*first_portal+157+10) == 2) || //right
         (*(*first_portal+157+11) == 2)) //left, ILLEGAL PLACE?
         {
-          //*(*first_portalf + 73) = *tmp2; //make invisible
           *(*first_portal + 73) = 0; //make invisible
           *first_portal_addr = 0;
 		  *curr_portal = 2;
@@ -296,6 +310,7 @@ int main(void)
       return 0;
     }
   
+  /*
   //*tmpint = 0x04000000;
   if(*(*first_portal + 157) >= 0x04000000)
     *(*first_portal + 64) = 0x80008000;
@@ -309,7 +324,7 @@ int main(void)
   //*tmpint = 0x14;
   if(*(*first_portal + 157) == 0x14)
     *(*first_portal + 64) = 0x4000C000;
-  
+  */
   
   //null pointer
   if(*second_portal_addr == 0)
@@ -339,14 +354,10 @@ int main(void)
       
       else 
       {
-        
         *(*second_portalf + 62) = *tmp2; //gravity = 0
         *(*second_portalf + 58) = *tmp2; //hastx = 0
         *(*second_portalf + 59) = *tmp2; //hasty = 0
       }
-      
-      
-      
       
 	  }
 	//gone?
