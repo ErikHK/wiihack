@@ -192,6 +192,8 @@ int main(void)
   {
 	*(*swooper_addrf + 43) = *(player_addr + 43);
 	*(*swooper_addrf + 44) = *(player_addr + 44) + *tmp;
+	*(*swooper_addr + 64) = 0; //no rotation plix
+	*(*swooper_addr + 65) = 0; //no rotation plix
   }
   
   
