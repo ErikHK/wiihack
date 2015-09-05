@@ -14,6 +14,8 @@ int main(void)
   
   int * button_store = (int*)(base_addr+4);
   
+  int ** swooper_addr = (int**)(base_addr+26);
+  
   int * first_portal_addr = (int*)(base_addr);
   int * second_portal_addr = (int*)(base_addr+1);
   
@@ -43,6 +45,15 @@ int main(void)
   //null pointer
   if(*created_actor == 0)
     return 0;
+	
+
+  if((*(*created_actor + 2) & 0xffff0000) == 0x00830000)
+  {
+	//swooper here, set it to non-hurting!
+	*(*created_actor + 121) = 0;
+	
+	*swooper_addr = *created_actor;
+  }
   
   // *tmpint = 0x01240000;
   //if micro goomba

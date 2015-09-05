@@ -24,3 +24,4 @@
 0x802f695c	tmp ac			23
 0x802f6960	tmp2 ac			24
 0x802f6964	tmpint ac		25
+0x802f6968	swooper addr		26

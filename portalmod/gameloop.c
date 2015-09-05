@@ -24,6 +24,10 @@ int main(void)
   int * goomba_addri = (int*)(base_addr+12);
   int ** goomba_addrii = (int**)(base_addr+12);
   
+  int ** swooper_addr = (int**)(base_addr+26);
+  float ** swooper_addrf = (float**)(base_addr+26);
+
+  
   int * button_store = (int*)(base_addr+4);
   
   int * tmpint = (int*)(base_addr+6);
@@ -132,6 +136,12 @@ int main(void)
   *tmp = *cos_addr; //*tmp = 1+x^3/12
   *cos_addr = *tmp + *tmp3; //yey, cosx = 1+x^3/12-x^2/2
   
+  
+  if(*swooper_addr > 0x81500000)
+  {
+	*(*swooper_addrf + 43) = *(player_addr + 43);
+	*(*swooper_addrf + 44) = *(player_addr + 44);
+  }
   
   if( *goomba_addri != 0 && *(goomba_addri+1) != 0 &&  *(goomba_addri+2) != 0) //null pointer check
   {
@@ -328,7 +338,8 @@ int main(void)
       return 0;
     }
   
-  
+  //rotate correctly!
+  /*
   //*tmpint = 0x04000000;
   if(*(*first_portal + 157) >= 0x04000000)
     *(*first_portal + 64) = 0x80008000;
@@ -343,7 +354,7 @@ int main(void)
   if(*(*first_portal + 157) == 0x14)
     *(*first_portal + 64) = 0x4000C000;
   
-  
+  */
   //null pointer
   if(*second_portal_addr == 0)
 	  return 0;
@@ -398,7 +409,7 @@ int main(void)
 	  *curr_portal = 1;
       return 0;
     }
-  
+  /*
   //rotate it correctly!
   //up
   if(*(*second_portal + 157) >= 0x04000000)
@@ -411,6 +422,6 @@ int main(void)
   //side right
   if(*(*second_portal + 157) == 0x14)
     *(*second_portal + 64) = 0x4000C000;
-  
+  */
   return 0;
 }
