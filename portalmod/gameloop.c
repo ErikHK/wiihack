@@ -5,19 +5,24 @@ typedef unsigned short u16;
 
 //active wiimote = 8042A748
 
+//Addresses, easily converted to NTSC this way!
+#define GET_PLAYER		0x8005fb90
+#define BASE_ADDR		0x802f6900
+#define CREATE_ACTOR	0x80064610
+#define WIIMOTE_PTR		0x80377F88
 
 int main(void)
 {
   //create actor
-  int (*CreateActor)(u16 classID, int settings, float * pos, char rot, char layer) = 0x80064610;
+  int (*CreateActor)(u16 classID, int settings, float * pos, char rot, char layer) = CREATE_ACTOR;
   //int (*get_player)(int ID, int some_addr, int one1, int zero, int one2) = 0x8005FB90;
-  int (*get_player)(int ID) = 0x8005FB90;
+  int (*get_player)(int ID) = GET_PLAYER;
   
   float *base_addr;// = (float*)0x802f6940;
-  base_addr = (float*)0x802f6900;
-  float ** goomba_addr = (float**)0x802f6930;
-  int * goomba_addri = (int*)0x802f6930;
-  int ** goomba_addrii = (int**)0x802f6930;
+  base_addr = (float*)BASE_ADDR;
+  float ** goomba_addr = (float**)(BASE_ADDR+12);
+  int * goomba_addri = (int*)(BASE_ADDR+12);
+  int ** goomba_addrii = (int**)(BASE_ADDR+12);
   
   int * button_store = (int*)(base_addr+4);
   
@@ -89,7 +94,7 @@ int main(void)
   *timer += *tmpint;
   
   *tmp2 = 1.7;
-  float ** wiimoteptr = (float **)0x80377F88;
+  float ** wiimoteptr = (float **)(WIIMOTE_PTR);
   
   //choose id 0
   float * tilt_addr = (float *)((*wiimoteptr+0) + 11);
@@ -234,7 +239,7 @@ int main(void)
   }
   
   *last_direction = *player_dir_addr;
-    
+  
   //increase timer
   *tmpint = 1;
   *portal_timer += *tmpint;
@@ -268,17 +273,25 @@ int main(void)
 	float ** second_portalf = (float**)(base_addr+1);
 	*tmpint = 0x00380100;
 
-	*tmp = 7.0;
-	*tmp2 = 0.0;
 	
 	//null pointer check!!
 	if(*first_portal_addr == 0)
 	  return 0;
-  
+	  
+    *tmp = 7.0;
+	*tmp2 = 0.1;
+	
     if( *(*first_portal+2) == 0x00380100) //it's a living bobomb
 	  {
       if(*(*first_portal+157) == 0) //and we can move it!
       {
+	    //*tmp2 = 0.25;
+	    //scale in x dir
+	    *(*first_portalf + 57) = (*tmp2);
+		*(*first_portalf + 56) = (*tmp2);
+		
+		*(*first_portal + 64) += 0x05000500;
+	    //*tmp = 7.0;
         *(*first_portalf + 58) = (*tmp) * (*static_cos_addr);
         *(*first_portalf + 59) = (*tmp) * (*static_sin_addr);
       }
@@ -297,6 +310,10 @@ int main(void)
         
         else 
         {
+		  *tmp = 1.0;
+		  *tmp2 = 0.0;
+		  *(*first_portalf + 56) = *tmp; //yscale = 1
+		  *(*first_portalf + 57) = *tmp; //xscale = 1
           *(*first_portalf + 62) = *tmp2; //gravity = 0
           *(*first_portalf + 58) = *tmp2; //hastx = 0
           *(*first_portalf + 59) = *tmp2; //hasty = 0
@@ -331,10 +348,19 @@ int main(void)
   if(*second_portal_addr == 0)
 	  return 0;
     
+	*tmp = 7.0;
+	*tmp2 = 0.1;
 	if( *(*second_portal+2) == 0x00380100)  
 	  {
       if(*(*second_portal+157) == 0) //can move
       {
+	    //*tmp2 = 0.25;
+	    //scale in x dir
+	    *(*second_portalf + 57) = (*tmp2);
+		*(*second_portalf + 56) = (*tmp2);
+	    //*tmp = 7.0;
+		*(*second_portal + 64) += 0x05000500;
+		
         *(*second_portalf + 58) = (*tmp) * (*static_cos_addr);
         *(*second_portalf + 59) = (*tmp) * (*static_sin_addr);
       } 
@@ -355,6 +381,10 @@ int main(void)
       
       else 
       {
+	    *tmp = 1.0;
+		*tmp2 = 0.0;
+		*(*second_portalf + 56) = *tmp; //yscale = 1
+	    *(*second_portalf + 57) = *tmp; //xscale = 1
         *(*second_portalf + 62) = *tmp2; //gravity = 0
         *(*second_portalf + 58) = *tmp2; //hastx = 0
         *(*second_portalf + 59) = *tmp2; //hasty = 0

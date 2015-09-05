@@ -1,10 +1,8 @@
 //store colliding adresses to 802f6950 and -54
-/*
-#define BASE_ADDR 0x802f6900
-#define MARIO_ADDR 0x8154b804
-#define XSPEED  67
-#define YSPEED  59
-*/
+
+#define BASE_ADDR	0x802f6900
+#define ANGLE		0x802f6800
+
 typedef unsigned short u16;
 
 __asm__("lis 5, 0x802f;lwz 4, 4(23);lwz 3, 4(24);stw 3, 0x6950(5);stw 4, 0x6954(5)");
@@ -14,15 +12,15 @@ int main(void)
   int (*CreateActor)(u16 classID, int settings, float * pos, char rot, char layer) = 0x80064610;
   float *base_addr;// = (float*)0x802f6940;
   //base_addr = (float*)BASE_ADDR;
-  base_addr = (float*)0x802f6900;
-  int * collider1 = (int*)0x802f6950;
-  int * collider2 = (int*)0x802f6954;
+  base_addr = (float*)BASE_ADDR;
+  int * collider1 = (int*)(BASE_ADDR + 20);
+  int * collider2 = (int*)(BASE_ADDR + 21);
   
-  int ** collider1_addr = (int**)0x802f6950;
-  int ** collider2_addr = (int**)0x802f6954;
+  int ** collider1_addr = (int**)(BASE_ADDR + 20);
+  int ** collider2_addr = (int**)(BASE_ADDR + 21);
   
-  float ** collider1f = (float**)(0x802f6950);
-  float ** collider2f = (float**)(0x802f6954);
+  float ** collider1f = (float**)((BASE_ADDR + 20);
+  float ** collider2f = (float**)(BASE_ADDR + 21);
   
   //float * mario = (float*)MARIO_ADDR;
   
@@ -45,7 +43,7 @@ int main(void)
   
   //*tmpint = 0;
   
-  float *angle = (float*)(0x802f6800);
+  float *angle = (float*)(ANGLE);
   float cosx = fabs((*angle)*(*angle)*(*angle));
 	*tmp = 12.0f;
   *tmp2 = cosx;
