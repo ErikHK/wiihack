@@ -14,15 +14,15 @@ typedef unsigned short u16;
 int main(void)
 {
   //create actor
-  int (*CreateActor)(u16 classID, int settings, float * pos, char rot, char layer) = CREATE_ACTOR;
+  int (*CreateActor)(u16 classID, int settings, float * pos, char rot, char layer) = 0x80064610;
   //int (*get_player)(int ID, int some_addr, int one1, int zero, int one2) = 0x8005FB90;
-  int (*get_player)(int ID) = GET_PLAYER;
+  int (*get_player)(int ID) = 0x8005fb90;
   
   float *base_addr;// = (float*)0x802f6940;
   base_addr = (float*)BASE_ADDR;
-  float ** goomba_addr = (float**)(BASE_ADDR+12);
-  int * goomba_addri = (int*)(BASE_ADDR+12);
-  int ** goomba_addrii = (int**)(BASE_ADDR+12);
+  float ** goomba_addr = (float**)(base_addr+12);
+  int * goomba_addri = (int*)(base_addr+12);
+  int ** goomba_addrii = (int**)(base_addr+12);
   
   int * button_store = (int*)(base_addr+4);
   
@@ -94,7 +94,7 @@ int main(void)
   *timer += *tmpint;
   
   *tmp2 = 1.7;
-  float ** wiimoteptr = (float **)(WIIMOTE_PTR);
+  float ** wiimoteptr = (float **)(0x80377F88);
   
   //choose id 0
   float * tilt_addr = (float *)((*wiimoteptr+0) + 11);
@@ -281,7 +281,7 @@ int main(void)
     *tmp = 7.0;
 	*tmp2 = 0.1;
 	
-    if( *(*first_portal+2) == 0x00380100) //it's a living bobomb
+    if( *(*first_portal+2) == 0x00380100) //it's a living buzzy beetle
 	  {
       if(*(*first_portal+157) == 0) //and we can move it!
       {
@@ -401,27 +401,14 @@ int main(void)
   
   //rotate it correctly!
   //up
-  
-  //*tmpint = 0x04000000;
-  //if(*(*first_portal + 157) >= *tmpint)
-  //  *(*first_portal + 64) = 0x80008000;
-    
   if(*(*second_portal + 157) >= 0x04000000)
     *(*second_portal + 64) = 0x80008000;
     
   //side left
-  //*tmpint = 0x28;
-  //if(*(*first_portal + 157) == *tmpint)
-  //  *(*first_portal + 64) = 0xC000C000;
-  
   if(*(*second_portal + 157) == 0x28)
     *(*second_portal + 64) = 0xC000C000;
     
   //side right
-  //*tmpint = 0x14;
-  //if(*(*first_portal + 157) == *tmpint)
-  //  *(*first_portal + 64) = 0x4000C000;
-    
   if(*(*second_portal + 157) == 0x14)
     *(*second_portal + 64) = 0x4000C000;
   

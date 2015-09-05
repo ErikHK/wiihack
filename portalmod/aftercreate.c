@@ -46,7 +46,7 @@ int main(void)
   
   // *tmpint = 0x01240000;
   //if micro goomba
-  if(*(*created_actor + 2) == 0x01240000)
+  if((*(*created_actor + 2) & 0xffff0000) == 0x01240000)
   {
     //make it non-interactive
 	*(*created_actor + 121) = 0;
