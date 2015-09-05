@@ -12,6 +12,8 @@ int main(void)
   int * created_actor_addr = (int*)(0x802f6958);
   float ** created_actorf = (float**)(0x802f6958);
   
+  int * button_store = (int*)(base_addr+4);
+  
   int * first_portal_addr = (int*)(base_addr);
   int * second_portal_addr = (int*)(base_addr+1);
   
@@ -64,14 +66,26 @@ int main(void)
 	}
   }
   
+  if((*(*created_actor + 2) == 0x00380000))
+  {
+	//make invisible
+	*(*created_actor + 73) = 0;
+        
+    //make untouchable
+    //*(*created_actor + 121) = 0;
+	
+	//return 0;
+  }
+  
   
   //NULL pointer!
   if(*player_addr == 0)
     return 0;
-    
+  
   player_addrf = *player_addr;
   
   int * player_dir_addr = (int*)(player_addrf+64);
+  int * button_presses = (int*)(player_addrf+938);
   //int * player_dir_addr = (int*)0x8154b904;
   
   int *portalnum = (int*)(base_addr+2);
@@ -79,13 +93,27 @@ int main(void)
   
   //check if buzzy beetle instead
   *tmpint = 0x00380000;
-  if((*(*created_actor + 2) & 0xffff0000) == *tmpint
-  
-  //check if it's tagged as created from the portal gun
-  && *(*created_actor + 1) != 0x00000001)
+  if((*(*created_actor + 2) == 0x00380000)
+  &&
+  (*button_presses & 0x06000000) == 0x06000000)
   {
-    //newly created is a portal
-    //move it up from the bottom of Mario where it's created
+  /*
+  if((*button_presses & 0x06000000) != 0x06000000)
+  {
+	//was not shot from the portal gun, make it invisible!
+	*(*created_actor + 73) = 0;
+        
+    //make untouchable
+    *(*created_actor + 121) = 0;
+	
+	return 0;
+  }
+  */
+	
+    //newly created is a portal and was shot from the portal gun
+    //move it up from the bottom of Mario where it's created,
+	//and make it visible again
+	*(*created_actor + 73) = 0x01000000;
     *tmp2 = 15.0;
     *tmp = *(*created_actorf + 44);
     *(*created_actorf + 44) = *tmp + *tmp2;

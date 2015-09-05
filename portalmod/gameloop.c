@@ -23,6 +23,7 @@ int main(void)
   
   int * tmpint = (int*)(base_addr+6);
   int ** created_actor = (int**)(base_addr+6);
+  //int ** created_actor = (int**)(base_addr+22);
   
   float * tmp = (float*)(base_addr+5);
   float * tmp2 = (float*)(base_addr+7);
@@ -234,7 +235,6 @@ int main(void)
   
   *last_direction = *player_dir_addr;
     
-  
   //increase timer
   *tmpint = 1;
   *portal_timer += *tmpint;
@@ -250,10 +250,11 @@ int main(void)
     *button_store = 1;
 	
 	//tag the newly created beetle as being shot from the portal gun!
-	if(*created_actor != 0)
-	{
-	  *(*created_actor + 1) = 0x00000001;
-	}
+	//seems to be overwritten anyway, scrap this?
+	//if(*created_actor != 0)
+	//{
+	//  *(*created_actor + 193) = 0x00000001;
+	//}
   }
     
   //clear *button_store if button 1 is released
@@ -310,7 +311,7 @@ int main(void)
       return 0;
     }
   
-  /*
+  
   //*tmpint = 0x04000000;
   if(*(*first_portal + 157) >= 0x04000000)
     *(*first_portal + 64) = 0x80008000;
@@ -324,7 +325,7 @@ int main(void)
   //*tmpint = 0x14;
   if(*(*first_portal + 157) == 0x14)
     *(*first_portal + 64) = 0x4000C000;
-  */
+  
   
   //null pointer
   if(*second_portal_addr == 0)
@@ -374,7 +375,7 @@ int main(void)
   //*tmpint = 0x04000000;
   //if(*(*first_portal + 157) >= *tmpint)
   //  *(*first_portal + 64) = 0x80008000;
-    /*
+    
   if(*(*second_portal + 157) >= 0x04000000)
     *(*second_portal + 64) = 0x80008000;
     
@@ -393,6 +394,6 @@ int main(void)
     
   if(*(*second_portal + 157) == 0x14)
     *(*second_portal + 64) = 0x4000C000;
-  */
+  
   return 0;
 }

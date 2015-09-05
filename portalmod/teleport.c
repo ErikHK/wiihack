@@ -28,6 +28,7 @@ int main(void)
   
   float *tmp = (float*)(base_addr+37); //0x802f6994
   float *tmp2 = (float*)(base_addr+38); //0x802f6998
+  float *tmp3 = (float*)(base_addr+42); //
   int *tmpint = (int*)(base_addr+39); //0x802f699c
   int *timer = (int*)(base_addr+40); //0x802f69a0
   int *has_teleported = (int*)(base_addr+41); //0x802f69a4
@@ -241,26 +242,29 @@ int main(void)
     
 	
     //check orientation of portals
-    //_  _ flip y speed
-    if( (*(*first_portal + 157) == 0x2000 && *(*second_portal + 157) == 0x2000) )
+    //_  _ flip y speed	
+    if( ((*(*first_portal + 157) & 0x0000ff00) == 0x2000 && (*(*second_portal + 157) & 0x0000ff00) == 0x2000) 
+	|| ((*(*first_portal + 157) & 0x0000ff00) == 0x8000 && (*(*second_portal + 157) & 0x0000ff00) == 0x8000))
     {
 	  *tmp = -3.0;
+	  *tmp3 = 5.0;
 	  *tmp2 = *(*teleporter + 59);
 	  if(*tmp2 > *tmp)
       {
-        *tmp = 5.0;
-		*(*teleporter + 59) = *tmp; //flip y
+        
+		*(*teleporter + 59) = *tmp3; //flip y
       }
 	  else
 	  {
-	    *tmp = -1.0;
-	    *(*teleporter + 59) *= *tmp; //flip y
+	    *tmp3 = -1.0;
+	    *(*teleporter + 59) *= *tmp3; //flip y
 	  }
 	  
 	  //give a little x speed so he won't fall down the portal again!	  
 	  *tmp = 1.0;
       *(*teleporter + 67) = *tmp;
     }
+	
 	//^ ^, flip y speed
 	if( (*(*first_portal + 157) >= 0x04000000 && *(*second_portal + 157) >= 0x04000000))
 	{
@@ -295,17 +299,19 @@ int main(void)
 	//yspeed = xspeed
     //xspeed = 1 for mario
 	//xspeed = yspeed for others
+	
 	if(*(*enter_portal + 157) == 0x14 && *(*exit_portal + 157) == 0x2000)
 	{
 	  int ** teleporteri = (int**)teleporter;
 	  *tmp = 3.0;
 	  *tmp2 = *(*teleporter + 67);
+	  *tmp3 = 5.0;
 	  if(*(*teleporteri + 2) == 0x000d0100) //IF MARIO or other player
 	  {
 	    if(*tmp2 < *tmp) //if xspeed < 3
 	    {
-	      *tmp2 = 5.0;
-		  *(*teleporter + 59) = *tmp2;
+	      
+		  *(*teleporter + 59) = *tmp3;
         }
 	    else
 	    {
@@ -325,6 +331,7 @@ int main(void)
 	  }
 	  
 	}
+	
     
     //enter to up, exit from left
     //xspeed = yspeed
@@ -366,7 +373,6 @@ int main(void)
       *(*teleporter + 67) = *tmp; //xspeed = -yspeed
     }
     
-    
     //enter to right, exit from up
     //yspeed = -xspeed
 	//xspeed = 0
@@ -381,6 +387,7 @@ int main(void)
 	//yspeed = -xspeed
 	//xspeed = -1 for mario
 	//xspeed = -yspeed for others
+	
 	if(*(*enter_portal + 157) == 0x28 && *(*exit_portal + 157) == 0x2000)
 	{
 	  int ** teleporteri = (int**)teleporter;
@@ -420,6 +427,7 @@ int main(void)
 	  }
 	  
 	}
+	
 	
 	//enter to down, exit from right
 	//xspeed = yspeed for mario
