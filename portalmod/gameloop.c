@@ -144,7 +144,7 @@ int main(void)
   }
   */
   
-  if( *goomba_addri != 0 && *(goomba_addri+1) != 0 &&  *(goomba_addri+2) != 0) //null pointer check
+  if( *goomba_addri > 0x81500000 && *(goomba_addri+1) > 0x81500000 &&  *(goomba_addri+2) > 0x81500000) //sanity check
   {
     //make crosshairs visible when B is held down, invisible otherwise!
     if(((*button_presses & 0x04000000) == 0x04000000))
@@ -186,6 +186,14 @@ int main(void)
   *tmp = 15.0;
   float marioy = *(player_addr + 44);
   float distancey = (*dist) * (*sin_addr);
+  
+  
+  if(*swooper_addr > 0x81500000)
+  {
+	*(*swooper_addrf + 43) = *(player_addr + 43);
+	*(*swooper_addrf + 44) = *(player_addr + 44) + *tmp;
+  }
+  
   
   if(*player_dir_addr == 0x00003000)
   {
@@ -286,7 +294,7 @@ int main(void)
 
 	
 	//null pointer check!!
-	if(*first_portal_addr == 0)
+	if(*first_portal_addr < 0x81500000)
 	  return 0;
 	  
     *tmp = 7.0;
@@ -360,7 +368,7 @@ int main(void)
     *(*first_portal + 64) = 0;
 
   //null pointer
-  if(*second_portal_addr == 0)
+  if(*second_portal_addr < 0x81500000)
 	  return 0;
     
 	*tmp = 7.0;
@@ -427,6 +435,7 @@ int main(void)
   if(*(*second_portal + 157) == 0x14)
     *(*second_portal + 64) = 0x4000C000;
 	
+  //ground
   if((*(*second_portal + 157) & 0x0000f000) != 0)
     *(*second_portal + 64) = 0;
   

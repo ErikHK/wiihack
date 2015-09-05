@@ -49,7 +49,7 @@ int main(void)
 
   if((*(*created_actor + 2) & 0xffff0000) == 0x00830000)
   {
-	//swooper here, set it to non-hurting!
+	//swooper here, set it to non-hurting/non-interacting!
 	*(*created_actor + 121) = 0;
 	
 	*swooper_addr = *created_actor;
