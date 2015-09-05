@@ -1,19 +1,16 @@
 
 __asm__("lis 5, 0x802f;stw 3, 0x6958(5)");
 
-#define DELETE_ACTOR	0x80162650
-#define BASE_ADDR		0x802f6900
-
 int main(void)
 {
   //delete actor function, execute this to kill things!
-  int (*delete_actor)(int *addr) = DELETE_ACTOR;
+  int (*delete_actor)(int *addr) = 0x80162650;
   //float * (*get_player)(int ID) = 0x8005FB90;
   
-  float *base_addr = (float*)BASE_ADDR;
-  int ** created_actor = (int**)(BASE_ADDR + 22);
-  int * created_actor_addr = (int*)(BASE_ADDR + 22);
-  float ** created_actorf = (float**)(BASE_ADDR + 22);
+  float *base_addr = (float*)0x802f6900;
+  int ** created_actor = (int**)(0x802f6958);
+  int * created_actor_addr = (int*)(0x802f6958);
+  float ** created_actorf = (float**)(0x802f6958);
   
   int * button_store = (int*)(base_addr+4);
   
@@ -190,4 +187,5 @@ int main(void)
     
   }
   return 0;
+
 }
