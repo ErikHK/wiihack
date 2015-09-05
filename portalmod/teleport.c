@@ -1,7 +1,7 @@
 //store colliding adresses to 802f6950 and -54
 
-#define BASE_ADDR	0x802f6900
-#define ANGLE		0x802f6800
+//#define BASE_ADDR	0x802f6900
+//#define ANGLE		0x802f6800
 
 typedef unsigned short u16;
 
@@ -12,15 +12,15 @@ int main(void)
   int (*CreateActor)(u16 classID, int settings, float * pos, char rot, char layer) = 0x80064610;
   float *base_addr;// = (float*)0x802f6940;
   //base_addr = (float*)BASE_ADDR;
-  base_addr = (float*)BASE_ADDR;
-  int * collider1 = (int*)(BASE_ADDR + 20);
-  int * collider2 = (int*)(BASE_ADDR + 21);
+  base_addr = (float*)0x802f6900;
+  int * collider1 = (int*)(base_addr + 20);
+  int * collider2 = (int*)(base_addr + 21);
   
-  int ** collider1_addr = (int**)(BASE_ADDR + 20);
-  int ** collider2_addr = (int**)(BASE_ADDR + 21);
+  int ** collider1_addr = (int**)(base_addr + 20);
+  int ** collider2_addr = (int**)(base_addr + 21);
   
-  float ** collider1f = (float**)((BASE_ADDR + 20);
-  float ** collider2f = (float**)(BASE_ADDR + 21);
+  float ** collider1f = (float**)(base_addr + 20);
+  float ** collider2f = (float**)(base_addr + 21);
   
   //float * mario = (float*)MARIO_ADDR;
   
@@ -43,7 +43,7 @@ int main(void)
   
   //*tmpint = 0;
   
-  float *angle = (float*)(ANGLE);
+  float *angle = (float*)(0x802f6800);
   float cosx = fabs((*angle)*(*angle)*(*angle));
 	*tmp = 12.0f;
   *tmp2 = cosx;
@@ -241,8 +241,7 @@ int main(void)
 	
     //check orientation of portals
     //_  _ flip y speed	
-    if( ((*(*first_portal + 157) & 0x0000ff00) == 0x2000 && (*(*second_portal + 157) & 0x0000ff00) == 0x2000) 
-	|| ((*(*first_portal + 157) & 0x0000ff00) == 0x8000 && (*(*second_portal + 157) & 0x0000ff00) == 0x8000))
+    if((*(*first_portal + 157) & 0x0000f000) != 0 && (*(*second_portal + 157) & 0x0000f000) != 0)
     {
 	  *tmp = -3.0;
 	  *tmp3 = 5.0;
@@ -270,7 +269,6 @@ int main(void)
 	    *(*teleporter + 59) *= *tmp; //flip y
 	}
 	
-    
     //_|  _| OR |_ |_ flip x speed
     if( (*(*enter_portal + 157) == 0x28 && *(*exit_portal + 157) == 0x28)
     || (*(*enter_portal + 157) == 0x14 && *(*exit_portal + 157) == 0x14))
@@ -298,7 +296,7 @@ int main(void)
     //xspeed = 1 for mario
 	//xspeed = yspeed for others
 	
-	if(*(*enter_portal + 157) == 0x14 && *(*exit_portal + 157) == 0x2000)
+	if(*(*enter_portal + 157) == 0x14 && (*(*exit_portal + 157) & 0x0000f000) != 0)
 	{
 	  int ** teleporteri = (int**)teleporter;
 	  *tmp = 3.0;
@@ -358,7 +356,7 @@ int main(void)
 	//enter to up, exit from right OR enter to down, exit from left
     //xspeed = -yspeed
     if((*(*enter_portal + 157) >= 0x04000000 && *(*exit_portal + 157) == 0x14)
-    || (*(*enter_portal + 157) == 0x2000 && *(*exit_portal + 157) == 0x28))
+    || ( (*(*enter_portal + 157) & 0x0000f000) != 0 && *(*exit_portal + 157) == 0x28))
     {
       *tmp2 = -1.0;
       *tmp = *(*teleporter + 59) * (*tmp2); // *tmp = -yspeed
@@ -386,7 +384,7 @@ int main(void)
 	//xspeed = -1 for mario
 	//xspeed = -yspeed for others
 	
-	if(*(*enter_portal + 157) == 0x28 && *(*exit_portal + 157) == 0x2000)
+	if(*(*enter_portal + 157) == 0x28 && (*(*exit_portal + 157) & 0x0000f000) != 0)
 	{
 	  int ** teleporteri = (int**)teleporter;
 	  
