@@ -151,15 +151,15 @@ int main(void)
     if(((*button_presses & 0x04000000) == 0x04000000))
 	{
       *(*goomba_addrii + 73) = 0x01000000;
-	  *(*(goomba_addrii+1) + 73) = 0x01000000;
+	  //*(*(goomba_addrii+1) + 73) = 0x01000000;
 	  *(*(goomba_addrii+2) + 73) = 0x01000000;
 	}
 	else
 	{
 	  *(*goomba_addrii + 73) = 0;
-	  *(*(goomba_addrii+1) + 73) = 0;
+	  //*(*(goomba_addrii+1) + 73) = 0;
 	  *(*(goomba_addrii+2) + 73) = 0;
-	  *dist = 0.1;
+	  *dist = 10.0;
 	}
   
     //move crosshairs outwards!
@@ -279,7 +279,7 @@ int main(void)
   
   if(*last_direction != *player_dir_addr)
   {
-    *dist = 0.1;
+    *dist = 10.0;
   }
   
   *last_direction = *player_dir_addr;

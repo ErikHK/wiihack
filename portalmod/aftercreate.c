@@ -51,6 +51,8 @@ int main(void)
   {
 	//swooper here, set it to non-hurting/non-interacting!
 	*(*created_actor + 121) = 0;
+	//set z level to 5000
+	*(*created_actor + 45) = 0x459C4000;
 	
 	*swooper_addr = *created_actor;
   }
@@ -109,7 +111,6 @@ int main(void)
   &&
   (*button_presses & 0x06000000) == 0x06000000)
   {
-	
     //newly created is a portal and was shot from the portal gun
     //move it up from the bottom of Mario where it's created,
 	//and make it visible again
