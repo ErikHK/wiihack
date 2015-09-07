@@ -195,10 +195,22 @@ int main(void)
 	*(*swooper_addr + 64) = 0; //no rotation plix
 	//*(*swooper_addr + 65) = 0; //no rotation plix
 	
+	if(*player_dir_addr == 0x00003000)
+	{
 	*tmp2 = 6.88E8;
 	//*tmpint = 0x40000000;
 	*(*swooper_addrf + 65) = *angle;
 	*(*swooper_addr + 65) = *(*swooper_addrf + 65)*(*tmp2);
+	}
+	else
+	{
+	*tmp2 = 6.88E8;
+	//*tmpint = 0x40000000;
+	//*tmp3 = -1.0;
+	*(*swooper_addrf + 65) = (*angle);
+	*(*swooper_addr + 65) = *(*swooper_addrf + 65)*(*tmp2);
+	*(*swooper_addr + 65) += 0x80000000;
+	}
 	//*(*swooper_addr + 65) = *tmpint;
 	
 	//*(*swooper_addr + 65) += *tmpint;
