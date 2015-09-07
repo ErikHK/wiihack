@@ -121,13 +121,13 @@ int main(void)
     
     if(*player_dir_addr == 0x00003000)
     {
-      *tmp2 = 15.0;
+      *tmp2 = 2.0;
       *tmp = *(*created_actorf + 43);
       *(*created_actorf + 43) = *tmp + *tmp2;
     }
     else
     {
-      *tmp2 = 15.0;
+      *tmp2 = 2.0;
       *tmp = *(*created_actorf + 43);
       *(*created_actorf + 43) = *tmp - *tmp2;
     }

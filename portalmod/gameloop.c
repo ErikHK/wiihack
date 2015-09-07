@@ -183,24 +183,26 @@ int main(void)
 	}
   
   
-  *tmp = 20.0;
+  //*tmp = 20.0;
   *tmp = 15.0;
   float marioy = *(player_addr + 44);
   float distancey = (*dist) * (*sin_addr);
   
   if(*swooper_addr > 0x81500000)
   {
-	*(*swooper_addrf + 43) = *(player_addr + 43);
-	*(*swooper_addrf + 44) = *(player_addr + 44) + *tmp;
+	*(*swooper_addrf + 43) = *(player_addr + 43); //x
+	*(*swooper_addrf + 44) = *(player_addr + 44) + *tmp; //y
 	*(*swooper_addr + 64) = 0; //no rotation plix
 	//*(*swooper_addr + 65) = 0; //no rotation plix
 	
+	*tmp = 2.0;
 	if(*player_dir_addr == 0x00003000)
 	{
 	*tmp2 = 6.88E8;
 	//*tmpint = 0x40000000;
 	*(*swooper_addrf + 65) = *angle;
 	*(*swooper_addr + 65) = *(*swooper_addrf + 65)*(*tmp2);
+	*(*swooper_addrf + 43) += *tmp;
 	}
 	else
 	{
@@ -210,6 +212,7 @@ int main(void)
 	*(*swooper_addrf + 65) = (*angle);
 	*(*swooper_addr + 65) = *(*swooper_addrf + 65)*(*tmp2);
 	*(*swooper_addr + 65) += 0x80000000;
+	*(*swooper_addrf + 43) -= *tmp;
 	}
 	//*(*swooper_addr + 65) = *tmpint;
 	
@@ -219,13 +222,13 @@ int main(void)
 	//*(*swooper_addr + 65) &= (*tmpint);
   }
   
-  
+  *tmp = 15.0;
   if(*player_dir_addr == 0x00003000)
   {
     *(*goomba_addr + 44) = marioy + distancey;
 	*(*goomba_addr + 44) += *tmp;
 	
-	*(*(goomba_addr+1) + 44) = marioy + *tmp;
+	//*(*(goomba_addr+1) + 44) = marioy + *tmp;
 	*tmp2 = 2.0;
 	*(*(goomba_addr+2) + 44) = distancey;
 	*(*(goomba_addr+2) + 44) /= *tmp2; //distance/2
@@ -236,7 +239,7 @@ int main(void)
     *(*goomba_addr + 44) = marioy - distancey;
 	*(*goomba_addr + 44) += *tmp;
 	
-	*(*(goomba_addr+1) + 44) = marioy + *tmp;
+	//*(*(goomba_addr+1) + 44) = marioy + *tmp;
 	*tmp2 = -2.0;
 	*(*(goomba_addr+2) + 44) = distancey;
 	*(*(goomba_addr+2) + 44) /= *tmp2; //distance/2
@@ -247,26 +250,29 @@ int main(void)
   float goombay = *(*goomba_addr + 44);
   float mariox = *(player_addr + 43);
   float distancex = (*dist) * (*cos_addr);
-  
+  //*tmp = 2.0;
+  *tmp2 = 2.0;
   //check direction of mario!	
   if(*(player_dir_addr) == 0x00003000) //stands to the right
   {
-	*(*goomba_addr + 43) = mariox + (*dist) * (*cos_addr) + *tmp;
-	*(*(goomba_addr+1) + 43) = mariox + *tmp;
-	*tmp2 = 2.0;
+	*(*goomba_addr + 43) = mariox + (*dist) * (*cos_addr);
+	*(*goomba_addr + 43) += *tmp2;
+	//*(*(goomba_addr+1) + 43) = mariox + *tmp;
+	//*tmp2 = 2.0;
 	*(*(goomba_addr+2) + 43) = distancex;
 	*(*(goomba_addr+2) + 43) /= *tmp2; //distance/2
-	*(*(goomba_addr+2) + 43) += mariox + *tmp; //marioy+ distance/2 + tmp
+	*(*(goomba_addr+2) + 43) += mariox + *tmp2; //marioy+ distance/2 + tmp
 	
   }
   else //stands to the left
   {
-	*(*goomba_addr + 43) = mariox - (*dist) * (*cos_addr) - *tmp;
-	*(*(goomba_addr+1) + 43) = mariox - *tmp;
+	*(*goomba_addr + 43) = mariox - (*dist) * (*cos_addr);
+	*(*goomba_addr + 43) -= *tmp2;
+	//*(*(goomba_addr+1) + 43) = mariox - *tmp;
 	*tmp2 = -2.0;
 	*(*(goomba_addr+2) + 43) = distancex;
 	*(*(goomba_addr+2) + 43) /= *tmp2; //distance/2
-	*(*(goomba_addr+2) + 43) += mariox - *tmp; //marioy+ distance/2 + tmp
+	*(*(goomba_addr+2) + 43) += mariox + *tmp2; //marioy+ distance/2 + tmp
   }
    
   }
