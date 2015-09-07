@@ -43,7 +43,7 @@ int main(void)
   float * player_addrf;
   
   //null pointer
-  if(*created_actor == 0)
+  if(*created_actor < 0x81500000)
     return 0;
 	
 
@@ -58,20 +58,21 @@ int main(void)
   // *tmpint = 0x01240000;
   //if micro goomba
   if((*(*created_actor + 2) & 0xffff0000) == 0x01240000)
+  //if(*(*created_actor + 2) == 0x01240000)
   {
     //make it non-interactive
 	*(*created_actor + 121) = 0;
      
     //*tmpint = 0;
-    if(*first_goomba == 0)
+    if(*first_goomba < 0x81500000)
 	{
 	  *first_goomba = *created_actor_addr;
 	}
-    else if(*second_goomba == 0)
+    else if(*second_goomba < 0x81500000)
 	{
       *second_goomba = *created_actor_addr;
 	}
-    else if(*third_goomba == 0)
+    else if(*third_goomba < 0x81500000)
 	{
       *third_goomba = *created_actor_addr;
 	}
@@ -90,7 +91,7 @@ int main(void)
   
   
   //NULL pointer!
-  if(*player_addr == 0)
+  if(*player_addr < 0x81500000)
     return 0;
   
   player_addrf = *player_addr;
@@ -108,22 +109,11 @@ int main(void)
   &&
   (*button_presses & 0x06000000) == 0x06000000)
   {
-  /*
-  if((*button_presses & 0x06000000) != 0x06000000)
-  {
-	//was not shot from the portal gun, make it invisible!
-	*(*created_actor + 73) = 0;
-        
-    //make untouchable
-    *(*created_actor + 121) = 0;
-	
-	return 0;
-  }
-  */
 	
     //newly created is a portal and was shot from the portal gun
     //move it up from the bottom of Mario where it's created,
 	//and make it visible again
+	
 	*(*created_actor + 73) = 0x01000000;
     *tmp2 = 15.0;
     *tmp = *(*created_actorf + 44);

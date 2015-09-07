@@ -66,7 +66,7 @@ int main(void)
   //*player_store_addr = 0x8154b804;
 
   //NULL pointer!
-  if(*player_store_addr == 0)
+  if(*player_store_addr < 0x81500000)
   {
     return 0;
   }
@@ -105,6 +105,7 @@ int main(void)
   //float * tilt_addr = (float*)0x807612c8;
   
   float * angle = (float*)(base_addr+24);
+  int * anglei = (int*)(base_addr+24);
   //*(base_addr+5) = 1.571;	//pi/2
   *tmp = *tmp2;	//pi/2 + x
   
@@ -187,13 +188,23 @@ int main(void)
   float marioy = *(player_addr + 44);
   float distancey = (*dist) * (*sin_addr);
   
-  
   if(*swooper_addr > 0x81500000)
   {
 	*(*swooper_addrf + 43) = *(player_addr + 43);
 	*(*swooper_addrf + 44) = *(player_addr + 44) + *tmp;
 	*(*swooper_addr + 64) = 0; //no rotation plix
-	*(*swooper_addr + 65) = 0; //no rotation plix
+	//*(*swooper_addr + 65) = 0; //no rotation plix
+	
+	*tmp2 = 6.88E8;
+	//*tmpint = 0x40000000;
+	*(*swooper_addrf + 65) = *angle;
+	*(*swooper_addr + 65) = *(*swooper_addrf + 65)*(*tmp2);
+	//*(*swooper_addr + 65) = *tmpint;
+	
+	//*(*swooper_addr + 65) += *tmpint;
+	//*(*swooper_addrf + 65) += *tmp3; //angle rotation?
+	//*tmpint = 0xffff0000;
+	//*(*swooper_addr + 65) &= (*tmpint);
   }
   
   
@@ -220,12 +231,6 @@ int main(void)
 	*(*(goomba_addr+2) + 44) += marioy + *tmp; //marioy+ distance/2 + tmp
   }
   
-   //= *tmp2; //store sin etc
-  //*tmp3 = marioy + *tmp;
-  //*(*(goomba_addr+1) + 44) = *tmp3;
-  //*tmp = 15.0;
-  //*tmp2 = *(*goomba_addr + 44);
-  //*(*goomba_addr + 44) = *tmp2 + *tmp;
   
   float goombay = *(*goomba_addr + 44);
   float mariox = *(player_addr + 43);
@@ -242,7 +247,7 @@ int main(void)
 	*(*(goomba_addr+2) + 43) += mariox + *tmp; //marioy+ distance/2 + tmp
 	
   }
-  else
+  else //stands to the left
   {
 	*(*goomba_addr + 43) = mariox - (*dist) * (*cos_addr) - *tmp;
 	*(*(goomba_addr+1) + 43) = mariox - *tmp;
@@ -342,11 +347,12 @@ int main(void)
         
       
       //gone?
-	  }else if( *(*first_portal+4) == 0)
+	  }
+	  else if( *(*first_portal+2) == 0x00380200)
     {
       *first_portal_addr = 0;
 	  *curr_portal = 2;
-      return 0;
+      //return 0;
     }
   
   //rotate correctly!
@@ -357,16 +363,16 @@ int main(void)
     
   //side left
   //*tmpint = 0x28;
-  if(*(*first_portal + 157) == 0x28)
+  else if(*(*first_portal + 157) == 0x28)
     *(*first_portal + 64) = 0xC000C000;
     
   //side right
   //*tmpint = 0x14;
-  if(*(*first_portal + 157) == 0x14)
+  else if(*(*first_portal + 157) == 0x14)
     *(*first_portal + 64) = 0x4000C000;
 
   //ground
-  if((*(*first_portal + 157) & 0x0000f000) != 0)
+  else if((*(*first_portal + 157) & 0x0000f000) != 0)
     *(*first_portal + 64) = 0;
 
   //null pointer
@@ -388,7 +394,7 @@ int main(void)
 		
         *(*second_portalf + 58) = (*tmp) * (*static_cos_addr);
         *(*second_portalf + 59) = (*tmp) * (*static_sin_addr);
-      } 
+      }
       
       //check illegalcheck.txt for info
       
@@ -396,7 +402,7 @@ int main(void)
         ((*(*second_portal+157+2) == 8) || //ground
         (*(*second_portal+157+10) == 2)) ) //right
         //(*(*second_portal+157+11) == 2)) //left, ILLEGAL PLACE?
-      { 
+      {
         //make portal invisible!
         *(*second_portal + 73) = 0;
         *second_portal_addr = 0;
@@ -417,11 +423,12 @@ int main(void)
       
 	  }
 	//gone?
-    if( *(*second_portal+4) == 0)
+    //if( *(*second_portal+4) == 0)
+	else if( *(*second_portal+2) == 0x00380200) 
     {
       *second_portal_addr = 0;
 	  *curr_portal = 1;
-      return 0;
+      //return 0;
     }
   
   //rotate it correctly!
@@ -430,15 +437,15 @@ int main(void)
     *(*second_portal + 64) = 0x80008000;
     
   //side left
-  if(*(*second_portal + 157) == 0x28)
+  else if(*(*second_portal + 157) == 0x28)
     *(*second_portal + 64) = 0xC000C000;
     
   //side right
-  if(*(*second_portal + 157) == 0x14)
+  else if(*(*second_portal + 157) == 0x14)
     *(*second_portal + 64) = 0x4000C000;
 	
   //ground
-  if((*(*second_portal + 157) & 0x0000f000) != 0)
+  else if((*(*second_portal + 157) & 0x0000f000) != 0)
     *(*second_portal + 64) = 0;
   
   return 0;
