@@ -14,9 +14,9 @@ typedef unsigned short u16;
 int main(void)
 {
   //create actor
-  int (*CreateActor)(u16 classID, int settings, float * pos, char rot, char layer) = 0x80064610;
+  int (*CreateActor)(u16 classID, int settings, float * pos, char rot, char layer) = CREATE_ACTOR;
   //int (*get_player)(int ID, int some_addr, int one1, int zero, int one2) = 0x8005FB90;
-  int (*get_player)(int ID) = 0x8005fb90;
+  int (*get_player)(int ID) = GET_PLAYER;
   
   float *base_addr;// = (float*)0x802f6940;
   base_addr = (float*)BASE_ADDR;
@@ -98,7 +98,7 @@ int main(void)
   *timer += *tmpint;
   
   *tmp2 = 1.7;
-  float ** wiimoteptr = (float **)(0x80377F88);
+  float ** wiimoteptr = (float **)(WIIMOTE_PTR);
   
   //choose id 0
   float * tilt_addr = (float *)((*wiimoteptr+0) + 11);
@@ -157,7 +157,7 @@ int main(void)
 	else
 	{
 	  *(*goomba_addrii + 73) = 0;
-	  //*(*(goomba_addrii+1) + 73) = 0;
+	  *(*(goomba_addrii+1) + 73) = 0;
 	  *(*(goomba_addrii+2) + 73) = 0;
 	  *dist = 10.0;
 	}

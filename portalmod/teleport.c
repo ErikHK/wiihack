@@ -87,6 +87,10 @@ int main(void)
     //if portal is flying, can't teleport
     if(*(*collider1_addr + 157) == 0)
        return 0;
+	
+	//check if the other portal is flying! not tried!
+	if(*(*second_portal + 157) == 0)
+	  return 0;
   
     //null pointer
     if(*portal2_addr == 0)
@@ -115,6 +119,10 @@ int main(void)
     //if portal is flying, can't teleport
     if(*(*collider1_addr + 157) == 0)
       return 0;
+	  
+	//check if the other portal is flying! not tried!
+	if(*(*first_portal + 157) == 0)
+	  return 0;
   
     //null pointer
     if(*portal1_addr == 0)
