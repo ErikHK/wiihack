@@ -112,7 +112,7 @@ int main(void)
     *timer = *tmpint;
     *has_teleported = 1;
   }
-	
+  
   else if(*collider1 == *portal2_addr && *collider2 != *portal1_addr && *timer > 10)
   {
   

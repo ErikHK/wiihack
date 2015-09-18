@@ -43,14 +43,18 @@ int main(void)
   float * player_addrf;
   
   //null pointer
-  if(*created_actor < 0x81500000)
-    return 0;
+  //if(*created_actor < 0x81500000)
+  //  return 0;
 	
 
   if((*(*created_actor + 2) & 0xffff0000) == 0x00830000)
   {
 	//swooper here, set it to non-hurting/non-interacting!
 	*(*created_actor + 121) = 0;
+	
+	//set invisible
+	*(*created_actor + 73) = 0;
+	
 	//set z level to 5000
 	*(*created_actor + 45) = 0x459C4000;
 	
@@ -106,7 +110,7 @@ int main(void)
   
   
   //check if buzzy beetle instead
-  *tmpint = 0x00380000;
+  //*tmpint = 0x00380000;
   if((*(*created_actor + 2) == 0x00380000)
   &&
   (*button_presses & 0x06000000) == 0x06000000)

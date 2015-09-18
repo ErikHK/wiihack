@@ -14,9 +14,9 @@ typedef unsigned short u16;
 int main(void)
 {
   //create actor
-  int (*CreateActor)(u16 classID, int settings, float * pos, char rot, char layer) = CREATE_ACTOR;
+  int (*CreateActor)(u16 classID, int settings, float * pos, char rot, char layer) = 0x80064610;
   //int (*get_player)(int ID, int some_addr, int one1, int zero, int one2) = 0x8005FB90;
-  int (*get_player)(int ID) = GET_PLAYER;
+  int (*get_player)(int ID) = 0x8005fb90;
   
   float *base_addr;// = (float*)0x802f6940;
   base_addr = (float*)BASE_ADDR;
@@ -98,7 +98,7 @@ int main(void)
   *timer += *tmpint;
   
   *tmp2 = 1.7;
-  float ** wiimoteptr = (float **)(WIIMOTE_PTR);
+  float ** wiimoteptr = (float **)(0x80377F88);
   
   //choose id 0
   float * tilt_addr = (float *)((*wiimoteptr+0) + 11);
@@ -153,19 +153,22 @@ int main(void)
       *(*goomba_addrii + 73) = 0x01000000;
 	  //*(*(goomba_addrii+1) + 73) = 0x01000000;
 	  *(*(goomba_addrii+2) + 73) = 0x01000000;
+	  *(*swooper_addr + 73) = 0x01000000;
 	}
 	else
 	{
 	  *(*goomba_addrii + 73) = 0;
 	  *(*(goomba_addrii+1) + 73) = 0;
 	  *(*(goomba_addrii+2) + 73) = 0;
-	  *dist = 10.0;
+	  *(*swooper_addr + 73) = 0;
+	  *dist = 15.0;
 	}
   
     //move crosshairs outwards!
 	*tmp = 200.0f;
 	*tmp2 = 4.0f;
 	*tmp3 = 200.0f;
+	//*tmp3 = 15.0f;
 	if(*(*goomba_addrii + 157) == 0
 	 && *dist < (*tmp)) //is free to move
 	{
@@ -174,7 +177,7 @@ int main(void)
 	  //*tmp = *tmp / (*tmp3);  //tmp3 = currdist / maxdist
 	  *dist += *tmp2; //dist += 1 / (currdist/maxdist)
 	}
-	else
+	else if(*dist > (*tmp2)*(*tmp2))
 	{
 	  //*tmp = (*dist + *tmp2);
 	  //*tmp = (*tmp) / (*tmp3);
@@ -198,7 +201,7 @@ int main(void)
 	*tmp = 2.0;
 	if(*player_dir_addr == 0x00003000)
 	{
-	*tmp2 = 6.88E8;
+	*tmp2 = 6.88E8;	//magic number
 	//*tmpint = 0x40000000;
 	*(*swooper_addrf + 65) = *angle;
 	*(*swooper_addr + 65) = *(*swooper_addrf + 65)*(*tmp2);
@@ -206,7 +209,7 @@ int main(void)
 	}
 	else
 	{
-	*tmp2 = 6.88E8;
+	*tmp2 = 6.88E8;	//magic number
 	//*tmpint = 0x40000000;
 	//*tmp3 = -1.0;
 	*(*swooper_addrf + 65) = (*angle);
@@ -279,7 +282,7 @@ int main(void)
   
   if(*last_direction != *player_dir_addr)
   {
-    *dist = 10.0;
+    *dist = 15.0;
   }
   
   *last_direction = *player_dir_addr;
