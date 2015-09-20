@@ -1227,6 +1227,17 @@ placeTile__8BgGmBaseFUsUsii = 0x80077860;
 
 807e18c8			38800001 gör så att tilesen bara skapas!
 
+
+800e453c
+802dd0b0
+
+800e42b0
+
+807ec0b0	60000000
+807ec12c	60000000
+(807ec104	60000000)
+(807ec084	60000000)
+
 8154014c			10 om innanför området
 
 bra adresser? 
