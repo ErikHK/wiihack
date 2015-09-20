@@ -1217,6 +1217,15 @@ b -(0x802fd8d8-0x80926770)-26*4+4
 
 
 
+mario+0x2a78		ID till objekt mario håller i
+actor_searchbyID	0x80162E40
+807e15d0			nåt med god tile??
+placeTile__8BgGmBaseFUsUsii = 0x80077860;
+807e1860			?
+807e18c8			remove tiles!
+807e18e0			create tiles!
+
+807e18c8			38800001 gör så att tilesen bara skapas!
 
 bra adresser? 
 8035a100 - 8035df00 ~ 4000 words! 8035a100 funkar iaf inte.
