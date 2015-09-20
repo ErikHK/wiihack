@@ -1227,6 +1227,8 @@ placeTile__8BgGmBaseFUsUsii = 0x80077860;
 
 807e18c8			38800001 gör så att tilesen bara skapas!
 
+8154014c			10 om innanför området
+
 bra adresser? 
 8035a100 - 8035df00 ~ 4000 words! 8035a100 funkar iaf inte.
 
