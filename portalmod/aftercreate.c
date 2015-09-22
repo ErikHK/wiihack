@@ -14,7 +14,7 @@ int main(void)
   
   int * button_store = (int*)(base_addr+4);
   
-  int ** swooper_addr = (int**)(base_addr+26);
+  //int ** swooper_addr = (int**)(base_addr+26);
   
   int * first_portal_addr = (int*)(base_addr);
   int * second_portal_addr = (int*)(base_addr+1);
@@ -50,7 +50,7 @@ int main(void)
   if((*(*created_actor + 2) & 0xffff0000) == 0x00830000)
   {
 	//swooper here, set it to non-hurting/non-interacting!
-	*(*created_actor + 121) = 0;
+	//*(*created_actor + 121) = 0;
 	
 	//set invisible
 	*(*created_actor + 73) = 0;
@@ -58,7 +58,7 @@ int main(void)
 	//set z level to 5000
 	*(*created_actor + 45) = 0x459C4000;
 	
-	*swooper_addr = *created_actor;
+	//*swooper_addr = *created_actor;
   }
   
   // *tmpint = 0x01240000;

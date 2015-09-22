@@ -1,10 +1,10 @@
-//store colliding adresses to 802f6950 and -54
 
 //#define BASE_ADDR	0x802f6900
 //#define ANGLE		0x802f6800
 
 typedef unsigned short u16;
 
+//store colliding adresses to 802f6950 and -54
 __asm__("lis 5, 0x802f;lwz 4, 4(23);lwz 3, 4(24);stw 3, 0x6950(5);stw 4, 0x6954(5)");
 
 int main(void)
@@ -23,6 +23,9 @@ int main(void)
   float ** collider2f = (float**)(base_addr + 21);
   
   //float * mario = (float*)MARIO_ADDR;
+  
+  int * teleporting_to = (int*)(base_addr + 27);
+  int * teleporter_addr = (int*)(base_addr + 26);
   
   float *tmp = (float*)(base_addr+37); //0x802f6994
   float *tmp2 = (float*)(base_addr+38); //0x802f6998
@@ -88,7 +91,7 @@ int main(void)
     if(*(*collider1_addr + 157) == 0)
        return 0;
 	
-	//check if the other portal is flying! not tried!
+	//check if the other portal is flying!
 	if(*(*second_portal + 157) == 0)
 	  return 0;
   
@@ -97,8 +100,11 @@ int main(void)
       return 0;
       
     //move collider2 to portal 2 if there is one
-    *(*collider2f + 43) = *(*second_portalf + 43);
-    *(*collider2f + 44) = *(*second_portalf + 44);
+    //*(*collider2f + 43) = *(*second_portalf + 43);
+    //*(*collider2f + 44) = *(*second_portalf + 44);
+	
+	*teleporting_to = 2;
+	*teleporter_addr = *collider2;
     
     teleporter = collider2f;
     enter_portalf = collider1f;
@@ -110,7 +116,7 @@ int main(void)
     //reset timer
     *tmpint = 0;
     *timer = *tmpint;
-    *has_teleported = 1;
+    //*has_teleported = 1;
   }
   
   else if(*collider1 == *portal2_addr && *collider2 != *portal1_addr && *timer > 10)
@@ -131,7 +137,10 @@ int main(void)
     //move collider2 to portal 1 if the portal is not dead
     *(*collider2f + 43) = *(*first_portalf + 43);
     *(*collider2f + 44) = *(*first_portalf + 44);
-       
+	
+	*teleporting_to = 1;
+	*teleporter_addr = *collider2;
+	
     teleporter = collider2f;
     enter_portalf = collider1f;
     enter_portal = collider1_addr;
@@ -159,6 +168,9 @@ int main(void)
     *(*collider1f + 43) = *(*first_portalf + 43);
     *(*collider1f + 44) = *(*first_portalf + 44);
       
+	*teleporting_to = 1;
+	*teleporter_addr = *collider1;
+	  
     teleporter = collider1f;
     enter_portalf = collider2f;
     enter_portal = collider2_addr;
@@ -185,6 +197,10 @@ int main(void)
     *(*collider1f + 43) = *(*second_portalf + 43);
     *(*collider1f + 44) = *(*second_portalf + 44);
       
+	*teleporting_to = 2;
+	
+	*teleporter_addr = *collider1;
+	  
     teleporter = collider1f;
     enter_portalf = collider2f;
     enter_portal = collider2_addr;
@@ -194,7 +210,7 @@ int main(void)
     //reset timer
     *tmpint = 0;
     *timer = *tmpint;
-    *has_teleported = 1;
+    //*has_teleported = 1;
   }
     
     

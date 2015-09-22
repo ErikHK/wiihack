@@ -24,4 +24,7 @@
 0x802f695c	tmp ac			23
 0x802f6960	tmp2 ac			24
 0x802f6964	tmpint ac		25
-0x802f6968	swooper addr		26
+0x802f6968	teleporter (org.swooper	26
+0x802f696c	teleporting_to		27
+0x802f6970	sin_addr_ac		28
+0x802f6974	cos_addr_ac		29

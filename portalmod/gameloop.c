@@ -13,6 +13,7 @@ typedef unsigned short u16;
 
 int main(void)
 {
+
   //create actor
   int (*CreateActor)(u16 classID, int settings, float * pos, char rot, char layer) = 0x80064610;
   //int (*get_player)(int ID, int some_addr, int one1, int zero, int one2) = 0x8005FB90;
@@ -24,8 +25,8 @@ int main(void)
   int * goomba_addri = (int*)(base_addr+12);
   int ** goomba_addrii = (int**)(base_addr+12);
   
-  int ** swooper_addr = (int**)(base_addr+26);
-  float ** swooper_addrf = (float**)(base_addr+26);
+  //int ** swooper_addr = (int**)(base_addr+26);
+  //float ** swooper_addrf = (float**)(base_addr+26);
 
   
   int * button_store = (int*)(base_addr+4);
@@ -53,6 +54,8 @@ int main(void)
   int * player_store_addr = (int*)(base_addr+11);
   int * get_player_timer = (int*)(base_addr+16);
   
+  int *has_teleported = (int*)(base_addr+41); //0x802f69a4
+  
   *get_player_timer += 1;
   if(*get_player_timer > 100)
   {
@@ -62,6 +65,7 @@ int main(void)
     *player_store_addr = get_player(0);
     *get_player_timer = 0;
   }
+  
   
   //*player_store_addr = 0x8154b804;
 
@@ -153,14 +157,14 @@ int main(void)
       *(*goomba_addrii + 73) = 0x01000000;
 	  //*(*(goomba_addrii+1) + 73) = 0x01000000;
 	  *(*(goomba_addrii+2) + 73) = 0x01000000;
-	  *(*swooper_addr + 73) = 0x01000000;
+	  //*(*swooper_addr + 73) = 0x01000000;
 	}
 	else
 	{
 	  *(*goomba_addrii + 73) = 0;
 	  *(*(goomba_addrii+1) + 73) = 0;
 	  *(*(goomba_addrii+2) + 73) = 0;
-	  *(*swooper_addr + 73) = 0;
+	  //*(*swooper_addr + 73) = 0;
 	  *dist = 15.0;
 	}
   
@@ -191,6 +195,8 @@ int main(void)
   float marioy = *(player_addr + 44);
   float distancey = (*dist) * (*sin_addr);
   
+  
+  /*
   if(*swooper_addr > 0x81500000)
   {
 	*(*swooper_addrf + 43) = *(player_addr + 43); //x
@@ -224,6 +230,7 @@ int main(void)
 	//*tmpint = 0xffff0000;
 	//*(*swooper_addr + 65) &= (*tmpint);
   }
+  */
   
   *tmp = 15.0;
   if(*player_dir_addr == 0x00003000)
