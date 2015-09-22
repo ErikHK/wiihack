@@ -77,6 +77,9 @@ int main(void)
   //check if one or the other (or both) are invisible
   if(*(*collider1_addr + 73) == 0 || *(*collider2_addr + 73) == 0)
     return 0;
+	
+  if(*teleporting_to != 0)
+    return 0;
     
   //make sure the portals are stationary, you shouldn't be able to teleport
   //when the portal is flying!
@@ -135,8 +138,8 @@ int main(void)
       return 0;
         
     //move collider2 to portal 1 if the portal is not dead
-    *(*collider2f + 43) = *(*first_portalf + 43);
-    *(*collider2f + 44) = *(*first_portalf + 44);
+    //*(*collider2f + 43) = *(*first_portalf + 43);
+    //*(*collider2f + 44) = *(*first_portalf + 44);
 	
 	*teleporting_to = 1;
 	*teleporter_addr = *collider2;
@@ -150,7 +153,7 @@ int main(void)
     //reset timer
     *tmpint = 0;
     *timer = *tmpint;
-    *has_teleported = 1;
+    //*has_teleported = 1;
   }
   
   
@@ -165,8 +168,8 @@ int main(void)
       return 0;
         
     //move collider1 to portal 1 if there is one
-    *(*collider1f + 43) = *(*first_portalf + 43);
-    *(*collider1f + 44) = *(*first_portalf + 44);
+    //*(*collider1f + 43) = *(*first_portalf + 43);
+    //*(*collider1f + 44) = *(*first_portalf + 44);
       
 	*teleporting_to = 1;
 	*teleporter_addr = *collider1;
@@ -180,7 +183,7 @@ int main(void)
     //reset timer
     *tmpint = 0;
     *timer = *tmpint;
-    *has_teleported = 1;
+    //*has_teleported = 1;
   }
     
   else if(*collider2 == *portal1_addr && *collider1 != *portal2_addr && *timer > 10)
@@ -194,8 +197,8 @@ int main(void)
       return 0;
     
     //move collider1 to portal 2 if there is one
-    *(*collider1f + 43) = *(*second_portalf + 43);
-    *(*collider1f + 44) = *(*second_portalf + 44);
+    //*(*collider1f + 43) = *(*second_portalf + 43);
+    //*(*collider1f + 44) = *(*second_portalf + 44);
       
 	*teleporting_to = 2;
 	
@@ -219,6 +222,7 @@ int main(void)
   //and make sure the speed isn't zero!
   //entered portal is enter_portal, actor is teleporter,
   //destination is exit_portal
+  /*
   if(*has_teleported)
   {
     
@@ -484,6 +488,8 @@ int main(void)
 	
     
   }
+  
+  */
     
   //reset colliders
   //*tmpint = 0;

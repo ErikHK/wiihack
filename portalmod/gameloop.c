@@ -46,7 +46,14 @@ int main(void)
   int * second_portal_addr = (int*)(base_addr+1);
   int * last_direction = (int*)(base_addr+15);
   
+  int * teleporting_to = (int*)(base_addr + 27);
+  int ** teleporter = (int*)(base_addr + 26);
+  float ** teleporterf = (int*)(base_addr + 26);
+  
   int * curr_portal = (int*)(base_addr+2);
+  
+  float ** first_portalf = (float**)(base_addr);
+  float ** second_portalf = (float**)(base_addr+1);
   //float * player_addr = (float*)0x8154b804;
   float * player_addr;
   //int * player_addri;
@@ -298,6 +305,78 @@ int main(void)
   *tmpint = 1;
   *portal_timer += *tmpint;
   
+  //here we should teleport if teleporting_to is 1 or 2!
+  if(*teleporting_to != 0)
+  {
+    //*(*teleporterf + 62) = 0.0; //gravity = 0
+	
+	
+    if(*teleporting_to == 1)
+	{
+	  
+	  *tmp = -(*(*teleporterf + 43) - *(*first_portalf + 43));
+	  //*tmp2 = (*(*teleporterf + 43))*(*(*teleporterf + 43)) + (*(*first_portalf + 43))*(*(*first_portalf + 43));
+	  *tmp2 = fabs((*(*teleporterf + 43)) + (*(*first_portalf + 43)));
+	  *tmp3 = (*tmp);
+	  *tmp3 = (*tmp3)/(*tmp2);
+	  *tmp2 = 100.0;
+	  *tmp = (*tmp3);
+	  *tmp = (*tmp)*(*tmp2);
+	  *(*teleporterf + 43) += (*tmp);
+	  
+	  *tmp = -(*(*teleporterf + 44) - *(*first_portalf + 44));
+	  //*tmp2 = (*(*teleporterf + 44))*(*(*teleporterf + 44)) + (*(*first_portalf + 44))*(*(*first_portalf + 44));
+	  *tmp2 = fabs((*(*teleporterf + 44)) + (*(*first_portalf + 44)));
+	  *tmp3 = (*tmp);
+	  *tmp3 = (*tmp3)/(*tmp2);
+	  *tmp2 = 100.0;
+	  *tmp = (*tmp3);
+	  *tmp = (*tmp)*(*tmp2);
+	  *(*teleporterf + 44) += *tmp;
+	}
+	
+	else //(*teleporting_to == 2)
+	{
+	  *tmp = -(*(*teleporterf + 43) - *(*second_portalf + 43));
+	  //*tmp2 = (*(*teleporterf + 43))*(*(*teleporterf + 43)) + (*(*second_portalf + 43))*(*(*second_portalf + 43));
+	  *tmp2 = fabs((*(*teleporterf + 43)) + (*(*second_portalf + 43)));
+	  *tmp3 = (*tmp);
+	  *tmp3 = (*tmp3)/(*tmp2);
+	  *tmp2 = 100.0;
+	  *tmp = (*tmp3);
+	  *tmp = (*tmp)*(*tmp2);
+	  *(*teleporterf + 43) += (*tmp);
+	  
+	  *tmp = -(*(*teleporterf + 44) - *(*second_portalf + 44));
+	  //*tmp2 = (*(*teleporterf + 44))*(*(*teleporterf + 44)) + (*(*second_portalf + 44))*(*(*second_portalf + 44));
+	  *tmp2 = fabs((*(*teleporterf + 44)) + (*(*second_portalf + 44)));
+	  *tmp3 = (*tmp);
+	  *tmp3 = (*tmp3)/(*tmp2);
+	  *tmp2 = 100.0;
+	  *tmp = (*tmp3);
+	  *tmp = (*tmp)*(*tmp2);
+	  *(*teleporterf + 44) += *tmp;
+	}
+	
+	*tmp3 = 10.0;
+	if((int)*tmp < (int)*tmp3)
+	{
+	  *has_teleported = 1;
+	  *(*teleporter + 227) = 0x01000000;
+	}
+	else
+	{
+	  *(*teleporterf + 59) = 0.0; //y speed
+	  *(*teleporterf + 67) = 0.0; //x speed
+	  *(*teleporter + 227) = 1; //interactiveness, 1 = fall through it all
+	}
+	
+	//*teleporting_to = 0;
+	//*has_teleported
+  }
+  
+  
+  
   //store button presses as a 1 if the button is held down, and its
   //value is already zero, so as to shoot just one portal at a time.
   //0x02000000 on the wii, 0x06000000 in dolphin!
@@ -323,8 +402,7 @@ int main(void)
   //if(*curr_portal == *tmpint) //place first portal
   //{
   //int ** first_portal = (int**)(base_addr);
-	float ** first_portalf = (float**)(base_addr);
-	float ** second_portalf = (float**)(base_addr+1);
+	
 	*tmpint = 0x00380100;
 
 	
