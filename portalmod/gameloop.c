@@ -310,26 +310,32 @@ int main(void)
   {
     //*(*teleporterf + 62) = 0.0; //gravity = 0
 	
-	
+	double distx, disty;
     if(*teleporting_to == 1)
 	{
 	  
 	  *tmp = -(*(*teleporterf + 43) - *(*first_portalf + 43));
-	  //*tmp2 = (*(*teleporterf + 43))*(*(*teleporterf + 43)) + (*(*first_portalf + 43))*(*(*first_portalf + 43));
-	  *tmp2 = fabs((*(*teleporterf + 43)) + (*(*first_portalf + 43)));
+	  distx = *(*teleporterf + 43) - *(*first_portalf + 43);
+	  disty = *(*teleporterf + 44) - *(*first_portalf + 44);
+	  *tmp2 = fabs(distx*distx + disty*disty);
+	  //*tmp2 = fabs((*(*teleporterf + 43))*(*(*teleporterf + 43)) + (*(*first_portalf + 43))*(*(*first_portalf + 43)));
+	  //*tmp2 = fabs((*(*teleporterf + 43)) + (*(*first_portalf + 43)));
 	  *tmp3 = (*tmp);
 	  *tmp3 = (*tmp3)/(*tmp2);
-	  *tmp2 = 100.0;
+	  *tmp2 = 15.0;
 	  *tmp = (*tmp3);
 	  *tmp = (*tmp)*(*tmp2);
 	  *(*teleporterf + 43) += (*tmp);
 	  
 	  *tmp = -(*(*teleporterf + 44) - *(*first_portalf + 44));
-	  //*tmp2 = (*(*teleporterf + 44))*(*(*teleporterf + 44)) + (*(*first_portalf + 44))*(*(*first_portalf + 44));
-	  *tmp2 = fabs((*(*teleporterf + 44)) + (*(*first_portalf + 44)));
+	  distx = *(*teleporterf + 43) - *(*first_portalf + 43);
+	  disty = *(*teleporterf + 44) - *(*first_portalf + 44);
+	  *tmp2 = fabs(distx*distx + disty*disty);
+	  //*tmp2 = fabs((*(*teleporterf + 44))*(*(*teleporterf + 44)) + (*(*first_portalf + 44))*(*(*first_portalf + 44)));
+	  //*tmp2 = fabs((*(*teleporterf + 44)) + (*(*first_portalf + 44)));
 	  *tmp3 = (*tmp);
 	  *tmp3 = (*tmp3)/(*tmp2);
-	  *tmp2 = 100.0;
+	  *tmp2 = 15.0;
 	  *tmp = (*tmp3);
 	  *tmp = (*tmp)*(*tmp2);
 	  *(*teleporterf + 44) += *tmp;
@@ -338,33 +344,41 @@ int main(void)
 	else //(*teleporting_to == 2)
 	{
 	  *tmp = -(*(*teleporterf + 43) - *(*second_portalf + 43));
-	  //*tmp2 = (*(*teleporterf + 43))*(*(*teleporterf + 43)) + (*(*second_portalf + 43))*(*(*second_portalf + 43));
-	  *tmp2 = fabs((*(*teleporterf + 43)) + (*(*second_portalf + 43)));
+	  distx = *(*teleporterf + 43) - *(*second_portalf + 43);
+	  disty = *(*teleporterf + 44) - *(*second_portalf + 44);
+	  *tmp2 = fabs(distx*distx + disty*disty);
+	  //*tmp2 = fabs((*(*teleporterf + 43))*(*(*teleporterf + 43)) + (*(*second_portalf + 43))*(*(*second_portalf + 43)));
+	  //*tmp2 = fabs((*(*teleporterf + 43)) + (*(*second_portalf + 43)));
 	  *tmp3 = (*tmp);
 	  *tmp3 = (*tmp3)/(*tmp2);
-	  *tmp2 = 100.0;
+	  *tmp2 = 15.0;
 	  *tmp = (*tmp3);
 	  *tmp = (*tmp)*(*tmp2);
 	  *(*teleporterf + 43) += (*tmp);
 	  
 	  *tmp = -(*(*teleporterf + 44) - *(*second_portalf + 44));
-	  //*tmp2 = (*(*teleporterf + 44))*(*(*teleporterf + 44)) + (*(*second_portalf + 44))*(*(*second_portalf + 44));
-	  *tmp2 = fabs((*(*teleporterf + 44)) + (*(*second_portalf + 44)));
+	  distx = *(*teleporterf + 43) - *(*second_portalf + 43);
+	  disty = *(*teleporterf + 44) - *(*second_portalf + 44);
+	  *tmp2 = fabs(distx*distx + disty*disty);
+	  //*tmp2 = fabs(distx*distx + disty*disty);
+	  //*tmp2 = fabs((*(*teleporterf + 44)) + (*(*second_portalf + 44)));
 	  *tmp3 = (*tmp);
 	  *tmp3 = (*tmp3)/(*tmp2);
-	  *tmp2 = 100.0;
+	  *tmp2 = 15.0;
 	  *tmp = (*tmp3);
 	  *tmp = (*tmp)*(*tmp2);
 	  *(*teleporterf + 44) += *tmp;
 	}
 	
-	*tmp3 = 10.0;
-	if((int)*tmp < (int)*tmp3)
+	*tmp3 = fabs(distx*distx + disty*disty);
+	*tmpint = (int)(*tmp3);
+	//*tmp3 = 250.0;
+	if((int)*tmp3 < 250)
 	{
 	  *has_teleported = 1;
 	  *(*teleporter + 227) = 0x01000000;
 	}
-	else
+	else if(*has_teleported == 0)
 	{
 	  *(*teleporterf + 59) = 0.0; //y speed
 	  *(*teleporterf + 67) = 0.0; //x speed
