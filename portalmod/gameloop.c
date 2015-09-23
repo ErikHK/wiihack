@@ -276,10 +276,20 @@ int main(void)
   {
     //*(*teleporterf + 62) = 0.0; //gravity = 0
 	
+	int ** enter_portal;// = (int**)collider1_addr;
+	int ** exit_portal;// = (int**)collider2_addr;
+	
+	float ** enter_portalf;
+	float ** exit_portalf;
+	
 	double distx, disty;
     if(*teleporting_to == 1)
 	{
+	  enter_portal = second_portal;
+	  exit_portal = first_portal;
 	  
+	  enter_portalf = second_portalf;
+	  exit_portalf = first_portalf;
 	  *tmp = -(*(*teleporterf + 43) - *(*first_portalf + 43));
 	  distx = *(*teleporterf + 43) - *(*first_portalf + 43);
 	  disty = *(*teleporterf + 44) - *(*first_portalf + 44);
@@ -307,8 +317,13 @@ int main(void)
 	  *(*teleporterf + 44) += *tmp;
 	}
 	
-	else //(*teleporting_to == 2)
+	else // *teleporting_to == 2 here
 	{
+	  enter_portal = first_portal;
+	  exit_portal = second_portal;
+	  
+	  enter_portalf = first_portalf;
+	  exit_portalf = second_portalf;
 	  *tmp = -(*(*teleporterf + 43) - *(*second_portalf + 43));
 	  distx = *(*teleporterf + 43) - *(*second_portalf + 43);
 	  disty = *(*teleporterf + 44) - *(*second_portalf + 44);
@@ -339,8 +354,9 @@ int main(void)
 	*tmp3 = fabs(distx*distx + disty*disty);
 	*tmpint = (*tmp3);
 	//*tmp2 = 250.0;
-	if(*tmpint < 50)
+	if(*tmpint < 20)
 	{
+	  
 	  *has_teleported = 1;
 	  *(*teleporter + 227) = 0x01000000;
 	}
@@ -351,11 +367,75 @@ int main(void)
 	  *(*teleporterf + 67) = 0.0; //x speed
 	  *(*teleporter + 227) = 1; //interactiveness, 1 = fall through it all
 	}
-	else
+	else // *has_teleported == 1
 	{
 	  *teleporting_to = 0;
-	}
+	  
+	  
+	  //first take care of moving and minimum speed
+    //TODO: MAX SPEED!
+    
+    //if exit portal is on the ground, move teleporter up
+    //TODO: move to the side if possible!
+    if(*(*exit_portal + 157) == 0x2000)
+    {
+      *tmp2 = 15.0;
+      *tmp = *(*teleporterf + 44);
+      *tmp += *tmp2;
+      *(*teleporterf + 44) = *tmp;
+    }
+    
+    //if exit portal is up, move teleporter down
+    else if(*(*exit_portal + 157) >= 0x04000000)
+    {
+      *tmp2 = -15.0;
+      *tmp = *(*teleporterf + 44);
+      *tmp += *tmp2;
+      *(*teleporterf + 44) = *tmp;
+    }
+    
+    //if exit portal is to the left, move teleporter right
+    else if(*(*exit_portal + 157) == 0x28)
+    {
+      *tmp2 = 15.0;
+      *tmp = *(*teleporterf + 43);
+      *tmp += *tmp2;
+      *(*teleporterf + 43) = *tmp;
+    }
+  
+    //if exit portal is to the right, move teleporter left
+    else if(*(*exit_portal + 157) == 0x14)
+    {
+      *tmp2 = -15.0;
+      *tmp = *(*teleporterf + 43);
+      *tmp += *tmp2;
+      *(*teleporterf + 43) = *tmp;
+    }
 	
+	//check orientation of portals
+    //_  _ flip y speed	
+    if((*(*first_portal + 157) & 0x0000f000) != 0 && (*(*second_portal + 157) & 0x0000f000) != 0)
+    {
+	  *tmp = -3.0;
+	  *tmp3 = 5.0;
+	  *tmp2 = *(*teleporterf + 59);
+	  if(*tmp2 > *tmp)
+      {
+        
+		*(*teleporterf + 59) = *tmp3; //flip y
+      }
+	  else
+	  {
+	    *tmp3 = -1.0;
+	    *(*teleporterf + 59) *= *tmp3; //flip y
+	  }
+	  
+	  //give a little x speed so he won't fall down the portal again!	  
+	  *tmp = 1.0;
+      *(*teleporterf + 67) = *tmp;
+    }
+	
+	}
 	//*teleporting_to = 0;
 	//*has_teleported
   }
