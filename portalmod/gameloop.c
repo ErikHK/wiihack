@@ -105,8 +105,9 @@ int main(void)
   
   //int * goomba = *goomba_addr;
   
-  *tmpint = 1;
-  *timer += *tmpint;
+  //*tmpint = 1;
+  //*timer += *tmpint;
+  *timer += 1;
   
   *tmp2 = 1.7;
   float ** wiimoteptr = (float **)(0x80377F88);
@@ -203,42 +204,6 @@ int main(void)
   float distancey = (*dist) * (*sin_addr);
   
   
-  /*
-  if(*swooper_addr > 0x81500000)
-  {
-	*(*swooper_addrf + 43) = *(player_addr + 43); //x
-	*(*swooper_addrf + 44) = *(player_addr + 44) + *tmp; //y
-	*(*swooper_addr + 64) = 0; //no rotation plix
-	//*(*swooper_addr + 65) = 0; //no rotation plix
-	
-	*tmp = 2.0;
-	if(*player_dir_addr == 0x00003000)
-	{
-	*tmp2 = 6.88E8;	//magic number
-	//*tmpint = 0x40000000;
-	*(*swooper_addrf + 65) = *angle;
-	*(*swooper_addr + 65) = *(*swooper_addrf + 65)*(*tmp2);
-	*(*swooper_addrf + 43) += *tmp;
-	}
-	else
-	{
-	*tmp2 = 6.88E8;	//magic number
-	//*tmpint = 0x40000000;
-	//*tmp3 = -1.0;
-	*(*swooper_addrf + 65) = (*angle);
-	*(*swooper_addr + 65) = *(*swooper_addrf + 65)*(*tmp2);
-	*(*swooper_addr + 65) += 0x80000000;
-	*(*swooper_addrf + 43) -= *tmp;
-	}
-	//*(*swooper_addr + 65) = *tmpint;
-	
-	//*(*swooper_addr + 65) += *tmpint;
-	//*(*swooper_addrf + 65) += *tmp3; //angle rotation?
-	//*tmpint = 0xffff0000;
-	//*(*swooper_addr + 65) &= (*tmpint);
-  }
-  */
-  
   *tmp = 15.0;
   if(*player_dir_addr == 0x00003000)
   {
@@ -302,8 +267,9 @@ int main(void)
   *last_direction = *player_dir_addr;
   
   //increase timer
-  *tmpint = 1;
-  *portal_timer += *tmpint;
+  //*tmpint = 1;
+  //*portal_timer += *tmpint;
+  *portal_timer += 1;
   
   //here we should teleport if teleporting_to is 1 or 2!
   if(*teleporting_to != 0)
@@ -371,18 +337,23 @@ int main(void)
 	}
 	
 	*tmp3 = fabs(distx*distx + disty*disty);
-	*tmpint = (int)(*tmp3);
-	//*tmp3 = 250.0;
-	if((int)*tmp3 < 250)
+	*tmpint = (*tmp3);
+	//*tmp2 = 250.0;
+	if(*tmpint < 50)
 	{
 	  *has_teleported = 1;
 	  *(*teleporter + 227) = 0x01000000;
 	}
-	else if(*has_teleported == 0)
+	
+	if(*has_teleported == 0)
 	{
 	  *(*teleporterf + 59) = 0.0; //y speed
 	  *(*teleporterf + 67) = 0.0; //x speed
 	  *(*teleporter + 227) = 1; //interactiveness, 1 = fall through it all
+	}
+	else
+	{
+	  *teleporting_to = 0;
 	}
 	
 	//*teleporting_to = 0;
@@ -417,7 +388,7 @@ int main(void)
   //{
   //int ** first_portal = (int**)(base_addr);
 	
-	*tmpint = 0x00380100;
+	//*tmpint = 0x00380100;
 
 	
 	//null pointer check!!
