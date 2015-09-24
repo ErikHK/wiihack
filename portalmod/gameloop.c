@@ -352,11 +352,13 @@ int main(void)
 	}
 	
 	*tmp3 = fabs(distx*distx + disty*disty);
-	*tmpint = (*tmp3);
+	*tmpint = (*tmp3); //cast to int, can't compare otherwise, for some reason
 	//*tmp2 = 250.0;
-	if(*tmpint < 20)
+	if(*tmpint < 200)
 	{
-	  
+	  //probably safe to move the teleporter to the exit portal now?
+	  *(*teleporterf + 44) = *(*exit_portalf + 44);
+	  *(*teleporterf + 43) = *(*exit_portalf + 43);
 	  *has_teleported = 1;
 	  *(*teleporter + 227) = 0x01000000;
 	}
