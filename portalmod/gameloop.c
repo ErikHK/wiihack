@@ -296,8 +296,8 @@ int main(void)
 	  distx = *(*teleporterf + 43) - *(*first_portalf + 43);
 	  disty = *(*teleporterf + 44) - *(*first_portalf + 44);
 	  *tmp2 = fabs(distx*distx + disty*disty);
-	  //*tmp2 = fabs((*(*teleporterf + 43))*(*(*teleporterf + 43)) + (*(*first_portalf + 43))*(*(*first_portalf + 43)));
-	  //*tmp2 = fabs((*(*teleporterf + 43)) + (*(*first_portalf + 43)));
+	  __asm__("frsqrte 0,0 stfs 0,0(30)");
+	  
 	  *tmp3 = (*tmp);
 	  *tmp3 = (*tmp3)*(*tmp2);
 	  *tmp2 = 8.0;
@@ -309,8 +309,8 @@ int main(void)
 	  distx = *(*teleporterf + 43) - *(*first_portalf + 43);
 	  disty = *(*teleporterf + 44) - *(*first_portalf + 44);
 	  *tmp2 = fabs(distx*distx + disty*disty);
-	  //*tmp2 = fabs((*(*teleporterf + 44))*(*(*teleporterf + 44)) + (*(*first_portalf + 44))*(*(*first_portalf + 44)));
-	  //*tmp2 = fabs((*(*teleporterf + 44)) + (*(*first_portalf + 44)));
+	  __asm__("frsqrte 2,2 stfs 2,0(30)");
+	  
 	  *tmp3 = (*tmp);
 	  *tmp3 = (*tmp3)*(*tmp2);
 	  *tmp2 = 8.0;
@@ -332,6 +332,7 @@ int main(void)
 	  distx = *(*teleporterf + 43) - *(*second_portalf + 43);
 	  disty = *(*teleporterf + 44) - *(*second_portalf + 44);
 	  *tmp2 = fabs(distx*distx + disty*disty);
+	  __asm__("frsqrte 0,0 stfs 0,0(30)");
 	  //*tmp2 = fabs((*(*teleporterf + 43))*(*(*teleporterf + 43)) + (*(*second_portalf + 43))*(*(*second_portalf + 43)));
 	  //*tmp2 = fabs((*(*teleporterf + 43)) + (*(*second_portalf + 43)));
 	  *tmp3 = (*tmp);
@@ -345,6 +346,7 @@ int main(void)
 	  distx = *(*teleporterf + 43) - *(*second_portalf + 43);
 	  disty = *(*teleporterf + 44) - *(*second_portalf + 44);
 	  *tmp2 = fabs(distx*distx + disty*disty);
+	  __asm__("frsqrte 2,2 stfs 2,0(30)");
 	  //*tmp2 = fabs(distx*distx + disty*disty);
 	  //*tmp2 = fabs((*(*teleporterf + 44)) + (*(*second_portalf + 44)));
 	  *tmp3 = (*tmp);
