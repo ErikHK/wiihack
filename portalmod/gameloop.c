@@ -271,8 +271,9 @@ int main(void)
   //*portal_timer += *tmpint;
   *portal_timer += 1;
   
+  
   //here we should teleport if teleporting_to is 1 or 2!
-  if(*teleporting_to != 0)
+  if( (*teleporting_to == 1 || *teleporting_to == 2) && *first_portal != 0 && second_portal != 0)
   {
     //*(*teleporterf + 62) = 0.0; //gravity = 0
 	
@@ -291,14 +292,15 @@ int main(void)
 	  enter_portalf = second_portalf;
 	  exit_portalf = first_portalf;
 	  *tmp = -(*(*teleporterf + 43) - *(*first_portalf + 43));
+	  
 	  distx = *(*teleporterf + 43) - *(*first_portalf + 43);
 	  disty = *(*teleporterf + 44) - *(*first_portalf + 44);
 	  *tmp2 = fabs(distx*distx + disty*disty);
 	  //*tmp2 = fabs((*(*teleporterf + 43))*(*(*teleporterf + 43)) + (*(*first_portalf + 43))*(*(*first_portalf + 43)));
 	  //*tmp2 = fabs((*(*teleporterf + 43)) + (*(*first_portalf + 43)));
 	  *tmp3 = (*tmp);
-	  *tmp3 = (*tmp3)/(*tmp2);
-	  *tmp2 = 15.0;
+	  *tmp3 = (*tmp3)*(*tmp2);
+	  *tmp2 = 8.0;
 	  *tmp = (*tmp3);
 	  *tmp = (*tmp)*(*tmp2);
 	  *(*teleporterf + 43) += (*tmp);
@@ -310,12 +312,14 @@ int main(void)
 	  //*tmp2 = fabs((*(*teleporterf + 44))*(*(*teleporterf + 44)) + (*(*first_portalf + 44))*(*(*first_portalf + 44)));
 	  //*tmp2 = fabs((*(*teleporterf + 44)) + (*(*first_portalf + 44)));
 	  *tmp3 = (*tmp);
-	  *tmp3 = (*tmp3)/(*tmp2);
-	  *tmp2 = 15.0;
+	  *tmp3 = (*tmp3)*(*tmp2);
+	  *tmp2 = 8.0;
 	  *tmp = (*tmp3);
 	  *tmp = (*tmp)*(*tmp2);
 	  *(*teleporterf + 44) += *tmp;
+	  
 	}
+	
 	
 	else // *teleporting_to == 2 here
 	{
@@ -331,8 +335,8 @@ int main(void)
 	  //*tmp2 = fabs((*(*teleporterf + 43))*(*(*teleporterf + 43)) + (*(*second_portalf + 43))*(*(*second_portalf + 43)));
 	  //*tmp2 = fabs((*(*teleporterf + 43)) + (*(*second_portalf + 43)));
 	  *tmp3 = (*tmp);
-	  *tmp3 = (*tmp3)/(*tmp2);
-	  *tmp2 = 15.0;
+	  *tmp3 = (*tmp3)*(*tmp2);
+	  *tmp2 = 8.0;
 	  *tmp = (*tmp3);
 	  *tmp = (*tmp)*(*tmp2);
 	  *(*teleporterf + 43) += (*tmp);
@@ -344,17 +348,17 @@ int main(void)
 	  //*tmp2 = fabs(distx*distx + disty*disty);
 	  //*tmp2 = fabs((*(*teleporterf + 44)) + (*(*second_portalf + 44)));
 	  *tmp3 = (*tmp);
-	  *tmp3 = (*tmp3)/(*tmp2);
-	  *tmp2 = 15.0;
+	  *tmp3 = (*tmp3)*(*tmp2);
+	  *tmp2 = 8.0;
 	  *tmp = (*tmp3);
 	  *tmp = (*tmp)*(*tmp2);
 	  *(*teleporterf + 44) += *tmp;
 	}
 	
 	*tmp3 = fabs(distx*distx + disty*disty);
+	__asm__("nop");
 	*tmpint = (*tmp3); //cast to int, can't compare otherwise, for some reason
-	//*tmp2 = 250.0;
-	if(*tmpint < 200)
+	if(*tmpint < 30000)
 	{
 	  //probably safe to move the teleporter to the exit portal now?
 	  *(*teleporterf + 44) = *(*exit_portalf + 44);
@@ -438,6 +442,7 @@ int main(void)
     }
 	
 	}
+	
 	//*teleporting_to = 0;
 	//*has_teleported
   }
