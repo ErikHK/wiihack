@@ -1,4 +1,4 @@
-fo = open("portalmod_riiv.txt", "r+")
+fo = open("testing.txt", "r+")
 str = fo.readlines();
 # Close opened file
 

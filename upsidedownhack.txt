@@ -1,0 +1,441 @@
+80070fb0
+
+testa:
+8006dcd8	38002000
+
+
+Kan hoppa även om man är i luften! Dock ej någon collision detection alls..
+80071210	4e800020
+
+kan hoppa även om man är i luften! collision detection med!
+80070ef0	4e800020
+
+nograv:
+8042bb44	00000000
+
+korrekt (typ) modell upponer:
+8154b8e0	bf800000
+8154b8e4	bf800000
+
+
+
+!!!!!!BÄTTRE MODELL UPPONER!!!!!!:
+funkar bara bra när man är liten :(
+8154b908	80000000
+
+
+
+80128264?
+80128100?
+
+80129e70	körs när man böjer sig och hoppar!
+
+80127350	hopp?
+
+80128264	hopp???
+
+8012771c	lägger till hastighet i y när man hoppat!
+
+
+801272b0
+800592ac
+
+800592a8	60000000
+
+8015fbe0
+
+8015fb70!!!???
+
+testa 8015fbb8	60000000
+
+
+fixa hopp upponer:
+80057104	ec010028	så att man faller uppåt!
+måste dock fixa så att man hoppar neråt...
+
+
+fixa hopp neråt:
+
+
+BR på 800570f8!
+BR på 80057150
+
+800570e4
+
+81548c04
+
+
+
+
+8014369c	läser in 8042bb44 - gravity!
+
+
+80071210:
+~70: tar marios position och nästa position och gör något med
+
+
+80127480: jump-funktion! körs när man trycker på hoppknappen
+
+80057a68: jump?
+
+8005e710: jump?
+
+8005e3b0: juuuump??
+
+
+800d9970	remove object?
+
+
+8004e4d0
+
+
+
+testa:
+8006efa0	60000000
+800706c8	60000000
+
+8006dcdc	60000000
+8006f0b0	60000000
+
+
+80054688	60000000
+80054698	60000000
+80054898	60000000
+80054888	60000000
+
+80054920	60000000
+80054950	60000000
+8005497c	60000000
+     98c
+    4a10
+    4a20
+
+
+###DESSA!!!###
+80070ef0	4e800020
+
+80054688	60000000
+#80054698	60000000
+#80054898	60000000
+#80054888	60000000
+
+80054d64	60000000	lägger inte till 0400...?
+#80054398	60000000
+
+also:
+#80057150	60000000
+8042bb44	00000000
+##############
+
+
+
+48 - ?-knapp
+49 - blå P
+4A - utropstecken
+
+
+8153da00:	?-knapp!
+8153e2c0:	?-knapp
+8153eb80:	!-knapp
+8153f440:	P-knapp
+8153fd00:	?-knapp
+
+knapp + 0x558 = 0 när itryckt, 3f800000 annars
+
+
+
+!!!!!!HEELT NY!!!!!!
+
+
+i 80064350:
+b (0x802f69a0-0x80064350)
+
+
+i 802f69a0:
+stwu sp, -0x10(sp)  #orig
+stwu r4, -0x4(sp)	#spara r4
+stwu r5, -0x4(sp)	#spara r5
+stwu r6, -0x4(sp)	#spara r6
+
+lhz r4, 0x08(r3)    #load type
+cmpwi r4, 0x4a      #check if ! button
+bne .ohno
+
+#else, yes
+lis r5, 0x802f
+ori r5,r5,0x6900
+stw r3, 0xfc(r5)
+
+
+.ohno:
+lwzu r6, 0(sp)
+lwzu r5, 4(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+
+b -(0x802f69a0-0x80064350)-14*4+4
+
+
+i 80070ef4:
+b (0x802f929c-0x80070ef4)
+
+
+i 802f929c:
+mflr r0
+stwu r4, -0x4(sp)	#spara r4
+stwu r5, -0x4(sp)	#spara r5
+stwu r6, -0x4(sp)	#spara r6
+stwu r7, -0x4(sp)	#spara r7
+
+lis r5, 0x802f
+ori r5,r5,0x6900
+
+lis r6, 0x8042
+ori r6, r6, 0xbb44
+
+lis r7, 0x8154
+ori r7, r7, 0xb804
+
+lwz r4, 0xfc(r5)
+cmpwi r4, 0
+beq .exit
+
+#else, load address
+lwz r5, 0x558(r4)
+cmpwi r5, 0
+bne .normalgravity
+
+#else, flip gravity!
+lis r4, 0x4080
+stw r4, 0(r6)
+
+#flip mario model
+lis r4, 0x8000
+stw r4, 0x104(r7)
+
+#check if mario is at top:
+lbz r4, 0x274(r7)
+cmpwi r4, 0x00
+beq .exit
+
+.blrr:
+#else, set speed to 0, gravity to 0! and blr
+#also set 80054688 to 60000000
+lis r4, 0x0
+stw r4, 0xec(r7)
+stw r4, 0x0(r6)
+li r4, 0x3099
+stw r4, 0x10d4(r7)
+
+lis r4, 0x6000
+lis r7, 0x8005
+ori r7, r7, 0x4688
+stw r4, 0(r7)
+
+lwzu r7, 0(sp)
+lwzu r6, 4(sp)
+lwzu r5, 4(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+addi sp, sp, 32
+blr
+
+.normalgravity:
+lis r4, 0xC080
+stw r4, 0(r6)
+
+#put mario model back!
+lis r4, 0x0000
+stw r4, 0x104(r7)
+
+.exit:
+lwzu r7, 0(sp)
+lwzu r6, 4(sp)
+lwzu r5, 4(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+
+b -(0x802f929c-0x80070ef4)-44*4+4
+
+
+!!!!!!!!!!!!!!
+
+
+
+
+i 80070ef4:
+b (0x802f6900-0x80070ef4)
+
+i 802f6a00:
+mflr r0
+stwu r4, -0x4(sp)	#spara r4
+stwu r5, -0x4(sp)	#spara r5
+stwu r6, -0x4(sp)	#spara r6
+lis r5, 0x8154
+ori r5,r5,0xb804
+lbz r6, 0x274(r5)
+cmpwi r6, 0x04
+bne .exit
+#EQUAL, gitta!
+
+
+lwzu r6, 0(sp)
+lwzu r5, 4(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+addi sp,sp,32
+blr
+
+.exit:
+lwzu r6, 0(sp)
+lwzu r5, 4(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+b -(0x802f6900-0x80070ef4)-19*4+4
+
+
+
+
+
+80056e40	svinlång rutin, lägger till hastighet etcetc
+
+80056f28	läser in acc i x-led..?
+
+8005714c: ble-?
+80057150: lagra max-värde i hastighet!
+
+800570fc	läser in -0.34 och lägger till på hastigheten!
+
+
+
+
+8005927c
+
+
+8015ff60
+
+8015fe10
+
+80059190
+
+802dceec
+
+80128100
+
+8015feb4
+
+80054a3c
+
+
+80376ca8	3.0, någon hastighet? max-hastighet i x?
+läses vid 8012763c
+
+
+prova att sätta hopphastigheten negativ:
+
+80127710	40820008
+80127718	fc200850
+
+
+
+8006dcd8
+8006db88
+
+prova:
+8007067c	90e300a0
+80070678	90e300a4
+80070680	60000000
+
+
+prova total kod:
+
+i 800e3ad4:
+b (0x802f929c-0x800e3ad4)
+
+
+i 802f929c:
+stwu r4, -0x4(sp)	#spara r4
+stwu r5, -0x4(sp)	#spara r5
+stwu r6, -0x4(sp)	#spara r6
+lis r5, 0x8154
+ori r5,r5,0xb804
+lbz r6, 0x274(r5)
+cmpwi r6, 0x04
+bne .noteq
+#equal! set to running
+
+lis r6, 0x8007
+ori r6,r6,0x0ef0
+
+lis r4, 0x4e80
+ori r4,r4,0x0020
+
+stw r4, 0(r6)
+
+#lis r6, 0x8042
+#ori r6,r6,0xbb44
+
+#lis r4, 0x4080
+#ori r4,r4,0x0000
+
+
+stw r4, 0(r6)
+
+b .exit
+
+.noteq:
+#lis r6, 0x8007
+#ori r6,r6,0x0ef0
+
+#lis r4, 0x9421
+#ori r4,r4,0xffe0
+#stw r4, 0(r6)
+
+.exit:
+lwzu r6, 0(sp)
+lwzu r5, 4(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+
+b -(0x802f929c-0x800e3ad4)-23*4+4
+
+i 80070ef4:
+b (0x802f6900-0x80070ef4)
+
+i 802f6900:
+mflr r0
+stwu r4, -0x4(sp)	#spara r4
+stwu r5, -0x4(sp)	#spara r5
+stwu r6, -0x4(sp)	#spara r6
+lis r5, 0x8154
+ori r5,r5,0xb804
+lbz r6, 0x274(r5)
+cmpwi r6, 0x04
+bne .exit
+#EQUAL, gitta!
+
+
+lwzu r6, 0(sp)
+lwzu r5, 4(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+addi sp,sp,32
+blr
+
+.exit:
+lwzu r6, 0(sp)
+lwzu r5, 4(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+b -(0x802f6900-0x80070ef4)-19*4+4
+
+
+
+801ca7c0	convertpathtoentrynum
+
+8016bd90	
+8016bd70
+
+..taru.arc	barrel
+
+801ca7d0
