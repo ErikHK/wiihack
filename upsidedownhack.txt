@@ -57,6 +57,16 @@ testa 8015fbb8	60000000
 8042bbb8	-2! det som sätts 24/7!
 
 801275b0	räkna ut alla arc-grejer i hopp?
+		har kanske med sidohastighet i hopp att göra
+
+
+801468b0	har nog mer med det att göra!
+
+
+8004c5ec	detta är det ju som ändrar fallhastigheten!!
+		...bara när man är högst upp typ...
+
+
 
 8004c58c	läser in -.34 från 802f595c och sparar i b918
 
@@ -90,6 +100,18 @@ testa 8015fbb8	60000000
 
 800575f0	lägger till skit i förgasarn???
 		testa 60000000 här istället!
+
+
+när man hoppar på marken, b918 skrivs av (typ):
+801468b0
+8004c5fc
+(8004c6e0)	OM MAN EJ HÅLLER INNE TVÅAN!
+
+
+när man hoppar från taket, b918 skrivs av (typ):
+801468b0
+8004c5fc
+(8004c6e0)	om man ej håller inne tvåan!
 
 
 
@@ -201,6 +223,60 @@ hastigheter i vanligt hopp:
 
 
 !!!!!!HEELT NY!!!!!!
+
+
+
+i 8004c5bc:
+b (0x802f6800-0x8004c5bc)
+
+
+i 802f6800:
+stwu r4, -0x4(sp)	#spara r4
+stwu r5, -0x4(sp)	#spara r5
+stwu r6, -0x4(sp)	#spara r6
+
+#read addr from 802f69fc
+lis r5, 0x802f
+ori r5,r5,0x6900
+lwz r4, 0xfc(r5)
+
+cmpwi r4, 0
+beq .exit
+
+#else, read status of switch, r4+0x558, 1.0 when INactive
+lwz r6, 0x558(r4)
+cmpwi r6, 0
+beq .active
+
+#inactive here
+fcmpo cr0, f0, f1
+ble- .jumpaway
+b .exit
+
+.active:
+fneg f1
+fcmpo cr0, f0, f1
+fneg f1
+bge- .jumpaway
+b .exit
+
+.jumpaway:
+lwzu r6, 0(sp)
+lwzu r5, 4(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+b -(0x802f6800-0x8004c5bc)-21*4+4*12
+
+
+
+.exit:
+lwzu r6, 0(sp)
+lwzu r5, 4(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+
+b -(0x802f6800-0x8004c5bc)-26*4+4+4
+
 
 
 i 8005714c:
