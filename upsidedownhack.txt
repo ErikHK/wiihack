@@ -49,6 +49,51 @@ funkar bara bra när man är liten :(
 testa 8015fbb8	60000000
 
 
+
+
+
+8042dc0c!!! 	sätt till plus!!
+8042da58	sätt till minus!!
+8042bbb8	-2! det som sätts 24/7!
+
+801275b0	räkna ut alla arc-grejer i hopp?
+
+8004c58c	läser in -.34 från 802f595c och sparar i b918
+
+8004c5e0	läser in -0.06 och sparar i 8154b918 om man är på marken
+		läser dock in -0.34 om man är där uppe!!!
+
+8004c5ac	bestämmer nog vilket som ska läsas in.. hamnar i 
+		801468b0
+
+8004c5d4
+
+80056bdc	läser från +0x1090
+
+
+8154c6a8/c	viktig för arc, 01000000 om man håller in ettan!
+
+8004c520	kör denna när upp och ner!
+
+8004c5b0
+
+
+
+8004c5c0	ble-, ändra till beq- när upp och ner!!!
+
+
+8043fcb4	blir 2.0 ibland och läggs till i x-led, varför??
+
+
+8006cd14	60000000, för att inte lägga till i x-led, testa!!
+		springer bara på stället då...
+
+800575f0	lägger till skit i förgasarn???
+		testa 60000000 här istället!
+
+
+
+
 fixa hopp upponer:
 80057104	ec010028	så att man faller uppåt!
 måste dock fixa så att man hoppar neråt...
@@ -143,8 +188,156 @@ also:
 knapp + 0x558 = 0 när itryckt, 3f800000 annars
 
 
+hastigheter i vanligt hopp:
+3.868		.06
+3.808		.34
+3.468		.34
+3.128		
+2.788
+...
+
+
+
+
 
 !!!!!!HEELT NY!!!!!!
+
+
+i 8005714c:
+b (0x802f6d00-0x8005714c)
+
+
+i 802f6d00:
+stwu r4, -0x4(sp)	#spara r4
+stwu r5, -0x4(sp)	#spara r5
+stwu r6, -0x4(sp)	#spara r6
+
+#read addr from 802f69fc
+lis r5, 0x802f
+ori r5,r5,0x6900
+lwz r4, 0xfc(r5)
+
+cmpwi r4, 0
+beq .exit
+
+#else, read status of switch, r4+0x558, 1.0 when INactive
+lwz r6, 0x558(r4)
+cmpwi r6, 0
+beq .active
+
+#inactive here
+fcmpo cr0, f0, f29
+bge- .exit
+b .else
+
+.active:
+fcmpo cr0, f0, f29
+ble- .exit
+
+.else:
+stfs f29, 0xec(r30)
+
+.exit:
+lwzu r6, 0(sp)
+lwzu r5, 4(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+
+b -(0x802f6d00-0x8005714c)-18*4+4+4
+
+
+
+
+
+
+
+
+i 8012771c:
+b (0x802f6c00-0x8012771c)
+
+
+i 802f6c00:
+stwu r4, -0x4(sp)	#spara r4
+stwu r5, -0x4(sp)	#spara r5
+stwu r6, -0x4(sp)	#spara r6
+
+#read addr from 802f69fc
+lis r5, 0x802f
+ori r5,r5,0x6900
+lwz r4, 0xfc(r5)
+
+cmpwi r4, 0
+beq .exit
+
+#else, read status of switch, r4+0x558, 1.0 when INactive
+lwz r6, 0x558(r4)
+cmpwi r6, 0
+beq .active
+
+#inactive, just go to exit to store f1
+b .exit
+
+.active:
+
+#set bbb8 to -2.0
+lis r6, 0x8042
+ori r6,r6,0xbbb8
+
+lis r4, 0xc000
+stw r4, 0x0(r6)
+
+fneg f1, f1
+
+.exit:
+#store speed to marios speed
+stfs f1, 0xec(r31)
+lwzu r6, 0(sp)
+lwzu r5, 4(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+
+b -(0x802f6c00-0x8012771c)-18*4+4
+
+
+
+
+i 80057104:
+b (0x802f6b00-0x80057104)
+
+
+i 802f6b00:
+stwu r4, -0x4(sp)	#spara r4
+stwu r5, -0x4(sp)	#spara r5
+stwu r6, -0x4(sp)	#spara r6
+
+#read addr from 802f69fc
+lis r5, 0x802f
+ori r5,r5,0x6900
+lwz r4, 0xfc(r5)
+
+cmpwi r4, 0
+beq .exit
+
+#else, read status of switch, r4+0x558, 1.0 when INactive
+lwz r6, 0x558(r4)
+cmpwi r6, 0
+beq .active
+
+#else, inactive
+fadds f0, f1, f0
+b .exit
+
+.active:
+fsubs f0, f1, f0
+
+.exit:
+lwzu r6, 0(sp)
+lwzu r5, 4(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+
+b -(0x802f6b00-0x80057104)-18*4+4
+
 
 
 i 80064350:
@@ -221,16 +414,26 @@ beq .exit
 .blrr:
 #else, set speed to 0, gravity to 0! and blr
 #also set 80054688 to 60000000
+#also set 8042bbb8 (r6+0x74) to 40000000
+#also set 8005714c to 41800008
 lis r4, 0x0
 stw r4, 0xec(r7)
-stw r4, 0x0(r6)
+#stw r4, 0x0(r6) #no gravity
 li r4, 0x3099
 stw r4, 0x10d4(r7)
+
+#set bbb8 to 2.0
+lis r4, 0x4000
+stw r4, 0x74(r6)
 
 lis r4, 0x6000
 lis r7, 0x8005
 ori r7, r7, 0x4688
 stw r4, 0(r7)
+lis r4, 0x4180
+ori r4, r4, 0x0008
+#stw r4, 0x2ac4(r7) #store 41800008 to 8005714c
+
 
 lwzu r7, 0(sp)
 lwzu r6, 4(sp)
@@ -243,8 +446,10 @@ blr
 .normalgravity:
 lis r4, 0xC080
 stw r4, 0(r6)
+lis r4, 0xC000
+stw r4, 0x74(r6)
 
-#put mario model back!
+#put mario model back the right way!
 lis r4, 0x0000
 stw r4, 0x104(r7)
 
