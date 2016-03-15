@@ -236,6 +236,16 @@ hastigheter i vanligt hopp:
 8006cde0	handle y speed, både koopa och goomba!!
 
 
+konstig rörelse åt höger när bbb8 är 2.0:
+802f6d00
+80057600
+8008c2c0	clear_activephysics
+
+8006cd00	man kan ej röra sig om den avaktiveras..
+
+
+
+
 
 !!!!!!HEELT NY!!!!!!
 !!!!!!!!!!!!!!!!!!!!
@@ -278,7 +288,7 @@ stw r4, 0x104(r3)
 lwzu r5, 0(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
-b -(0x802f6908-0x8006cde0)-16*4+4
+b -(0x802f6908-0x8006cde0)-18*4+4
 
 
 
@@ -531,8 +541,8 @@ bne .normalgravity
 lis r4, 0x4080
 stw r4, 0(r6)
 stw r4, 0xf8(r30)
-#store 2 at bbb8
-lis r4, 0x4000
+#store 0 at bbb8!!!!!
+lis r4, 0x0
 stw r4, 0x74(r6)
 
 
