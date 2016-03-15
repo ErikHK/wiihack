@@ -241,6 +241,46 @@ hastigheter i vanligt hopp:
 !!!!!!!!!!!!!!!!!!!!
 
 
+#handle y speed for actors, change
+#gravity on them here! also flip them
+i 8006cde0:
+b (0x802f6908-0x8006cde0)
+
+
+i 802f6908:
+lfs f2, 0xec(r3)	#orig
+stwu r4, -0x4(sp)	#spara r4
+stwu r5, -0x4(sp)	#spara r5
+
+lis r5, 0x802f
+ori r5,r5,0x6900
+lwz r4, 0(r5)
+cmpwi r4, 0
+bne .inactive
+
+#active here, positive gravity to actor plix
+lis r4, 0x4080
+stw r4, 0xf8(r3)
+#flip upside down
+lis r4, 0x8000
+stw r4, 0x104(r3)
+b .exit
+
+.inactive:
+#store normal gravity to actor
+lis r4, 0xC080
+stw r4, 0xf8(r3)
+#flip right way
+lis r4, 0x0000
+stw r4, 0x104(r3)
+
+.exit:
+lwzu r5, 0(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+b -(0x802f6908-0x8006cde0)-16*4+4
+
+
 
 i 8004c5bc:
 b (0x802f6800-0x8004c5bc)
@@ -340,7 +380,7 @@ b -(0x802f6d00-0x8005714c)-21*4+4+4
 
 
 
-
+#is run when jumping:
 i 8012771c:
 b (0x802f6c00-0x8012771c)
 
@@ -457,6 +497,7 @@ addi sp,sp,4
 b -(0x802f69a0-0x80064350)-14*4+4
 
 
+#is run often??
 i 80070ef4:
 b (0x802f929c-0x80070ef4)
 
@@ -479,8 +520,11 @@ cmpwi r4, 0
 beq .exit
 
 #else, load address
-lwz r5, 0x558(r4)
-cmpwi r5, 0
+lwz r4, 0x558(r4)
+#store it to 802f6900 for easy reference by others!
+stw r4, 0(r5)
+
+cmpwi r4, 0
 bne .normalgravity
 
 #else, flip gravity!
@@ -489,7 +533,7 @@ stw r4, 0(r6)
 stw r4, 0xf8(r30)
 #store 2 at bbb8
 lis r4, 0x4000
-stw r4, 0(r6)
+stw r4, 0x74(r6)
 
 
 
@@ -556,47 +600,11 @@ lwzu r5, 4(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
 
-b -(0x802f929c-0x80070ef4)-59*4+4
+b -(0x802f929c-0x80070ef4)-60*4+4
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!
-
-
-
-
-i 80070ef4:
-b (0x802f6900-0x80070ef4)
-
-i 802f6a00:
-mflr r0
-stwu r4, -0x4(sp)	#spara r4
-stwu r5, -0x4(sp)	#spara r5
-stwu r6, -0x4(sp)	#spara r6
-
-#lis r5, 0x8154
-#ori r5,r5,0xb804
-
-lbz r6, 0x274(r30)
-cmpwi r6, 0x04
-bne .exit
-#EQUAL, gitta!
-
-
-lwzu r6, 0(sp)
-lwzu r5, 4(sp)
-lwzu r4, 4(sp)
-addi sp,sp,4
-addi sp,sp,32
-blr
-
-.exit:
-lwzu r6, 0(sp)
-lwzu r5, 4(sp)
-lwzu r4, 4(sp)
-addi sp,sp,4
-b -(0x802f6900-0x80070ef4)-19*4+4
-
 
 
 
@@ -648,90 +656,6 @@ prova:
 8007067c	90e300a0
 80070678	90e300a4
 80070680	60000000
-
-
-prova total kod:
-
-i 800e3ad4:
-b (0x802f929c-0x800e3ad4)
-
-
-i 802f929c:
-stwu r4, -0x4(sp)	#spara r4
-stwu r5, -0x4(sp)	#spara r5
-stwu r6, -0x4(sp)	#spara r6
-lis r5, 0x8154
-ori r5,r5,0xb804
-lbz r6, 0x274(r5)
-cmpwi r6, 0x04
-bne .noteq
-#equal! set to running
-
-lis r6, 0x8007
-ori r6,r6,0x0ef0
-
-lis r4, 0x4e80
-ori r4,r4,0x0020
-
-stw r4, 0(r6)
-
-#lis r6, 0x8042
-#ori r6,r6,0xbb44
-
-#lis r4, 0x4080
-#ori r4,r4,0x0000
-
-
-stw r4, 0(r6)
-
-b .exit
-
-.noteq:
-#lis r6, 0x8007
-#ori r6,r6,0x0ef0
-
-#lis r4, 0x9421
-#ori r4,r4,0xffe0
-#stw r4, 0(r6)
-
-.exit:
-lwzu r6, 0(sp)
-lwzu r5, 4(sp)
-lwzu r4, 4(sp)
-addi sp,sp,4
-
-b -(0x802f929c-0x800e3ad4)-23*4+4
-
-i 80070ef4:
-b (0x802f6900-0x80070ef4)
-
-i 802f6900:
-mflr r0
-stwu r4, -0x4(sp)	#spara r4
-stwu r5, -0x4(sp)	#spara r5
-stwu r6, -0x4(sp)	#spara r6
-lis r5, 0x8154
-ori r5,r5,0xb804
-lbz r6, 0x274(r5)
-cmpwi r6, 0x04
-bne .exit
-#EQUAL, gitta!
-
-
-lwzu r6, 0(sp)
-lwzu r5, 4(sp)
-lwzu r4, 4(sp)
-addi sp,sp,4
-addi sp,sp,32
-blr
-
-.exit:
-lwzu r6, 0(sp)
-lwzu r5, 4(sp)
-lwzu r4, 4(sp)
-addi sp,sp,4
-b -(0x802f6900-0x80070ef4)-19*4+4
-
 
 
 801ca7c0	convertpathtoentrynum
