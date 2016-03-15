@@ -220,9 +220,25 @@ hastigheter i vanligt hopp:
 
 
 
+8153fe60	koopa
+81540888	goomba
+
+80a73ee0	flyttar fiender (koopa iaf...), 
+		kan använda denna för att ändra grav!
+		och rotera dom etc!
+
+80032170	flyttar goomba
+
+80033180
+8015fe80
+
+8006cd90	handle x speed, bara koopa?
+8006cde0	handle y speed, både koopa och goomba!!
+
 
 
 !!!!!!HEELT NY!!!!!!
+!!!!!!!!!!!!!!!!!!!!
 
 
 
@@ -254,9 +270,9 @@ ble- .jumpaway
 b .exit
 
 .active:
-fneg f1
+fneg f1,f1
 fcmpo cr0, f0, f1
-fneg f1
+fneg f1,f1
 bge- .jumpaway
 b .exit
 
@@ -265,7 +281,7 @@ lwzu r6, 0(sp)
 lwzu r5, 4(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
-b -(0x802f6800-0x8004c5bc)-21*4+4*12
+b -(0x802f6800-0x8004c5bc)-23*4+4*12
 
 
 
@@ -275,7 +291,7 @@ lwzu r5, 4(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
 
-b -(0x802f6800-0x8004c5bc)-26*4+4+4
+b -(0x802f6800-0x8004c5bc)-28*4+4+4
 
 
 
@@ -319,10 +335,7 @@ lwzu r5, 4(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
 
-b -(0x802f6d00-0x8005714c)-18*4+4+4
-
-
-
+b -(0x802f6d00-0x8005714c)-21*4+4+4
 
 
 
@@ -415,7 +428,6 @@ addi sp,sp,4
 b -(0x802f6b00-0x80057104)-18*4+4
 
 
-
 i 80064350:
 b (0x802f69a0-0x80064350)
 
@@ -462,9 +474,6 @@ ori r5,r5,0x6900
 lis r6, 0x8042
 ori r6, r6, 0xbb44
 
-lis r7, 0x8154
-ori r7, r7, 0xb804
-
 lwz r4, 0xfc(r5)
 cmpwi r4, 0
 beq .exit
@@ -477,15 +486,24 @@ bne .normalgravity
 #else, flip gravity!
 lis r4, 0x4080
 stw r4, 0(r6)
+stw r4, 0xf8(r30)
+#store 2 at bbb8
+lis r4, 0x4000
+stw r4, 0(r6)
 
-#flip mario model
+
+
+#flip model
 lis r4, 0x8000
-stw r4, 0x104(r7)
+stw r4, 0x104(r30)
 
-#check if mario is at top:
-lbz r4, 0x274(r7)
+#check if mario/player/enemy is at top:
+lbz r4, 0x274(r30)
 cmpwi r4, 0x00
 beq .exit
+
+li r4, 0
+stw r4, 0x274(r30)
 
 .blrr:
 #else, set speed to 0, gravity to 0! and blr
@@ -493,10 +511,10 @@ beq .exit
 #also set 8042bbb8 (r6+0x74) to 40000000
 #also set 8005714c to 41800008
 lis r4, 0x0
-stw r4, 0xec(r7)
+stw r4, 0xec(r30)
 #stw r4, 0x0(r6) #no gravity
 li r4, 0x3099
-stw r4, 0x10d4(r7)
+stw r4, 0x10d4(r30)
 
 #set bbb8 to 2.0
 lis r4, 0x4000
@@ -522,12 +540,14 @@ blr
 .normalgravity:
 lis r4, 0xC080
 stw r4, 0(r6)
+stw r4, 0xf8(r30)
+
 lis r4, 0xC000
 stw r4, 0x74(r6)
 
 #put mario model back the right way!
 lis r4, 0x0000
-stw r4, 0x104(r7)
+stw r4, 0x104(r30)
 
 .exit:
 lwzu r7, 0(sp)
@@ -536,10 +556,11 @@ lwzu r5, 4(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
 
-b -(0x802f929c-0x80070ef4)-44*4+4
+b -(0x802f929c-0x80070ef4)-59*4+4
 
 
-!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 
@@ -552,9 +573,11 @@ mflr r0
 stwu r4, -0x4(sp)	#spara r4
 stwu r5, -0x4(sp)	#spara r5
 stwu r6, -0x4(sp)	#spara r6
-lis r5, 0x8154
-ori r5,r5,0xb804
-lbz r6, 0x274(r5)
+
+#lis r5, 0x8154
+#ori r5,r5,0xb804
+
+lbz r6, 0x274(r30)
 cmpwi r6, 0x04
 bne .exit
 #EQUAL, gitta!
@@ -573,7 +596,6 @@ lwzu r5, 4(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
 b -(0x802f6900-0x80070ef4)-19*4+4
-
 
 
 
