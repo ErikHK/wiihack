@@ -787,6 +787,11 @@ bne .normalgravity
 lis r4, 0x4080
 stw r4, 0(r6)
 stw r4, 0xf8(r30)
+
+#store pound gravity as well!
+lis r4, 0x40C0 #6.0
+stw r4, 0x70(r6)
+
 #store 0 at bbb8!!!!!
 lis r4, 0x0
 stw r4, 0x74(r6)
@@ -843,8 +848,14 @@ addi sp, sp, 32
 blr
 
 .normalgravity:
+#store normal gravity
 lis r4, 0xC080
 stw r4, 0(r6)
+
+#store pound gravity as well!
+lis r4, 0xC0C0 #6.0
+stw r4, 0x70(r6)
+
 stw r4, 0xf8(r30)
 
 lis r4, 0xC000
