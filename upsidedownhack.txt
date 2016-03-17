@@ -245,10 +245,198 @@ konstig rörelse åt höger när bbb8 är 2.0:
 
 
 
+### fixa offset ###
+8016a2b0	DENNA fixar draw-matriser, this is it typ!!!
+
+
+ändrar matrisen för koopa i y-led:
+800384bc
+80a73148
+
+
+
+800d7110	avaktiveras denna så ritas mario ej!
+
+800ca654	60000000 => ritas ej
+800d3b8c	60000000 => inget
+800d3b40	60000000 => bara huvudet ritas ut :D
+800d3b50	60000000 => samma :O
+800d3b6c	60000000 => bara kroppen ritas ut :)
+800d3b80	60000000 => hänger sig
+
+80164fac	60000000 => skärmen blir svart utom statusgrejer!
+
+
+8154c660?
+
+8154ced0, fortfarande en massa matriser??
+
+
+80329ca0	står bland alla matriser..
+80308d80	
+80350d48
+
+811ea984
+
+
+8042e1c8
+8042e1e4
+
+
+8016a2b0	setDrawMatrix
+
+80164d90	något med floating point händer här
+802cd4e0	samma...
+802c0e90	samma... händer direkt här
+801c7130	samma
+
+
+
+0x2c4		hela statusradsgrejen!
+0x2c3		något annat?
+
+
+
+804295f8	sätter storlek på bakgrund!
+
+8087720c	60000000
+
+815417d0
+
+
+
+
+
+
+
+8154b9f0:
+
+8030f6d0
+8154b804
+8154c8a8
+8154c898
+8154c8b8
+b8b0
+b8bc
+b8ec
+..
+8154bae0
+..
+..
+80319188
+8154b9f0
+..
+8154e3ac
+..
+80308d80
+..
+816e7ae0
+80350d48
+80329ca0
+80350d48
+
+
+
+8154bb93
+8154e3ac
+816e7ae0
+80350d48
+80329ca0
+80329ca0
+804173d4
+81769ca0
+80350bd0
+
+
+
+8154b8e8
+
+
+### fixa hoppa sönder ###
+80095a10	60000000, mario kan ej interagera
+80095d30	preplayercollision
+80095c20	playercollision, kan inte dö men kan döda när denna är inaktiv!
+
+
+80031790	
+
+
+800a0ea0	kill goomba när man hoppar! dock ej koopa..
+
+800317f4	hoppar till 80031950, man kan hoppa på goombas utan att dom dör
+		dock ej koopas
+
+80095abc	körs när man springer på en goomba, ELLER en koopa
+		800389e0 när koopa, 80031790 när goomba!!!
+
+80038c30	kommer hit om man hoppar på koopa, ej annars!!
+		baseras på r3 som läses in i 800964a0!!
+
+800964fc	KOMMER BARA HIT OM MAN GÅR IN I NÅN!! :D
+		baseras på r3 som läses in i 800a29c0!!!
+
+
+800a2ae0	samma, baseras på r3 från 800a2870
+
+800a2998	jämför hastigheten med något, THIS IS not... IT!!!
+TESTA:
+800a2998	ble- 0xc! GER att man dör om man hoppar på, men även
+		om man hoppar på med upp-grav...
+
+
+800a296c	kommer bara hit om man hoppar!
+TESTA:
+800a2968	blt 0x3c funkar att hoppa, men även att springa in i tyvärr!
+
+800b07b0	läser in FIENDENS _NÅGOT_ i f1!
+8008cc2c	lagrar _NÅGOT_ i f1
+8008cb64	samma, djupare
+
+
+80031810
+
+80031950
 
 
 !!!!!!HEELT NY!!!!!!
 !!!!!!!!!!!!!!!!!!!!
+
+i 801c0d1c:
+b (0x802f67a0-0x801c0d1c)
+
+i 802f67a0:
+stwu r4, -0x4(sp)	#spara r4
+stwu r5, -0x4(sp)	#spara r5
+lis r5, 0x802f
+ori r5, r5, 0x6900
+lwz r4, 0x0(r5)
+cmpwi r4, 0x0
+bne .exit
+
+lis r5, 0x8042
+ori r5, r5, 0xbb44
+lbz r4, 0x9(r31) #read type of actor (if actor!)
+cmpwi r4, 0x33
+beq .move
+cmpwi r4, 0x36
+beq .move
+
+#otherwise, exit
+b .exit
+
+.move:
+#move model!
+lfs f1, 0x70(r5)
+fadds f2, f2, f1
+.exit:
+stfs f2, 0x1c(r3)
+lwzu r5, 0(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+b -(0x802f67a0-0x801c0d1c)-14*4+4
+
+
+
 
 
 #handle y speed for actors, change
@@ -274,6 +462,15 @@ stw r4, 0xf8(r3)
 #flip upside down
 lis r4, 0x8000
 stw r4, 0x104(r3)
+
+#fix offset!
+lis r5, 0x8042
+ori r5,r5,0xbb44
+lfs f1, 0xb0(r3) #read y pos
+lfs f0, 0x0(r5)
+fadds f1, f1, f0
+fadds f1, f1, f0
+stfs f1, 0x98(r3)
 b .exit
 
 .inactive:
@@ -288,7 +485,7 @@ stw r4, 0x104(r3)
 lwzu r5, 0(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
-b -(0x802f6908-0x8006cde0)-18*4+4
+b -(0x802f6908-0x8006cde0)-27*4+4
 
 
 
@@ -507,7 +704,8 @@ addi sp,sp,4
 b -(0x802f69a0-0x80064350)-14*4+4
 
 
-#is run often??
+
+#is run often???
 i 80070ef4:
 b (0x802f929c-0x80070ef4)
 
@@ -544,7 +742,12 @@ stw r4, 0xf8(r30)
 #store 0 at bbb8!!!!!
 lis r4, 0x0
 stw r4, 0x74(r6)
-
+#fix offset!
+lfs f1, 0xb0(r30) #read y pos
+lfs f0, 0x0(r6)
+fadds f1, f1, f0
+fadds f1, f1, f0
+stfs f1, 0x98(r30)
 
 
 #flip model
