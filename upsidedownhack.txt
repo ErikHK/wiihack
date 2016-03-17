@@ -386,25 +386,63 @@ TESTA:
 
 800a296c	kommer bara hit om man hoppar!
 TESTA:
-800a2968	blt 0x3c funkar att hoppa, men även att springa in i tyvärr!
+800a2968	blt 0x3c (4180003C) funkar att hoppa, men även att springa in i tyvärr!
 
 800b07b0	läser in FIENDENS _NÅGOT_ i f1!
 8008cc2c	lagrar _NÅGOT_ i f1
 8008cb64	samma, djupare
 
 
-80031810
 
-80031950
+80128254	lagrar fnegad speed i marios! läser den från 8043fc64!
+80146d14	lagrar hastigheten i 8043fc64!
+
+80127344	lagrar adressen till fnegad speed?
+		läses in från 8154b804+0x14a0 = 8154cca4!
+
+8004740c
+8004743c
+
+
+
+
 
 
 !!!!!!HEELT NY!!!!!!
 !!!!!!!!!!!!!!!!!!!!
 
-i 801c0d1c:
-b (0x802f67a0-0x801c0d1c)
+#stores bounce speed to mario, fneg this if upside down
+i 80128254:
+b (0x802f67b4-0x8128254)
 
-i 802f67a0:
+
+
+i 802f67b4:
+stwu r4, -0x4(sp)	#spara r4
+stwu r5, -0x4(sp)	#spara r5
+lis r5, 0x802f
+ori r5, r5, 0x6900
+lwz r4, 0x0(r5)
+cmpwi r4, 0x0
+bne .exit
+
+#here, upside down!
+fneg f1, f1
+
+.exit:
+stfs f1, 0xec(r29) #orig!
+lwzu r5, 0(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+b -(0x802f67b4-0x80128254)-12*4+4
+
+
+
+
+i 801c0d1c:
+b (0x802f6740-0x801c0d1c)
+
+i 802f6740:
 stwu r4, -0x4(sp)	#spara r4
 stwu r5, -0x4(sp)	#spara r5
 lis r5, 0x802f
@@ -416,24 +454,34 @@ bne .exit
 lis r5, 0x8042
 ori r5, r5, 0xbb44
 lbz r4, 0x9(r31) #read type of actor (if actor!)
-cmpwi r4, 0x33
-beq .move
-cmpwi r4, 0x36
-beq .move
+cmpwi r4, 0x33	#goomba
+beq .move_goomba
+cmpwi r4, 0x36	#koopa
+beq .move_koopa
 
 #otherwise, exit
 b .exit
 
-.move:
-#move model!
-lfs f1, 0x70(r5)
+.move_koopa:
+lfs f1, 0x70(r5) #6.0
 fadds f2, f2, f1
+fadds f2, f2, f1
+#f2 = 12.0
+b .exit
+
+.move_goomba:
+lfs f1, 0x70(r5) #6.0
+fadds f2, f2, f1
+lfs f1, 0x10(r5) #1.0
+fsubs f2, f2, f1
+#f2 = 5.0
+
 .exit:
 stfs f2, 0x1c(r3)
 lwzu r5, 0(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
-b -(0x802f67a0-0x801c0d1c)-14*4+4
+b -(0x802f6740-0x801c0d1c)-14*4+4
 
 
 
