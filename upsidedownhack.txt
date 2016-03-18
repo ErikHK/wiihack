@@ -407,6 +407,13 @@ TESTA:
 
 
 
+#goomba vid 81541808
+kollar 815419c0 = 1808+ 0x1b8
+
+800a295c	läser in 815419c0
+
+
+
 
 
 !!!
@@ -421,10 +428,45 @@ TESTA:
 !!!!!!HEELT NY!!!!!!
 !!!!!!!!!!!!!!!!!!!!
 
+
+#fix so you can jump on enemies upside down
+
+i 800b07ec:
+b (0x80001800-0x800b07ec)
+
+
+i 80001800:
+lfs f1, 0x70(r3)	#orig
+stwu r4, -0x4(sp)	#spara r4
+stwu r5, -0x4(sp)	#spara r5
+
+lis r5, 0x802f
+ori r5, r5, 0x6900
+lwz r4, 0x0(r5)
+cmpwi r4, 0x0
+beq .exit
+
+#otherwise, upside down!
+
+fcmpo cr0, f1, f0	#f0 = 0
+ble- .exit
+
+#else, fneg f1
+fneg f1, f1
+
+.exit
+lwzu r5, 0(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+b -(0x80001800-0x800b07ec)-4*4+4
+
+
+
+
+
 #stores bounce speed to mario, fneg this if upside down!
 i 80128254:
 b (0x802f67b4-0x8128254)
-
 
 
 i 802f67b4:
@@ -465,6 +507,10 @@ lis r5, 0x8042
 ori r5, r5, 0xbb44
 lbz r4, 0x9(r31) #read type of actor (if actor!)
 cmpwi r4, 0x33	#goomba
+beq .move_goomba
+cmpwi r4, 0x85  #bobomb
+beq .move_goomba
+cmpwi r4, 0x86  #para bobomb
 beq .move_goomba
 cmpwi r4, 0x36	#koopa
 beq .move_koopa
