@@ -773,7 +773,7 @@ lwz r4, 0x0(r5)
 cmpwi r4, 0
 beq .exit
 
-#else, load address
+#else, load status of button
 lwz r4, 0x558(r4)
 #store it to 802f6900 for easy reference by others!
 lis r5, 0x802f
