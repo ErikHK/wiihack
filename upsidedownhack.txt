@@ -409,6 +409,14 @@ TESTA:
 
 
 
+!!!
+
+800e453c	aktiverar event om r0 = 0x10,
+		avaktiverar event om r0 = 0!!!!
+
+
+
+
 
 !!!!!!HEELT NY!!!!!!
 !!!!!!!!!!!!!!!!!!!!
@@ -422,11 +430,11 @@ b (0x802f67b4-0x8128254)
 i 802f67b4:
 stwu r4, -0x4(sp)	#spara r4
 stwu r5, -0x4(sp)	#spara r5
-lis r5, 0x8000
-ori r5, r5, 0x1800
+lis r5, 0x802f
+ori r5, r5, 0x6900
 lwz r4, 0x0(r5)
 cmpwi r4, 0x0
-bne .exit
+beq .exit
 
 #here, upside down!
 fneg f1, f1
@@ -447,11 +455,11 @@ b (0x802f6740-0x801c0d1c)
 i 802f6740:
 stwu r4, -0x4(sp)	#spara r4
 stwu r5, -0x4(sp)	#spara r5
-lis r5, 0x8000
-ori r5, r5, 0x1800
+lis r5, 0x802f
+ori r5, r5, 0x6900
 lwz r4, 0x0(r5)
 cmpwi r4, 0x0
-bne .exit
+beq .exit
 
 lis r5, 0x8042
 ori r5, r5, 0xbb44
@@ -500,11 +508,11 @@ lfs f2, 0xec(r3)	#orig
 stwu r4, -0x4(sp)	#spara r4
 stwu r5, -0x4(sp)	#spara r5
 
-lis r5, 0x8000
-ori r5,r5,0x1800
+lis r5, 0x802f
+ori r5,r5,0x6900
 lwz r4, 0(r5)
 cmpwi r4, 0
-bne .inactive
+beq .inactive
 
 #active here, positive gravity to actor plix
 lis r4, 0x4080
@@ -539,6 +547,8 @@ b -(0x802f6908-0x8006cde0)-27*4+4
 
 
 
+<memory offset="0x8004c5bc" value="482AA244" />
+
 #fix jump?
 i 8004c5bc:
 b (0x802f6800-0x8004c5bc)
@@ -549,13 +559,13 @@ stwu r4, -0x4(sp)	#spara r4
 stwu r5, -0x4(sp)	#spara r5
 stwu r6, -0x4(sp)	#spara r6
 
-#read addr from 802f69fc
-lis r5, 0x8000
-ori r5,r5,0x1800
+#check gravity
+lis r5, 0x802f
+ori r5,r5,0x6900
 lwz r4, 0x0(r5)
 
 cmpwi r4, 0
-beq .active
+bne .active
 
 #else, inactive
 fcmpo cr0, f0, f1
@@ -596,15 +606,15 @@ stwu r4, -0x4(sp)	#spara r4
 stwu r5, -0x4(sp)	#spara r5
 stwu r6, -0x4(sp)	#spara r6
 
-#read addr from 802f69fc
-lis r5, 0x8000
-ori r5,r5,0x1800
+#check gravity
+lis r5, 0x802f
+ori r5,r5,0x6900
 lwz r4, 0x0(r5)
 
 cmpwi r4, 0
-beq .active
+bne .active
 
-#inactive here
+.inactive:
 fcmpo cr0, f0, f29
 bge- .exit
 b .else
@@ -622,8 +632,7 @@ lwzu r5, 4(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
 
-b -(0x802f6d00-0x8005714c)-21*4+4+4
-
+b -(0x802f6d00-0x8005714c)-18*4+4+4
 
 
 
@@ -638,12 +647,12 @@ stwu r5, -0x4(sp)	#spara r5
 stwu r6, -0x4(sp)	#spara r6
 
 #read status of gravity from 802f6900
-lis r5, 0x8000
-ori r5,r5,0x1800
+lis r5, 0x802f
+ori r5,r5,0x6900
 lwz r4, 0x0(r5)
 
 cmpwi r4, 0
-bne .exit
+beq .exit
 
 .active:
 #set bbb8 to -2.0
@@ -677,20 +686,17 @@ stwu r4, -0x4(sp)	#spara r4
 stwu r5, -0x4(sp)	#spara r5
 stwu r6, -0x4(sp)	#spara r6
 
-#read addr from 802f69fc
-lis r5, 0x8000
-ori r5,r5,0x1800
+#read status from 802f6900
+lis r5, 0x802f
+ori r5,r5,0x6900
 lwz r4, 0x0(r5)
 
 cmpwi r4, 0
-beq .exit
+beq .inactive
 
-#else, read status of switch, r4+0x558, 1.0 when INactive
-lwz r6, 0x558(r4)
-cmpwi r6, 0
-beq .active
+b .active
 
-#inactive
+.inactive:
 fadds f0, f1, f0
 b .exit
 
@@ -707,48 +713,48 @@ b -(0x802f6b00-0x80057104)-18*4+4
 
 
 
-#beforecreate!
-checks if newly created object is a "!" switch
-i 80064350:
-b (0x802f69a0-0x80064350)
+#enable or disable event!
+i 800e453c:
+b (0x802f69a0-0x800e453c)
 
 
 i 802f69a0:
-stwu sp, -0x10(sp)  #orig
+addi r11, sp, 32	#orig!
 stwu r4, -0x4(sp)	#spara r4
 stwu r5, -0x4(sp)	#spara r5
 stwu r6, -0x4(sp)	#spara r6
 
-lhz r4, 0x08(r3)    #load type
-cmpwi r4, 0x4a      #check if ! button
-bne .ohno
+lis r5, 0x802f
+ori r5,r5,0x6900
 
-#else, yes
-lis r5, 0x8000
-ori r5,r5,0x1800
-
-.check_loop:
-lwz r4, 0x0(r5)
-cmpwi r4, 0x0
-beq .store
-
-#else, increase r5 and loop!
-addi r5, r5, 0x4
-b .check_loop
+#here, r0=0 if disable, else r0=0x10 to enable
 
 .store:
-stw r3, 0x0(r5)
+stw r0, 0x0(r5)
+
+cmpwi r0, 0x10
+bne .exit
+
+#else, flip gravity!
+lis r6, 0x8042
+ori r6,r6,0xbb44
+lis r4, 0x4080
+stw r4, 0x0(r6)
 
 
-.ohno:
+
+
+.exit:
 lwzu r6, 0(sp)
 lwzu r5, 4(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
 
-b -(0x802f69a0-0x80064350)-19*4+4
+b -(0x802f69a0-0x800e453c)-11*4+4
 
 
+
+<memory offset="0x80070ef4" value="482883A8" />
 
 #is run often???
 #game loop kinda
@@ -757,32 +763,21 @@ b (0x802f929c-0x80070ef4)
 
 
 i 802f929c:
-mflr r0
+mflr r0			#orig
 stwu r4, -0x4(sp)	#spara r4
 stwu r5, -0x4(sp)	#spara r5
 stwu r6, -0x4(sp)	#spara r6
 stwu r7, -0x4(sp)	#spara r7
 
-lis r5, 0x8000
-ori r5,r5,0x1800
+lis r5, 0x802f
+ori r5,r5,0x6900
 
 lis r6, 0x8042
 ori r6, r6, 0xbb44
 
 lwz r4, 0x0(r5)
 cmpwi r4, 0
-beq .exit
-
-#else, load status of button
-lwz r4, 0x558(r4)
-#store it to 802f6900 for easy reference by others!
-lis r5, 0x802f
-ori r5,r5,0x6900
-
-stw r4, 0(r5)
-
-cmpwi r4, 0
-bne .normalgravity
+beq .normalgravity
 
 #else, flip gravity!
 lis r4, 0x4080
@@ -873,7 +868,7 @@ lwzu r5, 4(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
 
-b -(0x802f929c-0x80070ef4)-68*4+4
+b -(0x802f929c-0x80070ef4)-64*4+4
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!
