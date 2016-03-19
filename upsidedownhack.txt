@@ -577,6 +577,16 @@ beq .exit
 
 lis r5, 0x8042
 ori r5, r5, 0xbb44
+cmpwi r31, 0 #check for null pointer!
+beq .exit
+cmpwi r3, 0 #check for null pointer!
+beq .exit
+
+#check if r31 really is an addr
+lis r4, 0x8200
+cmpw r31, r4
+bge .exit
+
 lbz r4, 0x9(r31) #read type of actor (if actor!)
 cmpwi r4, 0x33	#goomba
 beq .move_goomba
@@ -609,7 +619,7 @@ stfs f2, 0x1c(r3)
 lwzu r5, 0(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
-b -(0x802f6740-0x801c0d1c)-27*4+4
+b -(0x802f6740-0x801c0d1c)-29*4+4
 
 
 
