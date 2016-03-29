@@ -352,7 +352,10 @@ b8ec
 8154b8e8
 
 
-### fixa hoppa sönder ###
+### fixa hoppa sönder upponer! ###
+värde i +0x1b8
+
+
 80095a10	60000000, mario kan ej interagera
 80095d30	preplayercollision
 80095c20	playercollision, kan inte dö men kan döda när denna är inaktiv!
@@ -391,8 +394,120 @@ TESTA:
 
 
 800b07b0	läser in FIENDENS _NÅGOT_ i f1!
-8008cc2c	lagrar _NÅGOT_ i f1
+
+
+
+--->8008cc2c	lagrar _NÅGOT_ i f1
+
+________
+8008cc28
+________
+
+
+8008cb64	lagrar f2 
+8008c2e4	lagrar f0
+8008cb88	lagrar f0
+
+
+
 8008cb64	samma, djupare
+
+
+
+##HELA GREJEN!
+f1 läses från 8043fd38 ~ 1183.12
+f0 läses från 8043fd30 ~ 1184.5
+f3 läses från 8154b970 = 4.0
+f4 = f1 - f0 ~ -1.378
+f1 läses från 0x81541a68+0x24 = 0x81541a8c = 8.0
+f2 läses från 0x8043fd3c ~ -586.304016
+f5 = f3 + f1 = 12.0
+f0 läses från 8043fd34 = -600
+fabs f3, f8 => 
+f3 = f4 ~ -1.378
+
+f6 = f2 - f0 ~ 13.695984
+f1 läses från 0x8154b94c + 0x28 = 0x8154b974 = 7.0
+f0 läses från 0x81541a68 + 0x28 = 0x81541a90 = 8.0
+frsp f2, f3 => f2 blir samma som f3 och f4
+f3 = f1 + f0 = 7 + 8 = 15.0
+fcmpo f2, f5 =>  -1.378, 12.0
+bge någonstans, annars=>
+
+fabs f0,f8 => f0 = 13.695...
+
+fcmpo f0, f3 => 13.695, 15.0
+bge någonstans, annars=>
+
+f0 = 0x8043fd38 ~ 1183.12
+spara f0 i 8154b94c + 0x90
+f0 = 0x8043fd3c = -586.304016
+spara f0 i 8154b94c + 0x94
+
+samma för den fienden...
+
+...
+
+r0 = 0x8154b94c+0x38 = 0
+hoppa iväg
+fabs f2, f8 => inget händer???
+f0 = 0x80433360-0x7080 = 0
+f1 = 0x80433360-0x7078 = 0.5
+fcmpo f4, f0 => -1.378, 0
+frsp f0, f2 => f0 = f2
+f0 = f5 - f0 = 10.622
+f4 = f0*f1 = 5.311
+bge någonstans, annars=>
+f4 = -f1 = -5.311
+fabs f2, f8 => f2 = 13.695...
+f0 = 0x80433360-0x7080 = 0
+f1 = 0x80433360-0x7078 = 0.5
+fcmpo f6, f0 => 13.695, 0
+f0 = f2 = 13.695
+f0 = f3-f0 = 1.305...
+f2 = f0*f1 = 0.6525...
+bge ett hopp=>
+r0 = 0x2c+0x81541a68 = 3
+fneg f1,f1 => f1 = 5.311
+fneg f0,f1 => f0 = -.6525
+
+nu är f1 = 5.311
+f0 = -.6525
+
+DETTA f0 LAGRAS I KONSTIGA TALET!!
+
+
+
+totalt:
+f0 = -0.5*(15-(ypos+600))
+_________________________
+
+där ypos = -586.304016 = mario.ypos-7.0??
+
+prova med goomba:
+
+8152ad60
+8152af18	specialstället
+
+8043fd34: -591.884766
+8154b8b4: -585.624084
+hmmm 6.260682 i skillnad...
+
+
+jämförelserna (bge snarare..) vid 8008ca8c och 8008ca9c kan fucka upp!!
+verkar dock ej så..
+
+TODO: kolla vad som händer i 8008cc24 när man springer in i någon!!
+
+
+
+
+800a2918	läser från 8042c608
+
+800a295c	60000000 => gör att man kan springa in i fiender, noo!
+
+81541920	bobomb i savefile f2
+81541ad8	konstigt tal i bobomb
 
 
 
@@ -434,6 +549,12 @@ changes 8154b8b4 on the ground and ceiling:
 
 8006f390	movar mario!
 
+8006f7c4	movar?
+
+
+801b512c
+
+
 
 
 #crouching
@@ -442,8 +563,47 @@ changes 8154b8b4 on the ground and ceiling:
 80269f24	
 80269df8
 
+8154bc90	3 när man glider, 0 annars?
+
+
+
+80056d50	4e800020 => slutar aldrig att glida animationsmässigt
+
+8004b380	4e800020 => fakkar ur
+
+80048630	4e800020 => glider animationsmässigt, men står still
+
+8012ad10
+
+
+
+80146794	storar 4.0 om man duckar
+801467c0	storar 8.0 om man ej duckar
+
+801423c4	storar 3.5 eller 7.0 i 8154ccec
+
+80142fd0	storar crouch-status i 8154ccf4
+
+802d8b30	storar nåt om crouch i 8154c098
+802d7e80	samma typ
+
+
+
+
+80059260
+800481c0	glider????
+8012acc0	glider???
+80048630	glider??
+80046768	innan glider?
+8004b460	fixar fart när man glider!!
+
+
+
 hanterar y pos när man glider:
 8006ecbc
+
+
+
 
 
 #killing out of zone?
@@ -473,13 +633,110 @@ hanterar y pos när man glider:
 802dcf10	kör 8013df80 om man dör
 
 
+#standing on blocks upside down fix
+80004600
+800951ec	goes to 80097f40
+80095458	goes somewhere
+
+
+81541cbc	size of block
+815301fc
+
+80022dc0
+80022e50	stores size	
+
+
+80022E60	4e800020!!!!!!!! Funkar för brick blocks, dock ej [!]
+		förstör dock om man är stor........
+
+80023bd0	4e800020
+
+
+
+
+#jump on enemies upside down etc
+
+81530cf8	bobombs hoppgrejs
+815419c0	goombas hoppgrejs
+
+
+8008cc28	60000000 => man dör dirr
+
+8008ca90	
+
+
+
+
+
+80095a10	60000000 gör en genomskinlig
+
+80095a34	60000000
+
+
+
+
+#fixa ökandet av poäng etc
+
+
+80159e3c	
+
+800cea40	4e800020
+80060690	samma
+80159df0	samma
+
+
+
+81547508
+81547908	lagrar ackumulerade poängen
+8035529c	samma
+80429fa0	samma
+
+8154c884	säger hur många gånger man hoppat på fiende!!!!
+		nollställ när man landar etc!!!
+		+0x1080
+
 
 
 !!!!!!HEELT NY!!!!!!
 !!!!!!!!!!!!!!!!!!!!
 
 
+#fix mario offset
+i 8006f7b4:
+b (0x80001cb0-0x8006f7b4)
+
+
+i 80001cb0:
+stwu r4, -0x4(sp)	#spara r4
+stwu r5, -0x4(sp)	#spara r5
+
+lis r5, 0x802f
+ori r5, r5, 0x6900
+lwz r4, 0x0(r5)
+
+cmpwi r4, 0
+beq .exit
+
+#else, add to f1
+lis r5, 0x8042
+ori r5, r5, 0xbb44
+lfs f3, 0x0(r5)
+fadds f1, f1, f3
+
+
+.exit:
+fcmpo cr0, f1, f0
+lwzu r5, 0(sp)
+lwzu r4, 4(sp)
+addi sp,sp,4
+b -(0x80001cb0-0x8006f7b4)-10*4+4
+
+
+
+
+
 #resets gravity at death
+#WRONG!!! especially for multiplayer.. move to drawworldmap again..
 i 8013dc40:
 b (0x80001b20-0x8013dc40)
 
@@ -587,6 +844,11 @@ lis r4, 0x8200
 cmpw r31, r4
 bge .exit
 
+lis r4, 0x8150	#all(?) actors reside in 0x815xxxxx
+cmpw r31, r4
+ble .exit
+
+
 lbz r4, 0x9(r31) #read type of actor (if actor!)
 cmpwi r4, 0x33	#goomba
 beq .move_goomba
@@ -619,7 +881,7 @@ stfs f2, 0x1c(r3)
 lwzu r5, 0(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
-b -(0x802f6740-0x801c0d1c)-29*4+4
+b -(0x802f6740-0x801c0d1c)-37*4+4
 
 
 
