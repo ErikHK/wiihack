@@ -246,6 +246,34 @@ konstig rörelse åt höger när bbb8 är 2.0:
 
 
 ### fixa offset ###
+8006f394	flyttar ut mario massa? this is it??
+
+8154b96c	hitbox offset!!!!!!! checka write!!
+
+skrivs i:
+8014249c	lagrar!!
+801424d0	samma
+
+
+80142494	lagrar i b970
+801424d8	samma
+
+
+801424d4	lagrar i b974
+
+
+80142170	hela funken
+
+skriver y-pos:
+8006cd20
+8005713c
+8006f7c8	!!!
+
+
+
+
+
+
 8016a2b0	DENNA fixar draw-matriser, this is it typ!!!
 
 
@@ -484,6 +512,82 @@ _________________________
 
 där ypos = -586.304016 = mario.ypos-7.0??
 
+
+testa:
+---
+8008cb74	lfs f11, -0x7004(rtoc)	C1628FFC 
+8008cb88	stfs f11, 0x70(r4)	D1640070
+
+lagrar -0.5 i konstiga talet
+
+Med dessa går det att springa in i alla fiender,
+MEN så länge de är på plan mark!! genombrott??
+
+att läsa in -4.0 istället ger samma sak
+att läsa in -.04 istället ger samma sak
+---
+
+
+
+80095d30	preplayercoll, körs när man hoppar eller går in i
+80095C20	playercoll, körs när man faktiskt kollajdar
+800b07ec	min egen sån hoppgrej, fnegar f1 etc
+8008cc24
+80097170	mark dead!
+80031790	kommer hit om man både hoppar och dör!
+		kör playercoll och därmed DÖD härifrån!
+
+800317c0	bestämmer om man ska dö!!! kör 800964a0!
+
+800964e8	samma, djupare, kör 800a29c0
+800a2ad4	samma, djppare, kör 800a2870
+800a2994	this is it?? igen??
+
+HELA HÄR MED:
+tar konstiga talet f1:
+f0 = 2;
+
+f1 = f1*2;
+f0 = 3;
+fcmp f1, 3
+
+om större än 3: DÖ
+annars, DÖDA!
+
+SÅ FELET LIGGER ÄNDÅ I DÄR 0x70 UTRÄKNAS!!!
+ALLTSÅ I 8008ca50!!!!!
+
+
+f0 = -.5*(15-(451.5499-439.8999)) ~ -1.675!!
+LADDA F5!!!
+
+
+f0 = -.5*(15-(marioypos+7 - goombaypos))
+
+
+
+ALLA konstiga tal i 8043fd38 läggs till i 8008cbd4 och framåt!!!
+Vissa räknas ut i 8008c570 som körs från 8008cbd0!!!
+
+men främst 8008cbf0?
+
+8008cba0
+
+802f0ac0	bestämmer vilket tal det högst får vara!!!
+		3 i orig, ändra till 4 kanske???
+
+
+
+
+
+80095a3c	60000000 => man kan butthoppa, men ej interagera annars
+
+80095a74	60000000 => 
+
+
+800971f0	kill??
+
+
 prova med goomba:
 
 8152ad60
@@ -616,6 +720,8 @@ hanterar y pos när man glider:
 		marios adress i r3 och r4
 
 
+8042c888	hmmmmmmmmmmmmmmmmmmmmmmmmmmm
+
 
 8013dc40	dödar allmänt?
 
@@ -697,8 +803,113 @@ hanterar y pos när man glider:
 
 
 
-!!!!!!HEELT NY!!!!!!
-!!!!!!!!!!!!!!!!!!!!
+
+#8154b8d8??
+801467e0	store
+
+#8154c834??
+80146770	store
+
+
+#8154ccec???
+801423c4	store
+
+
+#8154b96c??
+8014249c	lagrar!!
+801424d0	samma
+
+#8154b970
+80142494	lagrar i b970
+801424d8	samma
+
+#8154b974
+801424d4	lagrar i b974
+
+
+800543e0	flyttar mario etc?
+
+
+800575fc	flyttar mario def.
+
+8043fcb8	offseten lagras här! först 4, sen 2.34*3 = 11.02!!!
+
+800575f8	offseten lagras i 8043fcb8 här
+förmodligen inte detta ställe som ska kollas, detta 
+är ju antigravitationsgrejen som alltid ska köras, ska nog snarare kolla
+gravitationsgrej så att mario faktiskt flyger upp mer osvosvosv...
+
+
+8006f750	det måste vara denna va?
+
+f1 = mario.y + 26
+f2 = 0.1
+f0 = 0
+f3 = -432	??? kanske toppen osv????!?
+funkar, men går ej att hoppa med mario sen.. för att han sitter fast osv
+
+så r3+0x274 måste vara 04000000!!
+lagras i 8006dcdc!!
+
+
+
+
+kommer man till 80056cf0 på marken efter hopp etc???
+(egentligen 8005514c!!!)
+
+
+
+80055134	kolla om 1 osv!!
+
+8005515c
+
+80143ebc
+
+
+80055130	kör 80056cf0
+
+
+80054f80...
+
+
+
+###alla värden som ändras i mario när han är stor!###
+8154b8d8
+8154b96c
+8154b970
+8154b974
+8154c6a0
+8154c834
+8154c894
+8154c898
+8154c8a4
+8154c8c0
+8154cce4	storlek...
+8154ccec
+8154ccf4
+8154cd40
+
+
+
+#resetta gravityn
+802b5760	körs när man dör ELLER klarar banan!!!
+		...eller om man bara tar upp avbryt-menyn... ajja...
+816117bc	storlek på koopa som visar dödhet i slutet
+
+
+
+
+VUXENVÄRDEN I 802f531c!!!
+802f5aa0???????
+
+
+80142dd4	storear i 8154c898
+
+
+!!!!!!HEELT NY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 
 #fix mario offset
@@ -717,11 +928,20 @@ lwz r4, 0x0(r5)
 cmpwi r4, 0
 beq .exit
 
-#else, add to f1
+#else, see if mario is at top!!
+lbz r4, 0x88(r3)	#should be 4!
+cmpwi r4, 0
+beq .exit
+
+#else, add to f1 and store 0 to 0x88(r3)!
 lis r5, 0x8042
 ori r5, r5, 0xbb44
 lfs f3, 0x0(r5)
 fadds f1, f1, f3
+fadds f1, f1, f3
+fadds f1, f1, f3
+li r4, 0
+stb r4, 0x88(r3)
 
 
 .exit:
@@ -729,7 +949,7 @@ fcmpo cr0, f1, f0
 lwzu r5, 0(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
-b -(0x80001cb0-0x8006f7b4)-10*4+4
+b -(0x80001cb0-0x8006f7b4)-17*4+4
 
 
 
@@ -737,8 +957,11 @@ b -(0x80001cb0-0x8006f7b4)-10*4+4
 
 #resets gravity at death
 #WRONG!!! especially for multiplayer.. move to drawworldmap again..
-i 8013dc40:
-b (0x80001b20-0x8013dc40)
+#OR 802b5760 (innan 8013dc40)
+#drawworldmap at 80926770
+
+i 80926770:
+b (0x80001b20-0x80926770)
 
 
 i 80001b20:
@@ -753,7 +976,7 @@ stw r4, 0x0(r5)
 lwzu r5, 0(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
-b -(0x80001b20-0x8013dc40)-10*4+4
+b -(0x80001b20-0x80926770)-10*4+4
 
 
 
@@ -819,7 +1042,7 @@ b -(0x80001990-0x80128254)-12*4+4
 
 
 
-#fix offset!
+#fix offset for enemies!
 i 801c0d1c:
 b (0x802f6740-0x801c0d1c)
 
@@ -988,6 +1211,8 @@ b -(0x802f6800-0x8004c5bc)-25*4+4+4
 
 
 
+
+#some kind of gravity fix
 i 8005714c:
 b (0x802f6d00-0x8005714c)
 
@@ -1002,28 +1227,32 @@ lis r5, 0x802f
 ori r5,r5,0x6900
 lwz r4, 0x0(r5)
 
-cmpwi r4, 0
-bne .active
+fabs f28, f0
+fabs f31, f29
 
-.inactive:
-fcmpo cr0, f0, f29
-bge- .exit
-b .else
+#cmpwi r4, 0
+#bne .active
 
-.active:
-fcmpo cr0, f0, f29
+#.inactive:
+#fcmpo cr0, f0, f29
+#bge- .exit
+#b .else
+
+#.active:
+fcmpo cr0, f28, f31
 ble- .exit
 
 .else:
 stfs f29, 0xec(r30)
 
 .exit:
+lfs f31, 0x4(r5) #zero to f31
 lwzu r6, 0(sp)
 lwzu r5, 4(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
 
-b -(0x802f6d00-0x8005714c)-18*4+4+4
+b -(0x802f6d00-0x8005714c)-16*4+4+4
 
 
 
@@ -1055,6 +1284,18 @@ stw r4, 0x0(r6)
 
 fneg f1, f1
 
+
+#lfs f3, -0x74(r6) #4.0
+#lfs f4, 0xb0(r31) #mario.y
+#fsubs f4, f4, f3
+#fsubs f4, f4, f3
+#fsubs f4, f4, f3
+#stfs f4, 0xb0(r31) #move!
+##NO PLEASE DON'T
+##also set 10d4 to 0!!
+#lis r4, 0x0
+#stw r4, 0x10d4(r31)
+
 .exit:
 #store speed to marios speed
 stfs f1, 0xec(r31)
@@ -1063,14 +1304,13 @@ lwzu r5, 4(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
 
-b -(0x802f6c00-0x8012771c)-18*4+4
+b -(0x802f6c00-0x8012771c)-24*4+4
 
 
 
 #hmmm? jump thing?
 i 80057104:
 b (0x802f6b00-0x80057104)
-
 
 i 802f6b00:
 stwu r4, -0x4(sp)	#spara r4
@@ -1174,6 +1414,10 @@ lis r4, 0x4080
 stw r4, 0(r6)
 stw r4, 0xf8(r30)
 
+#store 4 to super special value!!
+lis r4, 0x4080	#4.0
+stw r4, -0x5e40(r5)
+
 #store pound gravity as well!
 lis r4, 0x40C0 #6.0
 stw r4, 0x70(r6)
@@ -1181,12 +1425,13 @@ stw r4, 0x70(r6)
 #store 0 at bbb8!!!!!
 lis r4, 0x0
 stw r4, 0x74(r6)
+
 #fix offset!
-lfs f1, 0xb0(r30) #read y pos
-lfs f0, 0x0(r6)
-fadds f1, f1, f0
-fadds f1, f1, f0
-stfs f1, 0x98(r30)
+#lfs f1, 0xb0(r30) #read y pos
+#lfs f0, 0x0(r6)
+#fadds f1, f1, f0
+#fadds f1, f1, f0
+#stfs f1, 0x98(r30)
 
 
 #flip model
@@ -1237,6 +1482,10 @@ blr
 #store normal gravity
 lis r4, 0xC080
 stw r4, 0(r6)
+
+#store 3 back to super special value!!
+lis r4, 0x4040	#3.0
+stw r4, -0x5e40(r5)
 
 #store pound gravity as well!
 lis r4, 0xC0C0 #6.0
