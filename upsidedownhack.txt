@@ -906,6 +906,27 @@ VUXENVÄRDEN I 802f531c!!!
 80142dd4	storear i 8154c898
 
 
+80055074	storear i 8154b8f0 när man hoppat på ett block
+
+80054f98
+
+
+
+
+
+800b57a8	f6 eller f2 har zone??
+		
+
+
+800c9650	dimmar startgrejen..
+
+80004680	samma..?  (80004600)
+
+
+8091f170
+
+
+
 !!!!!!HEELT NY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -959,13 +980,14 @@ b -(0x80001cb0-0x8006f7b4)-17*4+4
 #WRONG!!! especially for multiplayer.. move to drawworldmap again..
 #OR 802b5760 (innan 8013dc40)
 #drawworldmap at 80926770
+#NO! reset at 8091f170!
 
-i 80926770:
-b (0x80001b20-0x80926770)
+i 8091f170:
+b (0x80001b20-0x8091f170)
 
 
 i 80001b20:
-stwu sp, -0x20(sp)	#orig
+stwu sp, -0x10(sp)	#orig
 stwu r4, -0x4(sp)	#spara r4
 stwu r5, -0x4(sp)	#spara r5
 li r4, 0
@@ -976,7 +998,7 @@ stw r4, 0x0(r5)
 lwzu r5, 0(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
-b -(0x80001b20-0x80926770)-10*4+4
+b -(0x80001b20-0x8091f170)-10*4+4
 
 
 
