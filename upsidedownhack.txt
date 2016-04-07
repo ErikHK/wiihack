@@ -957,6 +957,8 @@ stwu r4, -0x4(sp)	#spara r4
 stwu r5, -0x4(sp)	#spara r5
 
 
+cmpwi r9, 0 #sometimes r9 is zero for some reason..
+beq .exit
 lfs f12, -0xd88(r9) #read in max y
 
 lis r5, 0x8000
@@ -967,7 +969,7 @@ stfs f12, 0x0(r5)
 lwzu r5, 0(sp)
 lwzu r4, 4(sp)
 addi sp,sp,4
-b -(0x80001cb0-0x80064f50)-10*4+4
+b -(0x80001cb0-0x80064f50)-12*4+4
 
 
 
@@ -1445,14 +1447,18 @@ b -(0x802f69a0-0x800e453c)-11*4+4
 
 <memory offset="0x80070ef4" value="482883A8" />
 
+
+
 #is run often???
 #game loop kinda
 i 80070ef4:
-b (0x802f929c-0x80070ef4)
+b (0x80001e40-0x80070ef4)
 
 
-i 802f929c:
+#i 802f929c:
+i 80001e40:
 mflr r0			#orig
+stwu r3, -0x4(sp)
 stwu r4, -0x4(sp)	#spara r4
 stwu r5, -0x4(sp)	#spara r5
 stwu r6, -0x4(sp)	#spara r6
@@ -1498,7 +1504,7 @@ stw r4, 0x104(r30)
 #check if mario/player/enemy is at top:
 lbz r4, 0x274(r30)
 cmpwi r4, 0x00
-beq .exit
+beq .killplayer_or_exit
 
 li r4, 0
 stw r4, 0x274(r30)
@@ -1527,42 +1533,13 @@ ori r4, r4, 0x0008
 #stw r4, 0x2ac4(r7) #store 41800008 to 8005714c
 
 
-
-#check if above zone!
-lis r4, 0x8000
-ori r4, r4, 0x1910
-lfs f12, 0x0(r4)
-lfs f11, 0xb0(r30) #mario's y pos
-
-fcmpo cr0, f11, f12
-bge .kill_player
-
-b .firstexit
-
-.kill_player:
-mr r4, r30
-lis r5, 0
-addi r5, r4, 0x148
-mr r31, r4
-lis r30, 0x8154
-ori r30, r30, 0x1808
-mr r3, r30
-
-stw r0, 0x14(sp)
-
-#80031ab0
-lis r12, 0x8003
-ori r12, r12, 0x1ab0
-mtctr r12
-bctrl	#jump to kill mario routine!
-
-
 .firstexit:
-lwz r0, 0x14(sp)
+#lwz r0, 0x14(sp)
 lwzu r7, 0(sp)
 lwzu r6, 4(sp)
 lwzu r5, 4(sp)
 lwzu r4, 4(sp)
+lwzu r3, 4(sp)
 addi sp,sp,4
 mtlr r0
 addi sp, sp, 32
@@ -1589,15 +1566,63 @@ stw r4, 0x74(r6)
 #put mario model back the right way!
 lis r4, 0x0000
 stw r4, 0x104(r30)
+b .exit
+
+.killplayer_or_exit:
+#check if above zone!
+lis r4, 0x8000
+ori r4, r4, 0x1910
+lfs f12, 0x0(r4)
+lfs f11, 0xb0(r30) #mario's y pos
+
+fcmpo cr0, f11, f12
+bge .kill_player
+
+b .exit #<---
+
+.kill_player:
+mr r4, r30
+lis r5, 0
+addi r5, r4, 0x148
+mr r31, r4
+lis r30, 0x8154
+ori r30, r30, 0x1808
+mr r3, r30
+
+stw r0, 0x54(sp)
+
+#80031ab0
+lis r12, 0x8003
+ori r12, r12, 0x1ab0
+mtctr r12
+
+
+stwu r3, -0x4(sp)
+stwu r4, -0x4(sp)	#spara r4
+stwu r5, -0x4(sp)	#spara r5
+stwu r6, -0x4(sp)	#spara r6
+stwu r7, -0x4(sp)	#spara r7
+bctrl	#jump to kill mario routine!
+lwzu r7, 0(sp)
+lwzu r6, 4(sp)
+lwzu r5, 4(sp)
+lwzu r4, 4(sp)
+lwzu r3, 4(sp)
+addi sp,sp,4
+
+
+lwz r0, 0x54(sp)
+mtlr r0 #move to lr again
 
 .exit:
 lwzu r7, 0(sp)
 lwzu r6, 4(sp)
 lwzu r5, 4(sp)
 lwzu r4, 4(sp)
+lwzu r3, 4(sp)
 addi sp,sp,4
 
-b -(0x802f929c-0x80070ef4)-84*4+4
+b -(0x80001e40-0x80070ef4)-102*4+4
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!
