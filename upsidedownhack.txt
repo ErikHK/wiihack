@@ -942,6 +942,42 @@ eller r3+0x98??
 		r9-0xd8c...
 
 
+
+när 80031ab0 körs, dvs kill mario:
+r0		00000000
+r1		8043fd18
+r2		80433360
+r3		81541808
+r4		8154b804
+r5		8154b94c
+r6		8043fd00
+r7		00000000
+r8		41000000
+r9		00000000
+r10		00000001
+r11		8043fce8
+r12		80031ab0
+r13		8042f980
+r14-r18		00000000
+r19		00000008
+r20		00000000
+r21		40e00000
+r22		40800000
+r23		8154b94c
+r24		81541950
+r25-r27		00000001
+r28		81541808
+r29		81541950
+r30		81541808
+r31		8154b804
+
+
+när JAG kör 80031ab0:
+r28		8154b9f0
+r29		8154b804
+
+
+
 !!!!!!HEELT NY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1458,14 +1494,21 @@ b (0x80001e40-0x80070ef4)
 #i 802f929c:
 i 80001e40:
 mflr r0			#orig
-stwu r3, -0x4(sp)
-stwu r4, -0x4(sp)	#spara r4
-stwu r5, -0x4(sp)	#spara r5
-stwu r6, -0x4(sp)	#spara r6
-stwu r7, -0x4(sp)	#spara r7
 
 lis r5, 0x8000
 ori r5,r5,0x1900
+
+stw r3, 0x20(r5)
+stw r4, 0x24(r5)
+stw r5, 0x28(r5)
+stw r6, 0x2c(r5)
+stw r7, 0x30(r5)
+stw r8, 0x34(r5)
+stw r9, 0x38(r5)
+stw r10, 0x3c(r5)
+stw r11, 0x40(r5)
+stw r12, 0x44(r5)
+
 
 lis r6, 0x8042
 ori r6, r6, 0xbb44
@@ -1535,12 +1578,26 @@ ori r4, r4, 0x0008
 
 .firstexit:
 #lwz r0, 0x14(sp)
-lwzu r7, 0(sp)
-lwzu r6, 4(sp)
-lwzu r5, 4(sp)
-lwzu r4, 4(sp)
-lwzu r3, 4(sp)
-addi sp,sp,4
+#lwzu r7, 0(sp)
+#lwzu r6, 4(sp)
+#lwzu r5, 4(sp)
+#lwzu r4, 4(sp)
+#lwzu r3, 4(sp)
+#addi sp,sp,4
+
+lis r5, 0x8000
+ori r5,r5,0x1900
+
+lwz r3, 0x20(r5)
+lwz r4, 0x24(r5)
+lwz r6, 0x2c(r5)
+lwz r7, 0x30(r5)
+lwz r8, 0x34(r5)
+lwz r9, 0x38(r5)
+lwz r10, 0x3c(r5)
+lwz r11, 0x40(r5)
+lwz r12, 0x44(r5)
+
 mtlr r0
 addi sp, sp, 32
 blr
@@ -1570,10 +1627,13 @@ b .exit
 
 .killplayer_or_exit:
 #check if above zone!
-lis r4, 0x8000
-ori r4, r4, 0x1910
+lis r4, 0x815e
+ori r4, r4, 0x36f0
 lfs f12, 0x0(r4)
 lfs f11, 0xb0(r30) #mario's y pos
+lwz r5, 0x0(r4)
+cmpwi r5, 0
+beq .exit
 
 fcmpo cr0, f11, f12
 bge .kill_player
@@ -1592,37 +1652,55 @@ mr r3, r30
 stw r0, 0x54(sp)
 
 #80031ab0
-lis r12, 0x8003
-ori r12, r12, 0x1ab0
+#lis r12, 0x8003
+#ori r12, r12, 0x1ab0
+lis r12, 0x8014
+ori r12, r12, 0x6230
+mr r3, r4
+
 mtctr r12
 
 
-stwu r3, -0x4(sp)
-stwu r4, -0x4(sp)	#spara r4
-stwu r5, -0x4(sp)	#spara r5
-stwu r6, -0x4(sp)	#spara r6
-stwu r7, -0x4(sp)	#spara r7
-bctrl	#jump to kill mario routine!
-lwzu r7, 0(sp)
-lwzu r6, 4(sp)
-lwzu r5, 4(sp)
-lwzu r4, 4(sp)
-lwzu r3, 4(sp)
-addi sp,sp,4
+#r28		81541808
+#r29		81541950
+#lis r28, 0x8154
+#ori r28, r28, 0x1808
+#lis r29, 0x8154
+#ori r29, r29, 0x1950
 
+#make mario small so that he dies right away!
+li r5, 0
+stw r5, 0x14e0(r3)
+
+bctrl	#jump to kill mario routine!
 
 lwz r0, 0x54(sp)
 mtlr r0 #move to lr again
 
 .exit:
-lwzu r7, 0(sp)
-lwzu r6, 4(sp)
-lwzu r5, 4(sp)
-lwzu r4, 4(sp)
-lwzu r3, 4(sp)
-addi sp,sp,4
+#lwzu r7, 0(sp)
+#lwzu r6, 4(sp)
+#lwzu r5, 4(sp)
+#lwzu r4, 4(sp)
+#lwzu r3, 4(sp)
+#addi sp,sp,4
 
-b -(0x80001e40-0x80070ef4)-102*4+4
+lis r5, 0x8000
+ori r5,r5,0x1900
+
+
+lwz r3, 0x20(r5)
+lwz r4, 0x24(r5)
+lwz r6, 0x2c(r5)
+lwz r7, 0x30(r5)
+lwz r8, 0x34(r5)
+lwz r9, 0x38(r5)
+lwz r10, 0x3c(r5)
+lwz r11, 0x40(r5)
+lwz r12, 0x44(r5)
+mr r5, r6
+
+b -(0x80001e40-0x80070ef4)-113*4+4
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!
