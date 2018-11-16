@@ -162,3 +162,5 @@ prova att göra det mer wii-vänligt:
 
 <memory offset="0x802bdc28" value="48042ED8" />
 <memory offset="0x80300b00" value="3E0080763A101e94823000008270F4207E319B789230F4203BFF00044BFBD110" />
+<memory offset="0x800bb7d0" value="4BF448c8" />
+<memory offset="0x80000098" value="9421ffe03E2080353A31519492510000480BB72c" />
