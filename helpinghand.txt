@@ -159,8 +159,16 @@ prova att göra det mer wii-vänligt:
 80300b18	3BFF0004	#addi r31, r31, 4
 80300b1c	4BFBD110	#b tillbaks
 
+sätt 0 liv på luigi när banan startar:
+800bb7d0	4BF4984C	#b 0x8000501c
+8000501c	9421ffe0	#stwu sp, -0x20(sp)
+80005020	3E208035	#lis r17, 0x8035
+80005024	3A315194	#addi r17, r17, 0x5194
+80005028	92510000	#stw r18, 0x0(r17) #kill luigi!
+8000502c	480B67A8 	#b tillbaks
+
 
 <memory offset="0x802bdc28" value="48042ED8" />
 <memory offset="0x80300b00" value="3E0080763A101e94823000008270F4207E319B789230F4203BFF00044BFBD110" />
-<memory offset="0x800bb7d0" value="4BF448c8" />
-<memory offset="0x80000098" value="9421ffe03E2080353A31519492510000480BB72c" />
+<memory offset="0x800bb7d0" value="4BF4984C" />
+<memory offset="0x8000501c" value="9421ffe03E2080353A31519492510000480B67A8" />
