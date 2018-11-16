@@ -1,0 +1,164 @@
+80c69cf8
+80c69da4
+
+80057ad0?
+
+80127350
+
+800592a8	innan 80127350
+
+80059290	innan 8127350
+
+8015fe60	körs när man hoppar innan 80059290, körs även vid toppen av hoppet och landning
+
+8015fe10	körs när man hoppar och landar
+
+8015fb70
+
+8015fba4
+
+8015fbb0	läs något med hopp??
+
+8015fbbc	första som körs när man hoppar och landar, körs även vid kollision med fiende
+
+8015fc20	
+
+
+80032f00	stor funktion, gör vad? 
+
+
+8015fe60
+
+8154b804	mario/luigi
+81548aec	mario/luigi
+
+
+800b5ef4	60000000	man kan inte hoppa..
+
+807612b4	00000100	gör så att mario hoppar! 801ed80c
+80761e94	00000100	gör så att luigi hoppar! 801ed88c?
+
+
+prova:
+801ed80c	480009d8	#b, 0x801ee1e4
+801ee1e4	90e6ff50	#stw r7,-0xb0 (r6)
+801ee1e8	38c6f420	#addi r6,r6,-0xbe0
+801ee1ec	4bfff624	#b -0x9dc
+
+nej prova:
+801ed80c	4be12864	#b, 0x80000070
+80000070	3a000000	#li r16,0
+80000074	3e008076	#lis r16, 0x8076
+80000078	3a101364	#addi r16,r16,0x1364
+8000007c	7e068050	#sub r16,r16,r6
+80000080	2c100000	#cmpwi r16,0
+80000084	40820010	#bne 0x10
+80000088	38c6f420	#addi r6,r6,0xbe0
+8000008c	3908f420	#addi r8,r8,0xbe0
+80000090	3bbdf420	#addi r29,r29,0xbe0
+80000094	90e6ff50	#stw r7,-0xb0 (r6)
+80000098	481ed778	#b tillbaks till 801ed810
+
+
+kanske detta..?
+80127350	4bed8d20	#b 0x80000070
+80000070	3E008154	#lis r16, 0x8154
+80000074	3A105C02	#addi r16,r16,0x5c02
+80000078	3A105C02	#addi r16,r16,0x5c02
+8000007c	7e1f8378	#mr r31, r16
+80000080	7ffefb78	#mr r30, r31
+80000084	7ffcfb78	#mr r28, r31
+80000088	7ffdfb78	#mr r29, r31
+8000008c	3bde147c	#addi r30, r30, 0x147c
+80000090	801f1564	#lwz r0, 0x1564 (r31)
+80000094	93c10008	#stw r30, 0x8(sp)
+80000098	93c1000c	#stw r30, 0xc(sp)
+
+8000009c	481272b8	#b 0x80127354
+
+
+
+neeej detta då???:
+8015fbbc	4BEA04b4 	#b 0x80000070
+80000070	3F808154 	#lis r28, 0x8154
+80000074	3B9C5C02 	#addi r28,r28,0x5c02
+80000078	3B9C5C02 	#addi r28,r28,0x5c02
+8000007c	7F9DE378 	#mr r29, r28
+80000080	3BBD1430 	#addi r29, r29, 0x1430
+80000084	7FBEEB78 	#mr r30, r29
+80000088	7FBFEB78	#mr r31, r29
+8000008c	7F86E378	#mr r6, r28
+80000090	38C6000C	#addi r6, r6, 0xc
+80000094	881E000E	#lbz r0, 0xe(r30)	
+80000098	4815fb28	#b 0x8015fbb4
+
+
+
+8043fd04	pekare till spelare... när sätts?
+
+
+802bd0d0	nåt bra..?
+
+8076129c
+
+
+knapptryck på spelare + 0xea8, 0xeac, 0xf68, 0xf6c, 0xf70, 0xf74
+alltså 81549994, 81549998, 81549a54, 91549a58, 81549a5c, 0x81549a60
+
+
+802bdc28??
+
+
+ny strategi, i game loop, kopiera till 807612b4 från 80761e94:
+YEEEEES!!! men p1 styr båda, ska fixa om!
+802bdc28	4BD42448	#b 0x80000070
+80000070	3E008076	#lis r16, 0x8076
+80000074	3A1012B4 	#addi r16,r16,0x12b4
+80000078	82300000	#lwz r17, 0(r16)
+8000007c	92300BE0	#stw r17, 0xbe0(r16)
+80000080	3BFF0004	#addi r31, r31, 4
+80000084	482BDBA8	#b tillbaks
+
+
+################################YES###############################
+ny strategi, i game loop, kopiera till 807612b4 från 80761e94:
+yey nu styr luigi både mario och sig själv!!!
+802bdc28	4BD42448	#b 0x80000070
+80000070	3E008076	#lis r16, 0x8076
+80000074	3A101e94 	#addi r16,r16,0x1e94
+80000078	82300000	#lwz r17, 0(r16)
+8000007c	8270F420	#lwz r19, -0xbe0(r16)
+80000080	7E319B78	#or r17, r17, r19
+80000084	9230F420	#stw r17, -0xbe0(r16)
+80000088	3BFF0004	#addi r31, r31, 4
+8000008c	482BDBA0	#b tillbaks
+
+sätt 0 liv på luigi när banan startar:
+800bb7d0	4BF448c8	#b 0x80000098
+80000098	9421ffe0	#stwu sp, -0x20(sp)
+8000009c	3E208035	#lis r17, 0x8035
+800000a0	3A315194	#addi r17, r17, 0x5194
+800000a4	92510000	#stw r18, 0x0(r17) #kill luigi!
+800000a8	480BB72c	#b tillbaks
+##################################################################
+
+
+also prova att sätta ett liv på luigi när banan är slut, 0x80102370
+also sätt hans liv till 0 efter liv fåtts av massa mynt!
+
+
+
+prova att göra det mer wii-vänligt:
+802bdc28	48042ED8	#b 0x80300b00
+80300b00	3E008076	#lis r16, 0x8076
+80300b04	3A101e94 	#addi r16,r16,0x1e94
+80300b08	82300000	#lwz r17, 0(r16)
+80300b0c	8270F420	#lwz r19, -0xbe0(r16)
+80300b10	7E319B78	#or r17, r17, r19
+80300b14	9230F420	#stw r17, -0xbe0(r16)
+80300b18	3BFF0004	#addi r31, r31, 4
+80300b1c	4BFBD110	#b tillbaks
+
+
+<memory offset="0x802bdc28" value="48042ED8" />
+<memory offset="0x80300b00" value="3E0080763A101e94823000008270F4207E319B789230F4203BFF00044BFBD110" />
